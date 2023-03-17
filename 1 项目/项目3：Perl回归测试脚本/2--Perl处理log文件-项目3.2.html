@@ -2,9 +2,9 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>工具的第一篇 | 马克得烂笔头</title>
-  <meta name="keywords" content="">
-  <meta name="description" content="工具的第一篇 | 马克得烂笔头">
+  <title>2--Perl处理log文件-项目3.2 | 马克得烂笔头</title>
+  <meta name="keywords" content=" perl ">
+  <meta name="description" content="2--Perl处理log文件-项目3.2 | 马克得烂笔头">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <meta name="description" content="个人简介22年7月二本微电子专业毕业，有幸进入IC行业，入职后从零基础自学相关知识，至今（2023&#x2F;3&#x2F;10）已八月有余，“好记性不如烂笔头”———故以此 “马克得烂笔头” 记录。 丢丢感悟不宜妄自菲薄，记忆犹新，那年考研失败后，才开始筹备找工作的我，在拿到现在公司设计岗的offer时，那一切的感觉是那么地不真实！毕竟以我自己当时的水平技能，学历出生，在面对无数次面试失败的打击">
 <meta property="og:type" content="website">
@@ -617,9 +617,9 @@
 </aside>
 <div id="post">
     <div class="pjax">
-        <article id="post-4 工具/工具" class="article article-type-post" itemscope itemprop="blogPost">
+        <article id="post-1 项目/项目3：Perl回归测试脚本/2--Perl处理log文件-项目3.2" class="article article-type-post" itemscope itemprop="blogPost">
     
-        <h1 class="article-title">工具的第一篇</h1>
+        <h1 class="article-title">2--Perl处理log文件-项目3.2</h1>
     
     <div class="article-meta">
         
@@ -629,20 +629,29 @@
             <i class="iconfont icon-category"></i>
             
             
-            <a  data-rel="工具">工具</a>
+            <a  data-rel="项目">项目</a> > 
+            
+            <a  data-rel="项目&lt;---&gt;项目3：Perl回归测试脚本">项目3：Perl回归测试脚本</a>
             
         </span>
         
         
+        <span class="tag">
+            <i class="iconfont icon-tag"></i>
+            
+            <a class="color5">perl</a>
+            
+        </span>
+        
     </div>
     <div class="article-meta">
         
-            发布时间 : <time class="date" title='最后更新: 2023-03-10 15:03:20'>2023-03-10 14:02</time>
+            发布时间 : <time class="date" title='最后更新: 2023-03-17 22:51:03'>2023-03-17 22:38</time>
         
     </div>
     <div class="article-meta">
         
-        <span>字数:0</span>
+        <span>字数:879</span>
         
         
         
@@ -650,7 +659,7 @@
     
     <div class="toc-ref">
     
-        
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E4%B8%BB%E8%A6%81%E5%8A%9F%E8%83%BD"><span class="toc-text">一、主要功能</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E4%BB%A3%E7%A0%81%E5%9D%97%E8%AF%B4%E6%98%8E"><span class="toc-text">二、代码块说明</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1%E3%80%81%E5%8F%98%E9%87%8F%E5%AE%9A%E4%B9%89%E5%8F%8A%E5%85%B6%E4%BD%9C%E7%94%A8"><span class="toc-text">1、变量定义及其作用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2%E3%80%81%E9%80%9A%E8%BF%87%E6%96%87%E4%BB%B6%E5%8F%A5%E6%9F%84%E5%B0%86log%E6%96%87%E4%BB%B6%E9%80%90%E4%B8%AA%E4%BC%A0%E8%BF%9B%E6%9D%A5%EF%BC%8C%E5%B9%B6%E5%B0%86%E6%89%80%E6%9C%89%E5%86%85%E5%AE%B9%EF%BC%88%E5%8D%95%E4%B8%AAlog%E6%96%87%E4%BB%B6%EF%BC%89%E5%AD%98%E5%82%A8%E5%88%B0%E5%8F%98%E9%87%8F-log%E4%B8%AD"><span class="toc-text">2、通过文件句柄将log文件逐个传进来，并将所有内容（单个log文件）存储到变量$log中</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%A7%A3%E9%87%8Amy-log-do-local-lt-LOG-gt"><span class="toc-text">******解释my $log &#x3D; do { local $&#x2F;; &lt;LOG&gt; };</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3%E3%80%81%E9%80%9A%E8%BF%87%E6%AD%A3%E5%88%99%E5%8C%B9%E9%85%8D%E5%88%A4%E6%96%AD%EF%BC%8C%E5%AF%B9log%E6%96%87%E4%BB%B6%E5%A4%84%E7%90%86%EF%BC%8C%E5%B9%B6%E7%BB%99%E7%9B%B8%E5%BA%94%E5%8F%98%E9%87%8F%E8%B5%8B%E5%80%BC"><span class="toc-text">3、通过正则匹配判断，对log文件处理，并给相应变量赋值</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-text">总结</span></a></li></ol>
     
 <style>
     .left-col .switch-btn,
@@ -666,7 +675,73 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        
+        <h1 id="一、主要功能"><a href="#一、主要功能" class="headerlink" title="一、主要功能"></a>一、主要功能</h1><ul>
+<li>逐个打开<code>logfile</code>文件夹中的log文件</li>
+<li>处理文件，判断是否有<code>ERROR</code>产生</li>
+</ul>
+<h1 id="二、代码块说明"><a href="#二、代码块说明" class="headerlink" title="二、代码块说明"></a>二、代码块说明</h1><h2 id="1、变量定义及其作用"><a href="#1、变量定义及其作用" class="headerlink" title="1、变量定义及其作用"></a>1、变量定义及其作用</h2><pre><code class="perl">my $dir_log;      #仿真目录
+my $case_name;    #testcase名字，例如test1.v
+my $description;  #testcase功能的描述,例如normal_erase
+my $result;       #存储结果的变量,PASS或者FAIL
+my $time;         #储存仿真时间
+my $table;        #表格的一行,(html语法)
+my $color;        #将FAIL或者PASS设置成不同的颜色
+</code></pre>
+<h2 id="2、通过文件句柄将log文件逐个传进来，并将所有内容（单个log文件）存储到变量-log中"><a href="#2、通过文件句柄将log文件逐个传进来，并将所有内容（单个log文件）存储到变量-log中" class="headerlink" title="2、通过文件句柄将log文件逐个传进来，并将所有内容（单个log文件）存储到变量$log中"></a>2、通过文件句柄将log文件逐个传进来，并将所有内容（单个log文件）存储到变量<code>$log</code>中</h2><pre><code class="perl">for my $i (96..$total)
+&#123;
+     $dir_log   = &quot;./logfile/test$i.log&quot;;
+     $case_name = &quot;test$i&quot;;
+
+    open(LOG, &quot;&lt;$dir_log&quot;)or die $!;
+    my $log = do &#123; local $/; &lt;LOG&gt; &#125;;
+………
+        close LOG;
+………
+&#125;
+</code></pre>
+<p>这里对文件句柄有更深的了解，LOG相当于一个从文件——&gt;Perl中的桥梁，要把文件中所有内容读出来并存储到变量<code>$log</code>中用到了<code>my $log = do &#123; local $/; &lt;LOG&gt; &#125;;</code></p>
+<h3 id="解释my-log-do-local-lt-LOG-gt"><a href="#解释my-log-do-local-lt-LOG-gt" class="headerlink" title="******解释my $log = do { local $/; &lt;LOG&gt; };"></a>******解释<code>my $log = do &#123; local $/; &lt;LOG&gt; &#125;;</code></h3><p>正常<LOG>一次只能读取一行，可以通过while循环将其全部读出来储存到一个变量中：</p>
+<pre><code class="perl">my $log;
+while (&lt;LOG&gt;) &#123;
+    $log .= $_;
+&#125;
+</code></pre>
+<p>而直接将其赋给变量有两种情况：</p>
+<pre><code class="perl">my $log = &lt;LOG&gt;;    # 等号左边为标量时，返回文件的单行内容
+my @log = &lt;LOG&gt;;    # 等号左边为数组时，返回文件的全部内容（文件的每行对应数组的每个元素）
+</code></pre>
+<p><code>**my $log = do &#123; local $/; &lt;LOG&gt; &#125;;</code>的实现方式：</p>
+<p>通过 <code>do &#123;&#125;</code>创建一个临时的作用域，在作用域中改变 <code>$\</code> 的值，改变了 <code>&lt;LOG&gt;</code>在标量上下文中的分隔符（由 <code>\n</code>变为 <code>undef</code>），达到了读取整个文件内容的目的，</p>
+<p><strong><code>local $/</code>等价于<code>local $/ = undef</code>，而<code>$/</code>输入记录分隔符，默认是新行字符，如用undef这个变量，将读到文件结尾</strong></p>
+<p>参考：<a target="_blank" rel="noopener" href="https://www.ogura.io/posts/2018/09/read-file-the-perl-way/">perl 关于 do { local $&#x2F;; <FILEHANDLE> } 语法糖 (ogura.io)</a></p>
+<h2 id="3、通过正则匹配判断，对log文件处理，并给相应变量赋值"><a href="#3、通过正则匹配判断，对log文件处理，并给相应变量赋值" class="headerlink" title="3、通过正则匹配判断，对log文件处理，并给相应变量赋值"></a>3、通过正则匹配判断，对log文件处理，并给相应变量赋值</h2><pre><code class="perl">#捕获变量截取log中的description
+if($log =~ /TEST.*:(.*)/)&#123;
+         $description = &quot;$1&quot;;
+        &#125;  
+#捕获变量截取log中的仿真时间
+ if($log =~ /on(.*)CST/)&#123;
+         $time = &quot;$1&quot;;
+        &#125;  
+
+#正则匹配ERROR关键此，给结果变量赋值为PASS或者FAIL
+  if($log =~ /ERROR:/)&#123;
+                          $result = (&quot;FAIL&quot;);
+   &#125;elsif($log =~ /errors: [^0]/)&#123;
+                          $result = (&quot;FAIL&quot;);
+   &#125;else&#123;
+                          $result = (&quot;PASS&quot;);
+   &#125;
+
+#判断结果变量，给$color变量赋值，便于后期html赋值
+   if($result eq &quot;FAIL&quot;)&#123;
+                      $color = &quot;\&quot;#FF0000\&quot;&quot;;
+   &#125;elsif($result eq &quot;PASS&quot;)&#123;
+                      $color = &quot;\&quot;#00FF00\&quot;&quot;;    
+   &#125;
+</code></pre>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>这一块的代码的难点在与对句柄的理解，以及文件传进来的状态（一行一行地读）。最初我直接让其等于变量，发现打印出来存储了一行。然后考虑整个存入数组中，但是又无法对数组中的所有元素进行文字处理，因为数组中的一个元素是log文件中的一行内容。后来才找到方法<code>my $log = do &#123; local $/; &lt;LOG&gt; &#125;;</code>，让一个文件的所有内容都读出来储存到变量中，然后进行文字处理。</p>
+<p>可以看到，<code>close LOG；</code>前后省略了两段代码，第一段代码为第3点中的内容，第二段内容是在相关变量产生后生成<code>$table</code>变量（储存了一行html表格的html格式代码），因为每一个testcase产生一个log文件，产生一行数据结果。</p>
+
       
        <hr><span style="font-style: italic;color: gray;"> 转载请注明来源，欢迎对文章中的引用来源进行考证，欢迎指出任何有错误或不够清晰的表达。可以在下面评论区评论，也可以邮件至 icmarktian@163.com </span>
     </div>

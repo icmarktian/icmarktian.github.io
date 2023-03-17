@@ -4,6 +4,89 @@
   
     
     <entry>
+      <title>4--Markdown简要速查笔记</title>
+      <link href="/3%20%E8%AF%AD%E8%A8%80/Markdown/4--Markdown%E7%AE%80%E8%A6%81%E9%80%9F%E6%9F%A5%E7%AC%94%E8%AE%B0.html"/>
+      <url>/3%20%E8%AF%AD%E8%A8%80/Markdown/4--Markdown%E7%AE%80%E8%A6%81%E9%80%9F%E6%9F%A5%E7%AC%94%E8%AE%B0.html</url>
+      
+        <content type="html"><![CDATA[<h1 id="1、标题"><a href="#1、标题" class="headerlink" title="1、标题"></a>1、标题</h1><ul><li><code>#(空格)一级标题</code></li><li><code>#(空格)二级标题</code></li></ul><h1 id="2、段落换行"><a href="#2、段落换行" class="headerlink" title="2、段落换行"></a>2、段落换行</h1><ul><li>末尾两个以上空格</li><li>句末加<code>&lt;br&gt;</code></li></ul><h1 id="3、强调语法"><a href="#3、强调语法" class="headerlink" title="3、强调语法"></a>3、强调语法</h1><ol><li><p>粗体：<code>**内容**</code></p></li><li><p>斜体：<code>*内容**</code></p></li><li><p>斜体+粗体：<code>***内容***</code></p></li></ol><h1 id="4、分割线"><a href="#4、分割线" class="headerlink" title="4、分割线"></a>4、分割线</h1><p>一行中三个“<code>-</code>”</p><h1 id="5、删除线"><a href="#5、删除线" class="headerlink" title="5、删除线"></a>5、删除线</h1><p><code>~~内容~~</code></p><h1 id="6、下划线"><a href="#6、下划线" class="headerlink" title="6、下划线"></a>6、下划线</h1><p><code>&lt;u&gt;带下划线文本&lt;/u&gt;</code></p><h1 id="7、列表和引用"><a href="#7、列表和引用" class="headerlink" title="7、列表和引用"></a>7、列表和引用</h1><p>第一种引用：<code>&gt;内容</code></p><p>数字：<code>1.（空格）内容</code></p><p>强调：<code>-（空格）内容</code></p><p>嵌套：</p><pre><code class="markdown">1.（空格）第一    （四个空格，或一个tab）- 小一</code></pre><h1 id="8、代码"><a href="#8、代码" class="headerlink" title="8、代码"></a>8、代码</h1><pre><code class="markdown">    ```代码类型    代码内容    ```</code></pre><p>句子中直接`内容`，内容会变成<code>内容</code></p><h1 id="9、链接"><a href="#9、链接" class="headerlink" title="9、链接"></a>9、链接</h1><p><code>[超链接名](http://XXX  &quot;说明&quot;)</code></p><p>鼠标悬停在链接名上，会显示说明内容</p><h1 id="10、图片插入"><a href="#10、图片插入" class="headerlink" title="10、图片插入"></a>10、图片插入</h1><ol><li>常规插入图片</li></ol><p><code>![alt 属性文本](XXX.img “可选标题”)</code></p><p>alt属性文本：当某种原因看不见图片时会显示该内容</p><p>可选标题：鼠标悬停图片显示该内容</p><ol start="2"><li>点击图片会跳转链接</li></ol><p> <code>[![alt 属性文本](XXX.img “可选标题”)](http://XXX)</code></p><ol start="3"><li>居左</li></ol><pre><code class="markdown">![在这里插入图片描述](https://img-blog.csdnimg.cn/20200822014538211.png#pic_left)</code></pre><ol start="4"><li>居中：<code>#pic_center</code></li></ol><p><strong>5. 等比缩放</strong></p><p><code>&lt;img src=https://xxx.img width=60% /&gt;</code></p><ol start="6"><li>固定宽高</li></ol><p><code>&lt;img src=https://xxx.img width=200 height=100 /&gt;</code></p><p><strong>7. 利用html终极格式</strong></p><pre><code class="html">&lt;center&gt;&lt;img src=&quot;链接&quot; width=&quot;25%&quot; height=&quot;25%&quot; alt=&quot;属性说明&quot;/&gt;&lt;/center&gt;</code></pre><h1 id="11、表格"><a href="#11、表格" class="headerlink" title="11、表格"></a>11、表格</h1><p>可直接通过网址生成markdown语句</p><p><a href="https://www.tablesgenerator.com/markdown_tables">Markdown Tables generator - TablesGenerator.com</a></p>]]></content>
+      
+      
+      <categories>
+          
+          <category> 语言 </category>
+          
+          <category> Markdown </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 速查笔记 </tag>
+            
+            <tag> Markdown </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>3--perl生成html table报告-项目3.3</title>
+      <link href="/1%20%E9%A1%B9%E7%9B%AE/%E9%A1%B9%E7%9B%AE3%EF%BC%9APerl%E5%9B%9E%E5%BD%92%E6%B5%8B%E8%AF%95%E8%84%9A%E6%9C%AC/3--table%E6%8A%A5%E5%91%8A-%E9%A1%B9%E7%9B%AE3-3.html"/>
+      <url>/1%20%E9%A1%B9%E7%9B%AE/%E9%A1%B9%E7%9B%AE3%EF%BC%9APerl%E5%9B%9E%E5%BD%92%E6%B5%8B%E8%AF%95%E8%84%9A%E6%9C%AC/3--table%E6%8A%A5%E5%91%8A-%E9%A1%B9%E7%9B%AE3-3.html</url>
+      
+        <content type="html"><![CDATA[<h1 id="一、主要功能"><a href="#一、主要功能" class="headerlink" title="一、主要功能"></a>一、主要功能</h1><ul><li>生成html table</li><li>CSS美化表格</li></ul><h1 id="二、html头文件代码"><a href="#二、html头文件代码" class="headerlink" title="二、html头文件代码"></a>二、html头文件代码</h1><p>在perl中定义<code>$html</code>变量，当生成好html代码后，通过文件句柄导出<code>$html</code>中所有内容到<code>verification.html</code>文件，就可以<code>firefox verification.html &amp;</code>看到最终结果的表格文件。</p><pre><code class="perl">my $html = &quot;&lt;html lang=&#39;en&#39;&gt;    &lt;head&gt;        &lt;meta charset=&#39;utf8&#39; /&gt;        &lt;link rel=&#39;stylesheet&#39; href=&#39;css/styles.css&#39;&gt;        &lt;title&gt;            verification table        &lt;/title&gt;    &lt;/head&gt;    &lt;style&gt;    $CSS       ##### CSS 美化代码    &lt;/style&gt;    &lt;body&gt;  &lt;table border=1&gt;      &lt;tr&gt;       &lt;th&gt;Test Case &lt;/th&gt;       &lt;th&gt;Description &lt;/th&gt;       &lt;th&gt;Dir &lt;/th&gt;       &lt;th&gt;Result &lt;/th&gt;       &lt;th&gt;Time &lt;/th&gt;      &lt;/tr&gt;      $table       ### 表格一行内容的 html table代码  &lt;/table&gt;      &lt;/body&gt;&lt;/html&gt;&quot;;##########---------------export html and clear some logopen(FILE,&quot;&gt;verification.html&quot;);say FILE &quot;$html&quot;;close (FILE);</code></pre><h1 id="三、-table中的html-table代码"><a href="#三、-table中的html-table代码" class="headerlink" title="三、$table中的html table代码"></a>三、$table中的html table代码</h1><p>将for循环产生的相关单元格变量填入html table中相应位置，每一次for循环都会产生一行数据</p><pre><code class="perl">$table .= &quot;&lt;tr&gt;\n\t\t              &lt;td&gt;&lt;a href= \&quot;../tb/$case_name.v\&quot;&gt;test_$i&lt;/a&gt;&lt;/td&gt;\n\t\t              &lt;td&gt;$description&lt;/td&gt;\n\t\t              &lt;td&gt;&lt;a href= \&quot;**$dir_log\**&quot;&gt;log_file_test_$i&lt;/a&gt;&lt;/td&gt;\n\t\t              &lt;td bgcolor= $color &gt; $result&lt;/td&gt;\n\t\t              &lt;td&gt;$time&lt;/td&gt;\n           &lt;/tr&gt;\n&quot;</code></pre><h1 id="四、html-table-CSS美化代码"><a href="#四、html-table-CSS美化代码" class="headerlink" title="四、html table CSS美化代码"></a>四、html table CSS美化代码</h1><pre><code class="perl">#########-------------------------CSS for table style$CSS=&#39;table &#123;    width: 90%;    background: #ccc;    margin: 10px auto;    border-collapse: collapse;    border: 2px inset black;&#125;th,td &#123;    height: 25px;    line-height: 25px;    text-align: center;    border: 1px solid #ccc;&#125;th &#123;    background: #eee;    font-weight: bold;    font-size:15px;&#125;tr &#123;    background: #fff;&#125;tr:hover &#123;    background: #cc0;&#125;td a &#123;    color: #06f;    text-decoration: none;&#125;td a:hover &#123;    color: #06f;    text-decoration: underline;&#125;&#39;;</code></pre><p>注意，这里使用的单引号对<code>$CSS</code>变量赋值，防止其中内容在双引号中当作perl的关键字被识别导致语法错误。</p><h1 id="五、总结"><a href="#五、总结" class="headerlink" title="五、总结"></a>五、总结</h1><p>到这，此次简单的perl回归测试报告脚本就完成了。这算是学完perl后，第一次写的一个原创的perl脚本，中间的逻辑可能不是最优解，但好歹能完成基本功能。通过这个脚本的书写，我第一次体会到了perl的强大和复杂，也深知自己之前仅仅学习了皮毛而已。同时我也了解了html、CSS相关的一些网页知识，这和我搭建blog的想法正不谋而合，高级的用法虽然不会，但底层逻辑大概了解了，算是打开了又一个世界的大门了！</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> 项目 </category>
+          
+          <category> 项目3：Perl回归测试脚本 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> perl </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>2--Perl处理log文件-项目3.2</title>
+      <link href="/1%20%E9%A1%B9%E7%9B%AE/%E9%A1%B9%E7%9B%AE3%EF%BC%9APerl%E5%9B%9E%E5%BD%92%E6%B5%8B%E8%AF%95%E8%84%9A%E6%9C%AC/2--Perl%E5%A4%84%E7%90%86log%E6%96%87%E4%BB%B6-%E9%A1%B9%E7%9B%AE3.2.html"/>
+      <url>/1%20%E9%A1%B9%E7%9B%AE/%E9%A1%B9%E7%9B%AE3%EF%BC%9APerl%E5%9B%9E%E5%BD%92%E6%B5%8B%E8%AF%95%E8%84%9A%E6%9C%AC/2--Perl%E5%A4%84%E7%90%86log%E6%96%87%E4%BB%B6-%E9%A1%B9%E7%9B%AE3.2.html</url>
+      
+        <content type="html"><![CDATA[<h1 id="一、主要功能"><a href="#一、主要功能" class="headerlink" title="一、主要功能"></a>一、主要功能</h1><ul><li>逐个打开<code>logfile</code>文件夹中的log文件</li><li>处理文件，判断是否有<code>ERROR</code>产生</li></ul><h1 id="二、代码块说明"><a href="#二、代码块说明" class="headerlink" title="二、代码块说明"></a>二、代码块说明</h1><h2 id="1、变量定义及其作用"><a href="#1、变量定义及其作用" class="headerlink" title="1、变量定义及其作用"></a>1、变量定义及其作用</h2><pre><code class="perl">my $dir_log;      #仿真目录my $case_name;    #testcase名字，例如test1.vmy $description;  #testcase功能的描述,例如normal_erasemy $result;       #存储结果的变量,PASS或者FAILmy $time;         #储存仿真时间my $table;        #表格的一行,(html语法)my $color;        #将FAIL或者PASS设置成不同的颜色</code></pre><h2 id="2、通过文件句柄将log文件逐个传进来，并将所有内容（单个log文件）存储到变量-log中"><a href="#2、通过文件句柄将log文件逐个传进来，并将所有内容（单个log文件）存储到变量-log中" class="headerlink" title="2、通过文件句柄将log文件逐个传进来，并将所有内容（单个log文件）存储到变量$log中"></a>2、通过文件句柄将log文件逐个传进来，并将所有内容（单个log文件）存储到变量<code>$log</code>中</h2><pre><code class="perl">for my $i (96..$total)&#123;     $dir_log   = &quot;./logfile/test$i.log&quot;;     $case_name = &quot;test$i&quot;;    open(LOG, &quot;&lt;$dir_log&quot;)or die $!;    my $log = do &#123; local $/; &lt;LOG&gt; &#125;;………        close LOG;………&#125;</code></pre><p>这里对文件句柄有更深的了解，LOG相当于一个从文件——&gt;Perl中的桥梁，要把文件中所有内容读出来并存储到变量<code>$log</code>中用到了<code>my $log = do &#123; local $/; &lt;LOG&gt; &#125;;</code></p><h3 id="解释my-log-do-local-lt-LOG-gt"><a href="#解释my-log-do-local-lt-LOG-gt" class="headerlink" title="******解释my $log = do { local $/; &lt;LOG&gt; };"></a>******解释<code>my $log = do &#123; local $/; &lt;LOG&gt; &#125;;</code></h3><p>正常<LOG>一次只能读取一行，可以通过while循环将其全部读出来储存到一个变量中：</p><pre><code class="perl">my $log;while (&lt;LOG&gt;) &#123;    $log .= $_;&#125;</code></pre><p>而直接将其赋给变量有两种情况：</p><pre><code class="perl">my $log = &lt;LOG&gt;;    # 等号左边为标量时，返回文件的单行内容my @log = &lt;LOG&gt;;    # 等号左边为数组时，返回文件的全部内容（文件的每行对应数组的每个元素）</code></pre><p><code>**my $log = do &#123; local $/; &lt;LOG&gt; &#125;;</code>的实现方式：</p><p>通过 <code>do &#123;&#125;</code>创建一个临时的作用域，在作用域中改变 <code>$\</code> 的值，改变了 <code>&lt;LOG&gt;</code>在标量上下文中的分隔符（由 <code>\n</code>变为 <code>undef</code>），达到了读取整个文件内容的目的，</p><p><strong><code>local $/</code>等价于<code>local $/ = undef</code>，而<code>$/</code>输入记录分隔符，默认是新行字符，如用undef这个变量，将读到文件结尾</strong></p><p>参考：<a href="https://www.ogura.io/posts/2018/09/read-file-the-perl-way/">perl 关于 do { local $&#x2F;; <FILEHANDLE> } 语法糖 (ogura.io)</a></p><h2 id="3、通过正则匹配判断，对log文件处理，并给相应变量赋值"><a href="#3、通过正则匹配判断，对log文件处理，并给相应变量赋值" class="headerlink" title="3、通过正则匹配判断，对log文件处理，并给相应变量赋值"></a>3、通过正则匹配判断，对log文件处理，并给相应变量赋值</h2><pre><code class="perl">#捕获变量截取log中的descriptionif($log =~ /TEST.*:(.*)/)&#123;         $description = &quot;$1&quot;;        &#125;  #捕获变量截取log中的仿真时间 if($log =~ /on(.*)CST/)&#123;         $time = &quot;$1&quot;;        &#125;  #正则匹配ERROR关键此，给结果变量赋值为PASS或者FAIL  if($log =~ /ERROR:/)&#123;                          $result = (&quot;FAIL&quot;);   &#125;elsif($log =~ /errors: [^0]/)&#123;                          $result = (&quot;FAIL&quot;);   &#125;else&#123;                          $result = (&quot;PASS&quot;);   &#125;#判断结果变量，给$color变量赋值，便于后期html赋值   if($result eq &quot;FAIL&quot;)&#123;                      $color = &quot;\&quot;#FF0000\&quot;&quot;;   &#125;elsif($result eq &quot;PASS&quot;)&#123;                      $color = &quot;\&quot;#00FF00\&quot;&quot;;       &#125;</code></pre><h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>这一块的代码的难点在与对句柄的理解，以及文件传进来的状态（一行一行地读）。最初我直接让其等于变量，发现打印出来存储了一行。然后考虑整个存入数组中，但是又无法对数组中的所有元素进行文字处理，因为数组中的一个元素是log文件中的一行内容。后来才找到方法<code>my $log = do &#123; local $/; &lt;LOG&gt; &#125;;</code>，让一个文件的所有内容都读出来储存到变量中，然后进行文字处理。</p><p>可以看到，<code>close LOG；</code>前后省略了两段代码，第一段代码为第3点中的内容，第二段内容是在相关变量产生后生成<code>$table</code>变量（储存了一行html表格的html格式代码），因为每一个testcase产生一个log文件，产生一行数据结果。</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> 项目 </category>
+          
+          <category> 项目3：Perl回归测试脚本 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> perl </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>Hello World</title>
       <link href="/6%20%E5%85%B6%E4%BB%96/hello-world.html"/>
       <url>/6%20%E5%85%B6%E4%BB%96/hello-world.html</url>
@@ -65,11 +148,11 @@
     
     
     <entry>
-      <title>1、perl回归测试（regression）代码逻辑</title>
-      <link href="/1%20%E9%A1%B9%E7%9B%AE/%E9%A1%B9%E7%9B%AE3%EF%BC%9APerl%E5%9B%9E%E5%BD%92%E6%B5%8B%E8%AF%95%E8%84%9A%E6%9C%AC/1%E3%80%81perl%E5%9B%9E%E5%BD%92%E6%B5%8B%E8%AF%95%EF%BC%88regression%EF%BC%89%E4%BB%A3%E7%A0%81%E9%80%BB%E8%BE%91.html"/>
-      <url>/1%20%E9%A1%B9%E7%9B%AE/%E9%A1%B9%E7%9B%AE3%EF%BC%9APerl%E5%9B%9E%E5%BD%92%E6%B5%8B%E8%AF%95%E8%84%9A%E6%9C%AC/1%E3%80%81perl%E5%9B%9E%E5%BD%92%E6%B5%8B%E8%AF%95%EF%BC%88regression%EF%BC%89%E4%BB%A3%E7%A0%81%E9%80%BB%E8%BE%91.html</url>
+      <title>1--perl回归测试（regression）代码逻辑-项目3.2</title>
+      <link href="/1%20%E9%A1%B9%E7%9B%AE/%E9%A1%B9%E7%9B%AE3%EF%BC%9APerl%E5%9B%9E%E5%BD%92%E6%B5%8B%E8%AF%95%E8%84%9A%E6%9C%AC/1--perl%E5%9B%9E%E5%BD%92%E6%B5%8B%E8%AF%95%EF%BC%88regression%EF%BC%89%E4%BB%A3%E7%A0%81%E9%80%BB%E8%BE%91-%E9%A1%B9%E7%9B%AE3.1.html"/>
+      <url>/1%20%E9%A1%B9%E7%9B%AE/%E9%A1%B9%E7%9B%AE3%EF%BC%9APerl%E5%9B%9E%E5%BD%92%E6%B5%8B%E8%AF%95%E8%84%9A%E6%9C%AC/1--perl%E5%9B%9E%E5%BD%92%E6%B5%8B%E8%AF%95%EF%BC%88regression%EF%BC%89%E4%BB%A3%E7%A0%81%E9%80%BB%E8%BE%91-%E9%A1%B9%E7%9B%AE3.1.html</url>
       
-        <content type="html"><![CDATA[<h1 id="一、主要功能（总）"><a href="#一、主要功能（总）" class="headerlink" title="一、主要功能（总）"></a>一、主要功能（总）</h1><ol><li>调用Xrun，回归测试所有的testcase。</li><li>可选择，Run单个的testcase。</li><li>当DEBUG时，可对单个testcase调用Simvision仿真。</li><li>处理分析log文件，判断FAIL还是PASS</li><li>用perl将结果生成html表格。</li></ol><h1 id="二、效果展示"><a href="#二、效果展示" class="headerlink" title="二、效果展示"></a>二、效果展示</h1><p>html table如下，可直接通过点击打开相应的testcase和log文件。</p><center><img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/html-table1.png" width="75%" height="75%" />html table效果1</center><center><img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/html-table2.png" width="75%" height="75%" />html table效果2</center><h1 id="三、目录说明"><a href="#三、目录说明" class="headerlink" title="三、目录说明"></a>三、目录说明</h1><p>项目文件如下，一级目录分为三级，其中sim目录下，run即为perl回归测试脚本，verification.html为perl最终生成的结果报告，logfile为创建的用于储存仿真结果的文件夹（run脚本中指定logfile路径）。</p><center><img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/%E6%96%87%E4%BB%B6%E7%9B%AE%E5%BD%95.png" width="25%" height="25%" />项目目录结构</center><h1 id="四、回归测试主要思路"><a href="#四、回归测试主要思路" class="headerlink" title="四、回归测试主要思路"></a>四、回归测试主要思路</h1><ul><li>第一步，通过GetOption操作，设置几个自定义的option</li></ul><pre><code class="perl">#! /usr/bin/perl#use strict;use feature &#39;say&#39;;use Getopt::Long;use vars qw( $help,  $all,  $simvision           );GetOptions (              &#39;h|help&#39;        =&gt;  \$help,              &#39;all&#39;           =&gt;  \$all,              &#39;gui&#39;           =&gt;  \$simvision);if($help) &#123;    print &quot;            -all          : enter the last testcase number i,can run test_1 to test_i.            -gui          : call simvision for simulation,can&#39;t ust &#39;-all -gui &#39; at the same time.            The default you can choose the single testcase number to sim.            \n&quot;;            exit 0;    &#125;</code></pre><ul><li>第二步，通过条件判断语句，选择run_sim的方式（回归还是单个case）</li></ul><pre><code class="perl">if(defined($all))&#123;  system(&quot;rm -rf ./logfile/*&quot;);   print &quot;Plese enter the last testcase number:\n&quot;;  chomp($total = &lt;STDIN&gt;);  @i = (1..$total);  foreach(@i)&#123;  my $files = &quot; ../tb/test$_.v &quot;;  my $cmd = &quot;xrun -access +rwc -sv -64 -nocopyright -l test$_.log &quot;.&quot; $files&quot;;  print &quot;cmd= $cmd \n&quot;;  system($cmd);  system(&quot;mv *.log logfile&quot;);  &#125;&#125;else&#123;    print &quot;Plese enter the testcase number:\n&quot;;    chomp(my $i = &lt;STDIN&gt;);    my $files = &quot; ../tb/test$i.v &quot;;    my $CMD;    my $cmd1 = &quot;xrun -access +rwc -sv -64 -nocopyright -l test$i.log &quot;.&quot; $files&quot;;    my $cmd2 = &quot;-gui&quot;;    if($simvision)&#123;        $CMD = &quot;$cmd1&quot; . &quot;$cmd2&quot;;    &#125;else&#123;        $CMD = &quot;$cmd1&quot;;    &#125;    print &quot;CMD= $CMD \n&quot;;    system($CMD);    system(&quot;mv *.log logfile&quot;);&#125;</code></pre><p>这一部分的逻辑是：</p><ol><li><p>首先，当输入<code>-all</code>这个option时，会执行if里的语句。先删除掉logfile文件夹里所有的文件，然后输入testcase目前所有的数目（会依次执行第一个case到你输入的case），通过foreach循环调用system函数依次将每个case执行，最后将所有文件移动到logfile文件夹，便于后续log文件的处理。</p></li><li><p>如果不输入<code>-all</code>则会执行else中单独跑一个case的命令。输入你期望跑的testcase编号，然后调用system函数进行仿真。这里有一个option，若执行perl脚本时输入<code>-gui</code>，会对单个的case调用simvision仿真。</p></li></ol>]]></content>
+        <content type="html"><![CDATA[<h1 id="一、主要功能（总）"><a href="#一、主要功能（总）" class="headerlink" title="一、主要功能（总）"></a>一、主要功能（总）</h1><ol><li>调用Xrun，回归测试所有的testcase。</li><li>可选择，Run单个的testcase。</li><li>当DEBUG时，可对单个testcase调用Simvision仿真。</li><li>处理分析log文件，判断FAIL还是PASS</li><li>用perl将结果生成html表格。</li></ol><h1 id="二、效果展示"><a href="#二、效果展示" class="headerlink" title="二、效果展示"></a>二、效果展示</h1><p>html table如下，可直接通过点击打开相应的testcase和log文件。</p><center><img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/1.1html-table1.png" width="75%" height="75%" alt="1.1html table效果1"/></center><center><img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/1.2html-table2.png" width="75%" height="75%" alt="1.2html table效果2"/></center><h1 id="三、目录说明"><a href="#三、目录说明" class="headerlink" title="三、目录说明"></a>三、目录说明</h1><p>项目文件如下，一级目录分为三级，其中sim目录下，run即为perl回归测试脚本，verification.html为perl最终生成的结果报告，logfile为创建的用于储存仿真结果的文件夹（run脚本中指定logfile路径）。</p><center><img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/1.3%E6%96%87%E4%BB%B6%E7%9B%AE%E5%BD%95.png" width="25%" height="25%" alt="1.3项目目录结构"/></center><h1 id="四、回归测试主要思路"><a href="#四、回归测试主要思路" class="headerlink" title="四、回归测试主要思路"></a>四、回归测试主要思路</h1><ul><li>第一步，通过GetOption操作，设置几个自定义的option</li></ul><pre><code class="perl">#! /usr/bin/perl#use strict;use feature &#39;say&#39;;use Getopt::Long;use vars qw( $help,  $all,  $simvision           );GetOptions (              &#39;h|help&#39;        =&gt;  \$help,              &#39;all&#39;           =&gt;  \$all,              &#39;gui&#39;           =&gt;  \$simvision);if($help) &#123;    print &quot;            -all          : enter the last testcase number i,can run test_1 to test_i.            -gui          : call simvision for simulation,can&#39;t ust &#39;-all -gui &#39; at the same time.            The default you can choose the single testcase number to sim.            \n&quot;;            exit 0;    &#125;</code></pre><ul><li>第二步，通过条件判断语句，选择run_sim的方式（回归还是单个case）</li></ul><pre><code class="perl">if(defined($all))&#123;  system(&quot;rm -rf ./logfile/*&quot;);   print &quot;Plese enter the last testcase number:\n&quot;;  chomp($total = &lt;STDIN&gt;);  @i = (1..$total);  foreach(@i)&#123;  my $files = &quot; ../tb/test$_.v &quot;;  my $cmd = &quot;xrun -access +rwc -sv -64 -nocopyright -l test$_.log &quot;.&quot; $files&quot;;  print &quot;cmd= $cmd \n&quot;;  system($cmd);  system(&quot;mv *.log logfile&quot;);  &#125;&#125;else&#123;    print &quot;Plese enter the testcase number:\n&quot;;    chomp(my $i = &lt;STDIN&gt;);    my $files = &quot; ../tb/test$i.v &quot;;    my $CMD;    my $cmd1 = &quot;xrun -access +rwc -sv -64 -nocopyright -l test$i.log &quot;.&quot; $files&quot;;    my $cmd2 = &quot;-gui&quot;;    if($simvision)&#123;        $CMD = &quot;$cmd1&quot; . &quot;$cmd2&quot;;    &#125;else&#123;        $CMD = &quot;$cmd1&quot;;    &#125;    print &quot;CMD= $CMD \n&quot;;    system($CMD);    system(&quot;mv *.log logfile&quot;);&#125;</code></pre><p>这一部分的逻辑是：</p><ol><li><p>首先，当输入<code>-all</code>这个option时，会执行if里的语句。先删除掉logfile文件夹里所有的文件，然后输入testcase目前所有的数目（会依次执行第一个case到你输入的case），通过foreach循环调用system函数依次将每个case执行，最后将所有文件移动到logfile文件夹，便于后续log文件的处理。</p></li><li><p>如果不输入<code>-all</code>则会执行else中单独跑一个case的命令。输入你期望跑的testcase编号，然后调用system函数进行仿真。这里有一个option，若执行perl脚本时输入<code>-gui</code>，会对单个的case调用simvision仿真。</p></li></ol>]]></content>
       
       
       <categories>
