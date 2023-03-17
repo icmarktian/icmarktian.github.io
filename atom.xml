@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>马克得烂笔头</title>
+  
+  <subtitle>Mark&#39;s Book</subtitle>
+  <link href="https://mkdbook.com/atom.xml" rel="self"/>
+  
+  <link href="https://mkdbook.com/"/>
+  <updated>2023-03-10T07:03:30.000Z</updated>
+  <id>https://mkdbook.com/</id>
+  
+  <author>
+    <name>Mark</name>
+    
+  </author>
+  
+  <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Hello World</title>
+    <link href="https://mkdbook.com/6%20%E5%85%B6%E4%BB%96/hello-world.html"/>
+    <id>https://mkdbook.com/6%20%E5%85%B6%E4%BB%96/hello-world.html</id>
+    <published>2023-03-16T14:56:44.368Z</published>
+    <updated>2023-03-10T07:03:30.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>Welcome to <a href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p><h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><pre><code class="bash">$ hexo new &quot;My New Post&quot;</code></pre><p>More info: <a href="https://hexo.io/docs/writing.html">Writing</a></p><h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><pre><code class="bash">$ hexo server</code></pre><p>More info: <a href="https://hexo.io/docs/server.html">Server</a></p><h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><pre><code class="bash">$ hexo generate</code></pre><p>More info: <a href="https://hexo.io/docs/generating.html">Generating</a></p><h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><pre><code class="bash">$ hexo deploy</code></pre><p>More info: <a href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;Welcome to &lt;a href=&quot;https://hexo.io/&quot;&gt;Hexo&lt;/a&gt;! This is your very first post. Check &lt;a href=&quot;https://hexo.io/docs/&quot;&gt;documentation&lt;/a&gt; for</summary>
+      
+    
+    
+    
+    <category term="其他" scheme="https://mkdbook.com/categories/%E5%85%B6%E4%BB%96/"/>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>1、NAND简述</title>
+    <link href="https://mkdbook.com/1%20%E9%A1%B9%E7%9B%AE/%E9%A1%B9%E7%9B%AE2%EF%BC%9AErase%20of%20NAND%20behavior%20model/1%E3%80%81NAND%E7%AE%80%E8%BF%B0.html"/>
+    <id>https://mkdbook.com/1%20%E9%A1%B9%E7%9B%AE/%E9%A1%B9%E7%9B%AE2%EF%BC%9AErase%20of%20NAND%20behavior%20model/1%E3%80%81NAND%E7%AE%80%E8%BF%B0.html</id>
+    <published>2023-03-10T08:20:34.000Z</published>
+    <updated>2023-03-10T08:24:30.000Z</updated>
+    
+    
+    
+    
+    <category term="项目" scheme="https://mkdbook.com/categories/%E9%A1%B9%E7%9B%AE/"/>
+    
+    <category term="项目2：Erase_of_NAND_behavior_model" scheme="https://mkdbook.com/categories/%E9%A1%B9%E7%9B%AE/%E9%A1%B9%E7%9B%AE2%EF%BC%9AErase-of-NAND-behavior-model/"/>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>Verilog第一</title>
+    <link href="https://mkdbook.com/3%20%E8%AF%AD%E8%A8%80/Verilog/Verilog.html"/>
+    <id>https://mkdbook.com/3%20%E8%AF%AD%E8%A8%80/Verilog/Verilog.html</id>
+    <published>2023-03-10T06:12:01.000Z</published>
+    <updated>2023-03-10T07:03:22.000Z</updated>
+    
+    
+    
+    
+    <category term="语言" scheme="https://mkdbook.com/categories/%E8%AF%AD%E8%A8%80/"/>
+    
+    <category term="Verilog" scheme="https://mkdbook.com/categories/%E8%AF%AD%E8%A8%80/Verilog/"/>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>1、perl回归测试（regression）代码逻辑</title>
+    <link href="https://mkdbook.com/1%20%E9%A1%B9%E7%9B%AE/%E9%A1%B9%E7%9B%AE3%EF%BC%9APerl%E5%9B%9E%E5%BD%92%E6%B5%8B%E8%AF%95%E8%84%9A%E6%9C%AC/1%E3%80%81perl%E5%9B%9E%E5%BD%92%E6%B5%8B%E8%AF%95%EF%BC%88regression%EF%BC%89%E4%BB%A3%E7%A0%81%E9%80%BB%E8%BE%91.html"/>
+    <id>https://mkdbook.com/1%20%E9%A1%B9%E7%9B%AE/%E9%A1%B9%E7%9B%AE3%EF%BC%9APerl%E5%9B%9E%E5%BD%92%E6%B5%8B%E8%AF%95%E8%84%9A%E6%9C%AC/1%E3%80%81perl%E5%9B%9E%E5%BD%92%E6%B5%8B%E8%AF%95%EF%BC%88regression%EF%BC%89%E4%BB%A3%E7%A0%81%E9%80%BB%E8%BE%91.html</id>
+    <published>2023-03-10T06:04:15.000Z</published>
+    <updated>2023-03-17T07:44:24.514Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="一、主要功能（总）"><a href="#一、主要功能（总）" class="headerlink" title="一、主要功能（总）"></a>一、主要功能（总）</h1><ol><li>调用Xrun，回归测试所有的testcase。</li><li>可选择，Run单个的testcase。</li><li>当DEBUG时，可对单个testcase调用Simvision仿真。</li><li>处理分析log文件，判断FAIL还是PASS</li><li>用perl将结果生成html表格。</li></ol><h1 id="二、效果展示"><a href="#二、效果展示" class="headerlink" title="二、效果展示"></a>二、效果展示</h1><p>html table如下，可直接通过点击打开相应的testcase和log文件。</p><center><img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/html-table1.png" width="75%" height="75%" />html table效果1</center><center><img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/html-table2.png" width="75%" height="75%" />html table效果2</center><h1 id="三、目录说明"><a href="#三、目录说明" class="headerlink" title="三、目录说明"></a>三、目录说明</h1><p>项目文件如下，一级目录分为三级，其中sim目录下，run即为perl回归测试脚本，verification.html为perl最终生成的结果报告，logfile为创建的用于储存仿真结果的文件夹（run脚本中指定logfile路径）。</p><center><img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/%E6%96%87%E4%BB%B6%E7%9B%AE%E5%BD%95.png" width="25%" height="25%" />项目目录结构</center><h1 id="四、回归测试主要思路"><a href="#四、回归测试主要思路" class="headerlink" title="四、回归测试主要思路"></a>四、回归测试主要思路</h1><ul><li>第一步，通过GetOption操作，设置几个自定义的option</li></ul><pre><code class="perl">#! /usr/bin/perl#use strict;use feature &#39;say&#39;;use Getopt::Long;use vars qw( $help,  $all,  $simvision           );GetOptions (              &#39;h|help&#39;        =&gt;  \$help,              &#39;all&#39;           =&gt;  \$all,              &#39;gui&#39;           =&gt;  \$simvision);if($help) &#123;    print &quot;            -all          : enter the last testcase number i,can run test_1 to test_i.            -gui          : call simvision for simulation,can&#39;t ust &#39;-all -gui &#39; at the same time.            The default you can choose the single testcase number to sim.            \n&quot;;            exit 0;    &#125;</code></pre><ul><li>第二步，通过条件判断语句，选择run_sim的方式（回归还是单个case）</li></ul><pre><code class="perl">if(defined($all))&#123;  system(&quot;rm -rf ./logfile/*&quot;);   print &quot;Plese enter the last testcase number:\n&quot;;  chomp($total = &lt;STDIN&gt;);  @i = (1..$total);  foreach(@i)&#123;  my $files = &quot; ../tb/test$_.v &quot;;  my $cmd = &quot;xrun -access +rwc -sv -64 -nocopyright -l test$_.log &quot;.&quot; $files&quot;;  print &quot;cmd= $cmd \n&quot;;  system($cmd);  system(&quot;mv *.log logfile&quot;);  &#125;&#125;else&#123;    print &quot;Plese enter the testcase number:\n&quot;;    chomp(my $i = &lt;STDIN&gt;);    my $files = &quot; ../tb/test$i.v &quot;;    my $CMD;    my $cmd1 = &quot;xrun -access +rwc -sv -64 -nocopyright -l test$i.log &quot;.&quot; $files&quot;;    my $cmd2 = &quot;-gui&quot;;    if($simvision)&#123;        $CMD = &quot;$cmd1&quot; . &quot;$cmd2&quot;;    &#125;else&#123;        $CMD = &quot;$cmd1&quot;;    &#125;    print &quot;CMD= $CMD \n&quot;;    system($CMD);    system(&quot;mv *.log logfile&quot;);&#125;</code></pre><p>这一部分的逻辑是：</p><ol><li><p>首先，当输入<code>-all</code>这个option时，会执行if里的语句。先删除掉logfile文件夹里所有的文件，然后输入testcase目前所有的数目（会依次执行第一个case到你输入的case），通过foreach循环调用system函数依次将每个case执行，最后将所有文件移动到logfile文件夹，便于后续log文件的处理。</p></li><li><p>如果不输入<code>-all</code>则会执行else中单独跑一个case的命令。输入你期望跑的testcase编号，然后调用system函数进行仿真。这里有一个option，若执行perl脚本时输入<code>-gui</code>，会对单个的case调用simvision仿真。</p></li></ol>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;h1 id=&quot;一、主要功能（总）&quot;&gt;&lt;a href=&quot;#一、主要功能（总）&quot; class=&quot;headerlink&quot; title=&quot;一、主要功能（总）&quot;&gt;&lt;/a&gt;一、主要功能（总）&lt;/h1&gt;&lt;ol&gt;
+&lt;li&gt;调用Xrun，回归测试所有的testcase。&lt;/li&gt;
+&lt;li&gt;可选择</summary>
+      
+    
+    
+    
+    <category term="项目" scheme="https://mkdbook.com/categories/%E9%A1%B9%E7%9B%AE/"/>
+    
+    <category term="项目3：Perl回归测试脚本" scheme="https://mkdbook.com/categories/%E9%A1%B9%E7%9B%AE/%E9%A1%B9%E7%9B%AE3%EF%BC%9APerl%E5%9B%9E%E5%BD%92%E6%B5%8B%E8%AF%95%E8%84%9A%E6%9C%AC/"/>
+    
+    
+    <category term="perl" scheme="https://mkdbook.com/tags/perl/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>1、NAND整体简述</title>
+    <link href="https://mkdbook.com/2%20%E9%A2%86%E5%9F%9F/NAND/NAND.html"/>
+    <id>https://mkdbook.com/2%20%E9%A2%86%E5%9F%9F/NAND/NAND.html</id>
+    <published>2023-03-10T06:04:03.000Z</published>
+    <updated>2023-03-10T07:09:16.000Z</updated>
+    
+    
+    
+    
+    <category term="领域" scheme="https://mkdbook.com/categories/%E9%A2%86%E5%9F%9F/"/>
+    
+    <category term="NAND" scheme="https://mkdbook.com/categories/%E9%A2%86%E5%9F%9F/NAND/"/>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>存储第一批</title>
+    <link href="https://mkdbook.com/2%20%E9%A2%86%E5%9F%9F/%E5%AD%98%E5%82%A8/%E5%AD%98%E5%82%A8.html"/>
+    <id>https://mkdbook.com/2%20%E9%A2%86%E5%9F%9F/%E5%AD%98%E5%82%A8/%E5%AD%98%E5%82%A8.html</id>
+    <published>2023-03-10T06:03:01.000Z</published>
+    <updated>2023-03-10T07:03:27.000Z</updated>
+    
+    
+    
+    
+    <category term="领域" scheme="https://mkdbook.com/categories/%E9%A2%86%E5%9F%9F/"/>
+    
+    <category term="存储" scheme="https://mkdbook.com/categories/%E9%A2%86%E5%9F%9F/%E5%AD%98%E5%82%A8/"/>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>PERL</title>
+    <link href="https://mkdbook.com/3%20%E8%AF%AD%E8%A8%80/Perl/perl.html"/>
+    <id>https://mkdbook.com/3%20%E8%AF%AD%E8%A8%80/Perl/perl.html</id>
+    <published>2023-03-10T06:02:09.000Z</published>
+    <updated>2023-03-10T07:03:21.000Z</updated>
+    
+    
+    
+    
+    <category term="语言" scheme="https://mkdbook.com/categories/%E8%AF%AD%E8%A8%80/"/>
+    
+    <category term="Perl" scheme="https://mkdbook.com/categories/%E8%AF%AD%E8%A8%80/Perl/"/>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>工具的第一篇</title>
+    <link href="https://mkdbook.com/4%20%E5%B7%A5%E5%85%B7/%E5%B7%A5%E5%85%B7.html"/>
+    <id>https://mkdbook.com/4%20%E5%B7%A5%E5%85%B7/%E5%B7%A5%E5%85%B7.html</id>
+    <published>2023-03-10T06:02:06.000Z</published>
+    <updated>2023-03-10T07:03:20.000Z</updated>
+    
+    
+    
+    
+    <category term="工具" scheme="https://mkdbook.com/categories/%E5%B7%A5%E5%85%B7/"/>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>杂记的第一篇</title>
+    <link href="https://mkdbook.com/5%20%E6%9D%82%E8%AE%B0/%E6%9D%82%E8%AE%B0.html"/>
+    <id>https://mkdbook.com/5%20%E6%9D%82%E8%AE%B0/%E6%9D%82%E8%AE%B0.html</id>
+    <published>2023-03-10T06:02:05.000Z</published>
+    <updated>2023-03-10T07:03:26.000Z</updated>
+    
+    
+    
+    
+    <category term="杂记" scheme="https://mkdbook.com/categories/%E6%9D%82%E8%AE%B0/"/>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>eMMC</title>
+    <link href="https://mkdbook.com/2%20%E9%A2%86%E5%9F%9F/eMMC/eMMC.html"/>
+    <id>https://mkdbook.com/2%20%E9%A2%86%E5%9F%9F/eMMC/eMMC.html</id>
+    <published>2023-03-10T06:02:01.000Z</published>
+    <updated>2023-03-10T07:03:28.000Z</updated>
+    
+    
+    
+    
+    <category term="领域" scheme="https://mkdbook.com/categories/%E9%A2%86%E5%9F%9F/"/>
+    
+    <category term="eMMC" scheme="https://mkdbook.com/categories/%E9%A2%86%E5%9F%9F/eMMC/"/>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>SV</title>
+    <link href="https://mkdbook.com/3%20%E8%AF%AD%E8%A8%80/SystemVerilog/SystemVerilog.html"/>
+    <id>https://mkdbook.com/3%20%E8%AF%AD%E8%A8%80/SystemVerilog/SystemVerilog.html</id>
+    <published>2023-03-10T05:02:01.000Z</published>
+    <updated>2023-03-10T07:03:23.000Z</updated>
+    
+    
+    
+    
+    <category term="语言" scheme="https://mkdbook.com/categories/%E8%AF%AD%E8%A8%80/"/>
+    
+    <category term="SystemVerilog" scheme="https://mkdbook.com/categories/%E8%AF%AD%E8%A8%80/SystemVerilog/"/>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>项目1的第一篇</title>
+    <link href="https://mkdbook.com/1%20%E9%A1%B9%E7%9B%AE/%E9%A1%B9%E7%9B%AE1%EF%BC%9ANand_behavior_model/%E9%A1%B9%E7%9B%AE%E4%B8%80.html"/>
+    <id>https://mkdbook.com/1%20%E9%A1%B9%E7%9B%AE/%E9%A1%B9%E7%9B%AE1%EF%BC%9ANand_behavior_model/%E9%A1%B9%E7%9B%AE%E4%B8%80.html</id>
+    <published>2023-03-06T13:32:02.000Z</published>
+    <updated>2023-03-14T09:04:03.000Z</updated>
+    
+    <content type="html"><![CDATA[<pre><code class="verilog">    if (Io_mirror [7 : 0] === 8&#39;h60) begin        1、program cache 未完成时，60h会被忽略，直到状态变为E0h        2、~Wp_n 和 OTP_mode 时均不允许 ERASE        3、60h有效时，判断是否处于Multi-Plane ERASE，      if lastCmd为60h，或D1h，则继续让lastCmd=60h      else if (~multiplane_op_erase) begin                              saw_cmnd_60h = 1&#39;b1;                              saw_cmnd_60h_clear = 1&#39;b1;                          end else begin                             saw_cmnd_60h = 1&#39;b1;                              saw_cmnd_60h_clear = 1&#39;b0;                          end        4、调用 disable_rdStatus，复位 status flag，让device返Read mode        endss</code></pre><p>   <img src="https://cdn.jsdelivr.net/gh/icmarktian/blog_img@master/data/blog_background2.jpg" alt="博客背景" title="github"></p><p>   <img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/%E5%8D%9A%E5%AE%A2%E8%83%8C%E6%99%AF.jpg" alt="博客背景" title="腾讯云"></p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;pre&gt;&lt;code class=&quot;verilog&quot;&gt;    if (Io_mirror [7 : 0] === 8&amp;#39;h60) begin
+        1、program cache 未完成时，60h会被忽略，直到状态变为E0h
+        2、~Wp_n 和 O</summary>
+      
+    
+    
+    
+    <category term="项目" scheme="https://mkdbook.com/categories/%E9%A1%B9%E7%9B%AE/"/>
+    
+    <category term="项目1：Nand_behavior_model" scheme="https://mkdbook.com/categories/%E9%A1%B9%E7%9B%AE/%E9%A1%B9%E7%9B%AE1%EF%BC%9ANand-behavior-model/"/>
+    
+    
+  </entry>
+  
+</feed>

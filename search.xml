@@ -4,6 +4,25 @@
   
     
     <entry>
+      <title>Hello World</title>
+      <link href="/6%20%E5%85%B6%E4%BB%96/hello-world.html"/>
+      <url>/6%20%E5%85%B6%E4%BB%96/hello-world.html</url>
+      
+        <content type="html"><![CDATA[<p>Welcome to <a href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p><h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><pre><code class="bash">$ hexo new &quot;My New Post&quot;</code></pre><p>More info: <a href="https://hexo.io/docs/writing.html">Writing</a></p><h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><pre><code class="bash">$ hexo server</code></pre><p>More info: <a href="https://hexo.io/docs/server.html">Server</a></p><h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><pre><code class="bash">$ hexo generate</code></pre><p>More info: <a href="https://hexo.io/docs/generating.html">Generating</a></p><h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><pre><code class="bash">$ hexo deploy</code></pre><p>More info: <a href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>]]></content>
+      
+      
+      <categories>
+          
+          <category> 其他 </category>
+          
+      </categories>
+      
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>1、NAND简述</title>
       <link href="/1%20%E9%A1%B9%E7%9B%AE/%E9%A1%B9%E7%9B%AE2%EF%BC%9AErase%20of%20NAND%20behavior%20model/1%E3%80%81NAND%E7%AE%80%E8%BF%B0.html"/>
       <url>/1%20%E9%A1%B9%E7%9B%AE/%E9%A1%B9%E7%9B%AE2%EF%BC%9AErase%20of%20NAND%20behavior%20model/1%E3%80%81NAND%E7%AE%80%E8%BF%B0.html</url>
@@ -46,11 +65,11 @@
     
     
     <entry>
-      <title>项目三的第一篇</title>
-      <link href="/1%20%E9%A1%B9%E7%9B%AE/%E9%A1%B9%E7%9B%AE3%EF%BC%9APerl%E5%9B%9E%E5%BD%92%E6%B5%8B%E8%AF%95%E8%84%9A%E6%9C%AC/%E9%A1%B9%E7%9B%AE%E4%B8%89.html"/>
-      <url>/1%20%E9%A1%B9%E7%9B%AE/%E9%A1%B9%E7%9B%AE3%EF%BC%9APerl%E5%9B%9E%E5%BD%92%E6%B5%8B%E8%AF%95%E8%84%9A%E6%9C%AC/%E9%A1%B9%E7%9B%AE%E4%B8%89.html</url>
+      <title>1、perl回归测试（regression）代码逻辑</title>
+      <link href="/1%20%E9%A1%B9%E7%9B%AE/%E9%A1%B9%E7%9B%AE3%EF%BC%9APerl%E5%9B%9E%E5%BD%92%E6%B5%8B%E8%AF%95%E8%84%9A%E6%9C%AC/1%E3%80%81perl%E5%9B%9E%E5%BD%92%E6%B5%8B%E8%AF%95%EF%BC%88regression%EF%BC%89%E4%BB%A3%E7%A0%81%E9%80%BB%E8%BE%91.html"/>
+      <url>/1%20%E9%A1%B9%E7%9B%AE/%E9%A1%B9%E7%9B%AE3%EF%BC%9APerl%E5%9B%9E%E5%BD%92%E6%B5%8B%E8%AF%95%E8%84%9A%E6%9C%AC/1%E3%80%81perl%E5%9B%9E%E5%BD%92%E6%B5%8B%E8%AF%95%EF%BC%88regression%EF%BC%89%E4%BB%A3%E7%A0%81%E9%80%BB%E8%BE%91.html</url>
       
-        <content type="html"><![CDATA[<p>走在熟悉的路上，身边的人纷纷擦肩而过，淡漠到未曾正视一眼。虽然，擦肩，也是一种缘分。<br>我常常想，缘分也许是这世间最玄妙的东西了。初问人世，各人便被安排进了各自的缘分里，周旋在或注定或偶遇的人情之中。即使是擦肩的缘，也须是前生五百次的回眸所换来。那么你，在我生命中弥足珍贵的你，你的存在，又将是我多么幸福的相遇。<br>如果我不明白你的重要，那么就让我想想，如果没有你——这是一个多么可怕的假设。如果没有你，我的世界，定然不是这般温融的模样。</p>]]></content>
+        <content type="html"><![CDATA[<h1 id="一、主要功能（总）"><a href="#一、主要功能（总）" class="headerlink" title="一、主要功能（总）"></a>一、主要功能（总）</h1><ol><li>调用Xrun，回归测试所有的testcase。</li><li>可选择，Run单个的testcase。</li><li>当DEBUG时，可对单个testcase调用Simvision仿真。</li><li>处理分析log文件，判断FAIL还是PASS</li><li>用perl将结果生成html表格。</li></ol><h1 id="二、效果展示"><a href="#二、效果展示" class="headerlink" title="二、效果展示"></a>二、效果展示</h1><p>html table如下，可直接通过点击打开相应的testcase和log文件。</p><center><img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/html-table1.png" width="75%" height="75%" />html table效果1</center><center><img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/html-table2.png" width="75%" height="75%" />html table效果2</center><h1 id="三、目录说明"><a href="#三、目录说明" class="headerlink" title="三、目录说明"></a>三、目录说明</h1><p>项目文件如下，一级目录分为三级，其中sim目录下，run即为perl回归测试脚本，verification.html为perl最终生成的结果报告，logfile为创建的用于储存仿真结果的文件夹（run脚本中指定logfile路径）。</p><center><img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/%E6%96%87%E4%BB%B6%E7%9B%AE%E5%BD%95.png" width="25%" height="25%" />项目目录结构</center><h1 id="四、回归测试主要思路"><a href="#四、回归测试主要思路" class="headerlink" title="四、回归测试主要思路"></a>四、回归测试主要思路</h1><ul><li>第一步，通过GetOption操作，设置几个自定义的option</li></ul><pre><code class="perl">#! /usr/bin/perl#use strict;use feature &#39;say&#39;;use Getopt::Long;use vars qw( $help,  $all,  $simvision           );GetOptions (              &#39;h|help&#39;        =&gt;  \$help,              &#39;all&#39;           =&gt;  \$all,              &#39;gui&#39;           =&gt;  \$simvision);if($help) &#123;    print &quot;            -all          : enter the last testcase number i,can run test_1 to test_i.            -gui          : call simvision for simulation,can&#39;t ust &#39;-all -gui &#39; at the same time.            The default you can choose the single testcase number to sim.            \n&quot;;            exit 0;    &#125;</code></pre><ul><li>第二步，通过条件判断语句，选择run_sim的方式（回归还是单个case）</li></ul><pre><code class="perl">if(defined($all))&#123;  system(&quot;rm -rf ./logfile/*&quot;);   print &quot;Plese enter the last testcase number:\n&quot;;  chomp($total = &lt;STDIN&gt;);  @i = (1..$total);  foreach(@i)&#123;  my $files = &quot; ../tb/test$_.v &quot;;  my $cmd = &quot;xrun -access +rwc -sv -64 -nocopyright -l test$_.log &quot;.&quot; $files&quot;;  print &quot;cmd= $cmd \n&quot;;  system($cmd);  system(&quot;mv *.log logfile&quot;);  &#125;&#125;else&#123;    print &quot;Plese enter the testcase number:\n&quot;;    chomp(my $i = &lt;STDIN&gt;);    my $files = &quot; ../tb/test$i.v &quot;;    my $CMD;    my $cmd1 = &quot;xrun -access +rwc -sv -64 -nocopyright -l test$i.log &quot;.&quot; $files&quot;;    my $cmd2 = &quot;-gui&quot;;    if($simvision)&#123;        $CMD = &quot;$cmd1&quot; . &quot;$cmd2&quot;;    &#125;else&#123;        $CMD = &quot;$cmd1&quot;;    &#125;    print &quot;CMD= $CMD \n&quot;;    system($CMD);    system(&quot;mv *.log logfile&quot;);&#125;</code></pre><p>这一部分的逻辑是：</p><ol><li><p>首先，当输入<code>-all</code>这个option时，会执行if里的语句。先删除掉logfile文件夹里所有的文件，然后输入testcase目前所有的数目（会依次执行第一个case到你输入的case），通过foreach循环调用system函数依次将每个case执行，最后将所有文件移动到logfile文件夹，便于后续log文件的处理。</p></li><li><p>如果不输入<code>-all</code>则会执行else中单独跑一个case的命令。输入你期望跑的testcase编号，然后调用system函数进行仿真。这里有一个option，若执行perl脚本时输入<code>-gui</code>，会对单个的case调用simvision仿真。</p></li></ol>]]></content>
       
       
       <categories>
@@ -61,6 +80,12 @@
           
       </categories>
       
+      
+        <tags>
+            
+            <tag> perl </tag>
+            
+        </tags>
       
     </entry>
     
@@ -222,25 +247,6 @@
           <category> 项目 </category>
           
           <category> 项目1：Nand_behavior_model </category>
-          
-      </categories>
-      
-      
-    </entry>
-    
-    
-    
-    <entry>
-      <title>Hello World</title>
-      <link href="/6%20%E5%85%B6%E4%BB%96/hello-world.html"/>
-      <url>/6%20%E5%85%B6%E4%BB%96/hello-world.html</url>
-      
-        <content type="html"><![CDATA[<p>Welcome to <a href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p><h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><pre><code class="bash">$ hexo new &quot;My New Post&quot;</code></pre><p>More info: <a href="https://hexo.io/docs/writing.html">Writing</a></p><h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><pre><code class="bash">$ hexo server</code></pre><p>More info: <a href="https://hexo.io/docs/server.html">Server</a></p><h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><pre><code class="bash">$ hexo generate</code></pre><p>More info: <a href="https://hexo.io/docs/generating.html">Generating</a></p><h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><pre><code class="bash">$ hexo deploy</code></pre><p>More info: <a href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>]]></content>
-      
-      
-      <categories>
-          
-          <category> 其他 </category>
           
       </categories>
       
