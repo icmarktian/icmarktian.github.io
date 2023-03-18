@@ -4,6 +4,33 @@
   
     
     <entry>
+      <title>5--NAND基本概念简述</title>
+      <link href="/2%20%E9%A2%86%E5%9F%9F/NAND/5--NAND%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5%E7%AE%80%E8%BF%B0.html"/>
+      <url>/2%20%E9%A2%86%E5%9F%9F/NAND/5--NAND%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5%E7%AE%80%E8%BF%B0.html</url>
+      
+        <content type="html"><![CDATA[<h1 id="一、概述"><a href="#一、概述" class="headerlink" title="一、概述"></a>一、概述</h1><p>NAND Flash可以看作是一个单独的存储器也可以看作是一个存储单元，最早它可以直接和CPU连接，通过CPU发送指令实现对NAND Flash的控制，进行数据的存储和交换。由于计算机功能越来越复杂，通过CPU直接控制NAND Flash这种方式很影响性能，故而基于不同协议的controller作为host端来控制NAND Flash，可以产生不同的存储产品，如eMMC等。本篇主要对基本的NAND Flash做一个整体总结。</p><h1 id="二、接口描述"><a href="#二、接口描述" class="headerlink" title="二、接口描述"></a>二、接口描述</h1><center><img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/5.1NAND%E5%8E%9F%E7%90%86%E5%9B%BE.png" width="50%" height="50%" alt="NAND原理图"/></center><p>如图，黄色部分为NAND Flash原理图，可以看到此NAND flash有六个控制端口，分别是：</p><p><code>ALE</code>：Address Latch enable</p><p><code>CLE</code>：Command Latch enbale</p><p><code>CE_n</code>：Chip enable</p><p><code>RE_n</code>：Read enable，为低时为数据输出，表示允许host端从NAND Flash读取数据出来</p><p><code>WE_n</code>：Write_enable</p><p><code>R/B_n</code>：Ready&#x2F;Besy</p><p>通过控制这六个端口信号的高低状态，可实现对NAND Flash的操作，这里介绍几种基本操作状态的信号描述，详细的需要参考不同厂商的Datashee。</p><ol><li>命令输入模式：CE_n拉低，ALE拉低，CLE拉高，WE_n拉低，RE_n拉高</li></ol><center><img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/5.2NAND%E5%91%BD%E4%BB%A4%E8%BE%93%E5%85%A5%E6%97%B6%E5%BA%8F.png" width="50%" height="50%" alt="NAND命令输入时序"/></center><ol start="2"><li>地址输入模式：CE_n拉低，ALE拉高，CLE拉低，WE_n拉低，RE_n拉高</li></ol><center><img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/5.3NAND%E5%9C%B0%E5%9D%80%E8%BE%93%E5%85%A5%E6%97%B6%E5%BA%8F.png" width="50%" height="50%" alt="NAND地址输入时序"/></center><ol start="3"><li>数据输入模式：CE_n拉低，ALE拉低，CLE拉低，WE_n拉低，RE_n拉高</li></ol><center><img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/5.4NAND%E6%95%B0%E6%8D%AE%E8%BE%93%E5%85%A5%E6%97%B6%E5%BA%8F.png" width="50%" height="50%" alt="NAND数据输入时序"/></center><ol start="4"><li>数据输出模式：CE_n拉低，ALE拉低，CLE拉低，WE_n拉高，RE_n拉低</li></ol><center><img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/5.5NAND%E6%95%B0%E6%8D%AE%E8%BE%93%E5%87%BA%E6%97%B6%E5%BA%8F.png" width="50%" height="50%" alt="NAND数据输出时序"/></center><h1 id="三、Flash-结构"><a href="#三、Flash-结构" class="headerlink" title="三、Flash 结构"></a>三、Flash 结构</h1><center><img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/5.6NAND%20LUN%E7%BB%93%E6%9E%84%E5%9B%BE.png" width="30%" height="30%" alt="LUN结构图"/></center><p>如图，是NAND Flash的一个Die（LUN）的结构图，Logical Unit Number是指NAND Flash能够独立执行命令和报告状态的最小单元，即一个NAND Flash memory可以由多个LUN组成，也可以是单个LUN。</p><p>在单个LUN结构中各个结构从大到小排序依次为：<strong>LUN ——&gt; Plane ——&gt; block ——&gt; page ——&gt; byte</strong>。</p><h1 id="四、地址的寻址"><a href="#四、地址的寻址" class="headerlink" title="四、地址的寻址"></a>四、地址的寻址</h1><p>有两种类型的地址Row Address和Column Address，Row address用于寻址LUN、block、page ，Column address用于寻址page中的byte。不同产品的Flash地址周期可能不一样，一般Datasheet中会有地址表格说明每个周期的地址的意义。如1.3所示，CA表示Column address，Low表示低电平，PA表示Page address，BA表示Block address，LA表示LUN address。</p><center><img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/5.7Flash%E5%9C%B0%E5%9D%80%E5%AE%9A%E4%B9%89.png" width="75%" height="75%" alt="Flash地址定义"/></center><h1 id="五、读、写、擦除操作"><a href="#五、读、写、擦除操作" class="headerlink" title="五、读、写、擦除操作"></a>五、读、写、擦除操作</h1><p>Read、Program、Erase是一款存储设备最基本的功能。对于NAND flash，读、写是以page为单位进行的，而擦除是以block为单位进行的；写操作是将1变为0，擦除操作时将0变为1，所以为写的memory array中读出来的数据为FF。</p><h1 id="六、总结"><a href="#六、总结" class="headerlink" title="六、总结"></a>六、总结</h1><p>NAND flash的IO口是双向的，在地址输入、命令输入、写操作是数据的流向都是从host端到NAND的，只有RE_n信号拉低处于数据输出模式才能从NAND flash中读出数据，如图。</p><center><img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/5.8NAND%E6%95%B0%E6%8D%AE%E4%BA%A4%E6%8D%A2.png" width="50%" height="50%" alt="NAND数据交换"/></center>]]></content>
+      
+      
+      <categories>
+          
+          <category> 领域 </category>
+          
+          <category> NAND </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> NAND </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>4--Markdown简要速查笔记</title>
       <link href="/3%20%E8%AF%AD%E8%A8%80/Markdown/4--Markdown%E7%AE%80%E8%A6%81%E9%80%9F%E6%9F%A5%E7%AC%94%E8%AE%B0.html"/>
       <url>/3%20%E8%AF%AD%E8%A8%80/Markdown/4--Markdown%E7%AE%80%E8%A6%81%E9%80%9F%E6%9F%A5%E7%AC%94%E8%AE%B0.html</url>
@@ -169,27 +196,6 @@
             <tag> perl </tag>
             
         </tags>
-      
-    </entry>
-    
-    
-    
-    <entry>
-      <title>1、NAND整体简述</title>
-      <link href="/2%20%E9%A2%86%E5%9F%9F/NAND/NAND.html"/>
-      <url>/2%20%E9%A2%86%E5%9F%9F/NAND/NAND.html</url>
-      
-        <content type="html"><![CDATA[]]></content>
-      
-      
-      <categories>
-          
-          <category> 领域 </category>
-          
-          <category> NAND </category>
-          
-      </categories>
-      
       
     </entry>
     
