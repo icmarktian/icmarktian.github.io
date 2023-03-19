@@ -6,7 +6,7 @@
   <link href="https://mkdbook.com/atom.xml" rel="self"/>
   
   <link href="https://mkdbook.com/"/>
-  <updated>2023-03-19T07:23:28.302Z</updated>
+  <updated>2023-03-19T10:44:50.344Z</updated>
   <id>https://mkdbook.com/</id>
   
   <author>
@@ -15,6 +15,30 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>7--[Design]ERASE BLOCK协议及代码实现-项目2-1</title>
+    <link href="https://mkdbook.com/blog007.html"/>
+    <id>https://mkdbook.com/blog007.html</id>
+    <published>2023-03-19T10:31:20.000Z</published>
+    <updated>2023-03-19T10:44:50.344Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="1、【Design】ERASE-BLOCK协议及代码实现"><a href="#1、【Design】ERASE-BLOCK协议及代码实现" class="headerlink" title="1、【Design】ERASE BLOCK协议及代码实现"></a>1、【Design】ERASE BLOCK协议及代码实现</h1><h1 id="一、项目功能描述"><a href="#一、项目功能描述" class="headerlink" title="一、项目功能描述"></a>一、项目功能描述</h1><p>本项目基于长江存储NAND Datasheet，实现了NAND behavior model的<code>擦除功能（Erase Block）</code>，<code>擦除挂起功能（Erase Suspend）</code>，<code>擦除恢复功能（Erase Resume）</code>。</p><h1 id="二、Erase-Block功能描述"><a href="#二、Erase-Block功能描述" class="headerlink" title="二、Erase Block功能描述"></a>二、<strong>Erase Block功能描述</strong></h1><ul><li>以Block为单位对Array进行擦除。</li><li>如图7.1，Command 60h后跟四个周期的Row地址，再发送Command D0h，经tWB时间后，R&#x2F;B_n信号拉低，开始时长tBERS的擦除操作。</li><li>Host端通过监测R&#x2F;B_n信号或者Status Register，判断Erase操作是否完成，<br>SR[0]为0则表示Erase成功（SR[6]为1时，SR[0]才有效）。</li><li>在Erase过程中，只可接受Read Status Command、Reset Command、Suspend Command。</li></ul><center><img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/7.1Block%20Erase%20Sequence.png" width="75%" height="75%" alt="7.1 Block Erase Sequence"/></center><h1 id="三、ERASE-BLOCK代码实现方案"><a href="#三、ERASE-BLOCK代码实现方案" class="headerlink" title="三、ERASE BLOCK代码实现方案"></a>三、<strong>ERASE BLOCK代码实现方案</strong></h1><h2 id="3-1、命令输入always块"><a href="#3-1、命令输入always块" class="headerlink" title="3.1、命令输入always块"></a>3.1、<strong>命令输入always块</strong></h2><p>如下所示，在We_n的上升沿会触发command input的always块。</p><pre><code class="verilog">always @ (posedge We_n) begin : cLatch          1、判断是否command_enable          2、判断power up后第一个命令是否为reset命令，会产生error信息          3、Command（60h）          4、Command（D0h）end</code></pre><p>command_enbale信号定义如下：</p><pre><code class="verilog">assign command_enable = (Cle &amp; ~Ale &amp; ~Ce_n_vol &amp; Re_n );</code></pre><h2 id="3-2、Command-60h"><a href="#3-2、Command-60h" class="headerlink" title="3.2、Command 60h"></a>3.2、Command 60h</h2><p>当IO口收到60h时，内部会进行如下操作：</p><pre><code class="verilog">if (Io_mirror [7 : 0] = = = 8&#39;h60) begin        1、program cache 未完成时，60h会被忽略，直到状态变为E0h        2、~Wp_n 和 OTP_mode 时均不允许 ERASE        3、60h有效时，判断是否处于Multi-Plane ERASE，           if lastCmd为60h，或D1h，则继续让lastCmd=60h        else if (~multiplane_op_erase) begin                              saw_cmnd_60h = 1&#39;b1;                              saw_cmnd_60h_clear = 1&#39;b1;                          end else begin                              saw_cmnd_60h = 1&#39;b1;                              saw_cmnd_60h_clear = 1&#39;b0;                          end        4、调用 disable_rdStatus，复位 status flag，让device返Read modeend</code></pre><h2 id="3-3、Command-D0h"><a href="#3-3、Command-D0h" class="headerlink" title="3.3、Command D0h"></a>3.3、<strong>Command D0h</strong></h2><p>当IO口收到D0h时，内部会进行如下操作：</p><pre><code class="verilog">else if (Io_mirror [7 : 0] = = = 8&#39;hD0) begin      1、program cache 未完成时，D0h会被忽略，直到状态变为E0h      2、判断是否 die_select，选择了才会往下执行      3、if ((lastCmd = = = 8&#39;h60) &amp;&amp; row_valid &amp;&amp; Wp_n) begin          3.1、lastCmd = 8&#39;hD0          3.2、判断当前LUN是否有被 Erase Suspend 的blcok，若地址相同，将会Resume 被Suspend 的block          3.3、调用clear_erase_suspend，清除和 Erase Suspend 相关的 reg          3.4、erase_blk_en = ~ erase_blk_en，产生沿降，调用后续always 块开始erase操作       end    end</code></pre><h2 id="3-4、Erase功能实现的always块"><a href="#3-4、Erase功能实现的always块" class="headerlink" title="3.4、Erase功能实现的always块"></a>3.4、<strong>Erase功能实现的always块</strong></h2><p>第一个always块的作用是通过erase_blk_en和erase_blk_en_r的异或逻辑，使得一旦产生erase_blk_en &#x3D; ~ erase_blk_en的变换时，确保erase_blk_pls都能产生上升沿逻辑，从而驱动Erase操作的always块。</p><pre><code class="verilog">always @(*)begin    erase_blk_pls &lt;= #tWB_delay ((erase_blk_en &amp; ~erase_blk_en_r) | (~erase_blk_en &amp; erase_blk_en_r));    erase_blk_en_r &lt;= #1 erase_blk_en;end</code></pre><p>当erase_blk_pls产生上升沿的跳变时，会触发如下具有擦除逻辑的always块，从而完成Erase操作。</p><pre><code class="verilog">always @(posedge erase_blk_pls) begin      1、进入busy状态，设置SR【5、6】为00；      2、调用 check_plane_addresses，检查排队的擦除块是否满足multi-plane寻址要求      3、擦除逻辑       if (eb_unlocked_erase) begin : unlocked_erase_block            3.1、截取擦除的 block 地址              erase_block_addr = row_addr [eb_thisPlane] [BLCK_BITS + PAGE_BITS – 1 : PAGE_BITS];                    3.2、采用循环将array进行写1擦除                      for (e=0; e&lt;memory_used; e=e+1) begin : mem_loop                          //check to see if existing used address location matches block being erased                          if (memory_addr[e] [BLCK_BITS + PAGE_BITS - 1 : PAGE_BITS] = = = erase_block_addr) begin                              mem_array[e] = &#123;PAGE_SIZE&#123;erase_data[0]&#125;&#125;;                              seq_page[erase_block_addr] = &#123;PAGE_BITS&#123;1&#39;b0&#125;&#125;;                                  mem_flag[e] = 0;  // 0: not programmed; 1: programmed.                                                  end                      end //mem_loop end         end  // unlocked_erase_blockend</code></pre>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;h1 id=&quot;1、【Design】ERASE-BLOCK协议及代码实现&quot;&gt;&lt;a href=&quot;#1、【Design】ERASE-BLOCK协议及代码实现&quot; class=&quot;headerlink&quot; title=&quot;1、【Design】ERASE BLOCK协议及代码实现&quot;&gt;&lt;/a&gt;1、</summary>
+      
+    
+    
+    
+    <category term="项目2：Erase of NAND behavior model" scheme="https://mkdbook.com/categories/%E9%A1%B9%E7%9B%AE2%EF%BC%9AErase-of-NAND-behavior-model/"/>
+    
+    
+    <category term="NAND" scheme="https://mkdbook.com/tags/NAND/"/>
+    
+  </entry>
   
   <entry>
     <title>6--NAND基本的读、写、擦除功能</title>
@@ -158,8 +182,8 @@
   
   <entry>
     <title>Hello World</title>
-    <link href="https://mkdbook.com/clff2sna90001m0ub8gihdfx0.html"/>
-    <id>https://mkdbook.com/clff2sna90001m0ub8gihdfx0.html</id>
+    <link href="https://mkdbook.com/clff9uz830003d0ubevmp1i5l.html"/>
+    <id>https://mkdbook.com/clff9uz830003d0ubevmp1i5l.html</id>
     <published>2023-03-16T14:56:44.368Z</published>
     <updated>2023-03-10T07:03:30.000Z</updated>
     
@@ -179,26 +203,9 @@
   </entry>
   
   <entry>
-    <title>1、NAND简述</title>
-    <link href="https://mkdbook.com/clff2snan000am0ubgaqc9xfq.html"/>
-    <id>https://mkdbook.com/clff2snan000am0ubgaqc9xfq.html</id>
-    <published>2023-03-10T08:20:34.000Z</published>
-    <updated>2023-03-10T08:24:30.000Z</updated>
-    
-    
-    
-    
-    <category term="项目" scheme="https://mkdbook.com/categories/%E9%A1%B9%E7%9B%AE/"/>
-    
-    <category term="项目2：Erase_of_NAND_behavior_model" scheme="https://mkdbook.com/categories/%E9%A1%B9%E7%9B%AE/%E9%A1%B9%E7%9B%AE2%EF%BC%9AErase-of-NAND-behavior-model/"/>
-    
-    
-  </entry>
-  
-  <entry>
     <title>Verilog第一</title>
-    <link href="https://mkdbook.com/clff2snay000vm0ub891b67uq.html"/>
-    <id>https://mkdbook.com/clff2snay000vm0ub891b67uq.html</id>
+    <link href="https://mkdbook.com/clff9uz9k002dd0ubeowybcyj.html"/>
+    <id>https://mkdbook.com/clff9uz9k002dd0ubeowybcyj.html</id>
     <published>2023-03-10T06:12:01.000Z</published>
     <updated>2023-03-10T07:03:22.000Z</updated>
     
@@ -242,8 +249,8 @@
   
   <entry>
     <title>存储第一批</title>
-    <link href="https://mkdbook.com/clff2snbg002dm0ub8whh5900.html"/>
-    <id>https://mkdbook.com/clff2snbg002dm0ub8whh5900.html</id>
+    <link href="https://mkdbook.com/clff9uz8s000id0ub4yto51x7.html"/>
+    <id>https://mkdbook.com/clff9uz8s000id0ub4yto51x7.html</id>
     <published>2023-03-10T06:03:01.000Z</published>
     <updated>2023-03-10T07:03:27.000Z</updated>
     
@@ -259,8 +266,8 @@
   
   <entry>
     <title>PERL</title>
-    <link href="https://mkdbook.com/clff2snau000nm0ub2umb5ygj.html"/>
-    <id>https://mkdbook.com/clff2snau000nm0ub2umb5ygj.html</id>
+    <link href="https://mkdbook.com/clff9uz8x000vd0ubaxv3fty5.html"/>
+    <id>https://mkdbook.com/clff9uz8x000vd0ubaxv3fty5.html</id>
     <published>2023-03-10T06:02:09.000Z</published>
     <updated>2023-03-10T07:03:21.000Z</updated>
     
@@ -276,8 +283,8 @@
   
   <entry>
     <title>工具的第一篇</title>
-    <link href="https://mkdbook.com/clff2snak0006m0ub60khboco.html"/>
-    <id>https://mkdbook.com/clff2snak0006m0ub60khboco.html</id>
+    <link href="https://mkdbook.com/clff9uz7z0001d0ubatghaqku.html"/>
+    <id>https://mkdbook.com/clff9uz7z0001d0ubatghaqku.html</id>
     <published>2023-03-10T06:02:06.000Z</published>
     <updated>2023-03-10T07:03:20.000Z</updated>
     
@@ -291,8 +298,8 @@
   
   <entry>
     <title>杂记的第一篇</title>
-    <link href="https://mkdbook.com/clff2snaf0003m0ubbdiy0b3o.html"/>
-    <id>https://mkdbook.com/clff2snaf0003m0ubbdiy0b3o.html</id>
+    <link href="https://mkdbook.com/clff9uz860006d0ubewfwb64n.html"/>
+    <id>https://mkdbook.com/clff9uz860006d0ubewfwb64n.html</id>
     <published>2023-03-10T06:02:05.000Z</published>
     <updated>2023-03-10T07:03:26.000Z</updated>
     
@@ -306,8 +313,8 @@
   
   <entry>
     <title>eMMC</title>
-    <link href="https://mkdbook.com/clff2snaz000xm0ub22367fwg.html"/>
-    <id>https://mkdbook.com/clff2snaz000xm0ub22367fwg.html</id>
+    <link href="https://mkdbook.com/clff9uz8a000bd0ubc2n6d0qd.html"/>
+    <id>https://mkdbook.com/clff9uz8a000bd0ubc2n6d0qd.html</id>
     <published>2023-03-10T06:02:01.000Z</published>
     <updated>2023-03-10T07:03:28.000Z</updated>
     
@@ -323,8 +330,8 @@
   
   <entry>
     <title>SV</title>
-    <link href="https://mkdbook.com/clff2snar000gm0ubfe585ahp.html"/>
-    <id>https://mkdbook.com/clff2snar000gm0ubfe585ahp.html</id>
+    <link href="https://mkdbook.com/clff9uz8y000yd0ub5ff43t7d.html"/>
+    <id>https://mkdbook.com/clff9uz8y000yd0ub5ff43t7d.html</id>
     <published>2023-03-10T05:02:01.000Z</published>
     <updated>2023-03-10T07:03:23.000Z</updated>
     
@@ -340,8 +347,8 @@
   
   <entry>
     <title>项目1的第一篇</title>
-    <link href="https://mkdbook.com/clff2snal0007m0ub1344g0qw.html"/>
-    <id>https://mkdbook.com/clff2snal0007m0ub1344g0qw.html</id>
+    <link href="https://mkdbook.com/clff9uz8b000cd0ubffno0ses.html"/>
+    <id>https://mkdbook.com/clff9uz8b000cd0ubffno0ses.html</id>
     <published>2023-03-06T13:32:02.000Z</published>
     <updated>2023-03-14T09:04:03.000Z</updated>
     
