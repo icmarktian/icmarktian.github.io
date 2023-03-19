@@ -5,8 +5,8 @@
     
     <entry>
       <title>6--NAND基本的读、写、擦除功能</title>
-      <link href="/2%20%E9%A2%86%E5%9F%9F/NAND/6--NAND%E5%9F%BA%E6%9C%AC%E7%9A%84%E8%AF%BB%E3%80%81%E5%86%99%E3%80%81%E6%93%A6%E9%99%A4%E5%8A%9F%E8%83%BD.html"/>
-      <url>/2%20%E9%A2%86%E5%9F%9F/NAND/6--NAND%E5%9F%BA%E6%9C%AC%E7%9A%84%E8%AF%BB%E3%80%81%E5%86%99%E3%80%81%E6%93%A6%E9%99%A4%E5%8A%9F%E8%83%BD.html</url>
+      <link href="/c1eaf2e9b208.html"/>
+      <url>/c1eaf2e9b208.html</url>
       
         <content type="html"><![CDATA[<p>NAND Flash的读（READ）、写（PROGRAM）、擦除（ERASE）功能有很多种类型，例如就读而言，有READ page、READ ID等，这些功能和命令不同厂商可能不完全相同，具体要参照该NAND Flash厂商提供的Datasheet。本文总结一下NAND基本的几种读、写、擦除功能。</p><h1 id="一、NAND-Flash-读操作"><a href="#一、NAND-Flash-读操作" class="headerlink" title="一、NAND Flash 读操作"></a>一、NAND Flash 读操作</h1><p>这里介绍两种重要的读，一种是正常的<code>Page Read</code>：即读取由指定LUN的ROW地址表示的 一个page的数据；一种是<code>Cache Read</code>：当数据从Memory Array复制到Data Register的同时，允许前一拍数据从Cache Register读取出去，实现Pipeline方式工作。</p><h2 id="00h-30h：READ-PAGE-operation"><a href="#00h-30h：READ-PAGE-operation" class="headerlink" title="00h-30h：READ PAGE operation"></a>00h-30h：READ PAGE operation</h2><center><img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/6.1Read%20Page.png" width="40%" height="40%" alt="6.1 Read Page"/></center><p>如6.1所示，从Memory Array读出数据时，会经过Buffer。在每个Plane中会有两个Buffer：<code>Data Buffer</code>和<code>Cache Buffer</code>，它们的大小均为一个Page的大小。<br>当收到00h-30h命令串后，就会开始从指定位置读出Memory数据的功能。这种方式只能一次读取一个Page的数据，操作逻辑是数据从Memory Array到Cache Buffer，然后从Cache Buffer读出到IO口。</p><h2 id="Cache-read（31h和00h-31h）"><a href="#Cache-read（31h和00h-31h）" class="headerlink" title="Cache read（31h和00h-31h）"></a>Cache read（31h和00h-31h）</h2><center><img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/6.2Cache%20Read.png" width="70%" height="70%" alt="6.2 Cache Read"/></center><p>Cache Read会同时用到Data Buffer和Cache Buffer。如6.2所示，当Page N的数据从Cache Buffer读出到IO口的同时，Page N+1的数据从Memory Array读出到了Data buffer。<br>Cache Read又分为两种，一种是了连续Cache Read（31h：Sequential Cache Read），一种是随机Cache Read（00h-31h：Cache Read Random）。它们的区别如下：</p><center><img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/6.3Sequential%20Cache%20Read.png" width="75%" height="75%" alt="6.3 Sequential Cache Read"/></center><p><code>连续Cache Read</code>的操作逻辑如6.3序列图所示，00h-30h输入page M的地址后，后面输入一次31h命令，会读出page M中的数据，后面再输一次31h命令会读出page M+1的数据，以此类推。</p><center><img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/6.4Cache%20Read%20Random.png" width="75%" height="75%" alt="6.4 Cache Read Random"/></center><p><code>随机Cache Read</code>是指可以跳着读取不同Page的数据，如6.4序列图所示，第一次发00h-30h地址M后，第二次发00h-31h地址N之后，读出的是第一次Page M的数据，然后下一次输入Page P的地址之后，读取的是上一次Page N的数据，以此类推。</p><h1 id="二、NAND-Flash-写操作"><a href="#二、NAND-Flash-写操作" class="headerlink" title="二、NAND Flash 写操作"></a>二、NAND Flash 写操作</h1><p>写操作在NAND Flash中被称为Program，逻辑上是将1写成0。操作过程类似于读操作的反操作，数据从IO口进来然后经过两Buffer最后被写入到NAND Flash的Memory Array中。<br>写操作也有两种方式，<code>80h-10h：Program Page</code>；<code>80h-15h：Program Page Cache</code>。这里针对TLC不同厂商有不同的处理方式，例如长存使用One Pass Program，美光使用Two Pass Program。</p><h1 id="三、NAND-Flash-擦除操作"><a href="#三、NAND-Flash-擦除操作" class="headerlink" title="三、NAND Flash 擦除操作"></a>三、NAND Flash 擦除操作</h1><p>NAND Flash的Erase操作可以理解成一种特殊的写操作，它是将所有的数据都写成1（16进制读出来为FF）。命令为<code>60h-D0h</code>。</p><center><img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/6.5Erase%20Block.png" width="75%" height="75%" alt="6.5 Erase Block"/></center><p>如6.5序列图所示，擦除是以Block为单位的，所以只需要Row地址。扩展一下，ERASE相关的操作有如下几种：Erase Block、Multi_Plane Erase、Erase Suspend、 Erase Resume。</p><h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>本篇记录了比较浅显的基本功能，个人认为学习一个功能应该先从功能的描述入手，然后对照这它的序列图理解其命令逻辑。虽然不同厂商的功能描述和实现会有区别，但是大体的功能应该都是类似的（前提都是基于<a href="http://www.onfi.org/">ONFI协议</a>）。</p>]]></content>
       
@@ -32,8 +32,8 @@
     
     <entry>
       <title>5--NAND基本概念简述</title>
-      <link href="/2%20%E9%A2%86%E5%9F%9F/NAND/5--NAND%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5%E7%AE%80%E8%BF%B0.html"/>
-      <url>/2%20%E9%A2%86%E5%9F%9F/NAND/5--NAND%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5%E7%AE%80%E8%BF%B0.html</url>
+      <link href="/7af7d12f2df2.html"/>
+      <url>/7af7d12f2df2.html</url>
       
         <content type="html"><![CDATA[<h1 id="一、概述"><a href="#一、概述" class="headerlink" title="一、概述"></a>一、概述</h1><p>NAND Flash可以看作是一个单独的存储器也可以看作是一个存储单元，最早它可以直接和CPU连接，通过CPU发送指令实现对NAND Flash的控制，进行数据的存储和交换。由于计算机功能越来越复杂，通过CPU直接控制NAND Flash这种方式很影响性能，故而基于不同协议的controller作为host端来控制NAND Flash，可以产生不同的存储产品，如eMMC等。本篇主要对基本的NAND Flash做一个整体总结。</p><h1 id="二、接口描述"><a href="#二、接口描述" class="headerlink" title="二、接口描述"></a>二、接口描述</h1><center><img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/5.1NAND%E5%8E%9F%E7%90%86%E5%9B%BE.png" width="50%" height="50%" alt="NAND原理图"/></center><p>如图，黄色部分为NAND Flash原理图，可以看到此NAND flash有六个控制端口，分别是：</p><p><code>ALE</code>：Address Latch enable</p><p><code>CLE</code>：Command Latch enbale</p><p><code>CE_n</code>：Chip enable</p><p><code>RE_n</code>：Read enable，为低时为数据输出，表示允许host端从NAND Flash读取数据出来</p><p><code>WE_n</code>：Write_enable</p><p><code>R/B_n</code>：Ready&#x2F;Besy</p><p>通过控制这六个端口信号的高低状态，可实现对NAND Flash的操作，这里介绍几种基本操作状态的信号描述，详细的需要参考不同厂商的Datashee。</p><ol><li>命令输入模式：CE_n拉低，ALE拉低，CLE拉高，WE_n拉低，RE_n拉高</li></ol><center><img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/5.2NAND%E5%91%BD%E4%BB%A4%E8%BE%93%E5%85%A5%E6%97%B6%E5%BA%8F.png" width="50%" height="50%" alt="NAND命令输入时序"/></center><ol start="2"><li>地址输入模式：CE_n拉低，ALE拉高，CLE拉低，WE_n拉低，RE_n拉高</li></ol><center><img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/5.3NAND%E5%9C%B0%E5%9D%80%E8%BE%93%E5%85%A5%E6%97%B6%E5%BA%8F.png" width="50%" height="50%" alt="NAND地址输入时序"/></center><ol start="3"><li>数据输入模式：CE_n拉低，ALE拉低，CLE拉低，WE_n拉低，RE_n拉高</li></ol><center><img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/5.4NAND%E6%95%B0%E6%8D%AE%E8%BE%93%E5%85%A5%E6%97%B6%E5%BA%8F.png" width="50%" height="50%" alt="NAND数据输入时序"/></center><ol start="4"><li>数据输出模式：CE_n拉低，ALE拉低，CLE拉低，WE_n拉高，RE_n拉低</li></ol><center><img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/5.5NAND%E6%95%B0%E6%8D%AE%E8%BE%93%E5%87%BA%E6%97%B6%E5%BA%8F.png" width="50%" height="50%" alt="NAND数据输出时序"/></center><h1 id="三、Flash-结构"><a href="#三、Flash-结构" class="headerlink" title="三、Flash 结构"></a>三、Flash 结构</h1><center><img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/5.6NAND%20LUN%E7%BB%93%E6%9E%84%E5%9B%BE.png" width="30%" height="30%" alt="LUN结构图"/></center><p>如图，是NAND Flash的一个Die（LUN）的结构图，Logical Unit Number是指NAND Flash能够独立执行命令和报告状态的最小单元，即一个NAND Flash memory可以由多个LUN组成，也可以是单个LUN。</p><p>在单个LUN结构中各个结构从大到小排序依次为：<strong>LUN ——&gt; Plane ——&gt; block ——&gt; page ——&gt; byte</strong>。</p><h1 id="四、地址的寻址"><a href="#四、地址的寻址" class="headerlink" title="四、地址的寻址"></a>四、地址的寻址</h1><p>有两种类型的地址Row Address和Column Address，Row address用于寻址LUN、block、page ，Column address用于寻址page中的byte。不同产品的Flash地址周期可能不一样，一般Datasheet中会有地址表格说明每个周期的地址的意义。如1.3所示，CA表示Column address，Low表示低电平，PA表示Page address，BA表示Block address，LA表示LUN address。</p><center><img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/5.7Flash%E5%9C%B0%E5%9D%80%E5%AE%9A%E4%B9%89.png" width="75%" height="75%" alt="Flash地址定义"/></center><h1 id="五、读、写、擦除操作"><a href="#五、读、写、擦除操作" class="headerlink" title="五、读、写、擦除操作"></a>五、读、写、擦除操作</h1><p>Read、Program、Erase是一款存储设备最基本的功能。对于NAND flash，读、写是以page为单位进行的，而擦除是以block为单位进行的；写操作是将1变为0，擦除操作时将0变为1，所以为写的memory array中读出来的数据为FF。</p><h1 id="六、总结"><a href="#六、总结" class="headerlink" title="六、总结"></a>六、总结</h1><p>NAND flash的IO口是双向的，在地址输入、命令输入、写操作是数据的流向都是从host端到NAND的，只有RE_n信号拉低处于数据输出模式才能从NAND flash中读出数据，如图。</p><center><img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/5.8NAND%E6%95%B0%E6%8D%AE%E4%BA%A4%E6%8D%A2.png" width="50%" height="50%" alt="NAND数据交换"/></center>]]></content>
       
@@ -59,8 +59,8 @@
     
     <entry>
       <title>4--Markdown简要速查笔记</title>
-      <link href="/3%20%E8%AF%AD%E8%A8%80/Markdown/4--Markdown%E7%AE%80%E8%A6%81%E9%80%9F%E6%9F%A5%E7%AC%94%E8%AE%B0.html"/>
-      <url>/3%20%E8%AF%AD%E8%A8%80/Markdown/4--Markdown%E7%AE%80%E8%A6%81%E9%80%9F%E6%9F%A5%E7%AC%94%E8%AE%B0.html</url>
+      <link href="/b5f222500069.html"/>
+      <url>/b5f222500069.html</url>
       
         <content type="html"><![CDATA[<h1 id="1、标题"><a href="#1、标题" class="headerlink" title="1、标题"></a>1、标题</h1><ul><li><code>#(空格)一级标题</code></li><li><code>#(空格)二级标题</code></li></ul><h1 id="2、段落换行"><a href="#2、段落换行" class="headerlink" title="2、段落换行"></a>2、段落换行</h1><ul><li>末尾两个以上空格</li><li>句末加<code>&lt;br&gt;</code></li></ul><h1 id="3、强调语法"><a href="#3、强调语法" class="headerlink" title="3、强调语法"></a>3、强调语法</h1><ol><li><p>粗体：<code>**内容**</code></p></li><li><p>斜体：<code>*内容**</code></p></li><li><p>斜体+粗体：<code>***内容***</code></p></li></ol><h1 id="4、分割线"><a href="#4、分割线" class="headerlink" title="4、分割线"></a>4、分割线</h1><p>一行中三个“<code>-</code>”</p><h1 id="5、删除线"><a href="#5、删除线" class="headerlink" title="5、删除线"></a>5、删除线</h1><p><code>~~内容~~</code></p><h1 id="6、下划线"><a href="#6、下划线" class="headerlink" title="6、下划线"></a>6、下划线</h1><p><code>&lt;u&gt;带下划线文本&lt;/u&gt;</code></p><h1 id="7、列表和引用"><a href="#7、列表和引用" class="headerlink" title="7、列表和引用"></a>7、列表和引用</h1><p>第一种引用：<code>&gt;内容</code></p><p>数字：<code>1.（空格）内容</code></p><p>强调：<code>-（空格）内容</code></p><p>嵌套：</p><pre><code class="markdown">1.（空格）第一    （四个空格，或一个tab）- 小一</code></pre><h1 id="8、代码"><a href="#8、代码" class="headerlink" title="8、代码"></a>8、代码</h1><pre><code class="markdown">    ```代码类型    代码内容    ```</code></pre><p>句子中直接`内容`，内容会变成<code>内容</code></p><h1 id="9、链接"><a href="#9、链接" class="headerlink" title="9、链接"></a>9、链接</h1><p><code>[超链接名](http://XXX  &quot;说明&quot;)</code></p><p>鼠标悬停在链接名上，会显示说明内容</p><h1 id="10、图片插入"><a href="#10、图片插入" class="headerlink" title="10、图片插入"></a>10、图片插入</h1><ol><li>常规插入图片</li></ol><p><code>![alt 属性文本](XXX.img “可选标题”)</code></p><p>alt属性文本：当某种原因看不见图片时会显示该内容</p><p>可选标题：鼠标悬停图片显示该内容</p><ol start="2"><li>点击图片会跳转链接</li></ol><p> <code>[![alt 属性文本](XXX.img “可选标题”)](http://XXX)</code></p><ol start="3"><li>居左</li></ol><pre><code class="markdown">![在这里插入图片描述](https://img-blog.csdnimg.cn/20200822014538211.png#pic_left)</code></pre><ol start="4"><li>居中：<code>#pic_center</code></li></ol><p><strong>5. 等比缩放</strong></p><p><code>&lt;img src=https://xxx.img width=60% /&gt;</code></p><ol start="6"><li>固定宽高</li></ol><p><code>&lt;img src=https://xxx.img width=200 height=100 /&gt;</code></p><p><strong>7. 利用html终极格式</strong></p><pre><code class="html">&lt;center&gt;&lt;img src=&quot;链接&quot; width=&quot;75%&quot; height=&quot;75%&quot; alt=&quot;属性说明&quot;/&gt;&lt;/center&gt;</code></pre><h1 id="11、表格"><a href="#11、表格" class="headerlink" title="11、表格"></a>11、表格</h1><p>可直接通过网址生成markdown语句</p><p><a href="https://www.tablesgenerator.com/markdown_tables">Markdown Tables generator - TablesGenerator.com</a></p>]]></content>
       
@@ -88,8 +88,8 @@
     
     <entry>
       <title>3--perl生成html table报告-项目3.3</title>
-      <link href="/1%20%E9%A1%B9%E7%9B%AE/%E9%A1%B9%E7%9B%AE3%EF%BC%9APerl%E5%9B%9E%E5%BD%92%E6%B5%8B%E8%AF%95%E8%84%9A%E6%9C%AC/3--table%E6%8A%A5%E5%91%8A-%E9%A1%B9%E7%9B%AE3-3.html"/>
-      <url>/1%20%E9%A1%B9%E7%9B%AE/%E9%A1%B9%E7%9B%AE3%EF%BC%9APerl%E5%9B%9E%E5%BD%92%E6%B5%8B%E8%AF%95%E8%84%9A%E6%9C%AC/3--table%E6%8A%A5%E5%91%8A-%E9%A1%B9%E7%9B%AE3-3.html</url>
+      <link href="/82da99f12c12.html"/>
+      <url>/82da99f12c12.html</url>
       
         <content type="html"><![CDATA[<h1 id="一、主要功能"><a href="#一、主要功能" class="headerlink" title="一、主要功能"></a>一、主要功能</h1><ul><li>生成html table</li><li>CSS美化表格</li></ul><h1 id="二、html头文件代码"><a href="#二、html头文件代码" class="headerlink" title="二、html头文件代码"></a>二、html头文件代码</h1><p>在perl中定义<code>$html</code>变量，当生成好html代码后，通过文件句柄导出<code>$html</code>中所有内容到<code>verification.html</code>文件，就可以<code>firefox verification.html &amp;</code>看到最终结果的表格文件。</p><pre><code class="perl">my $html = &quot;&lt;html lang=&#39;en&#39;&gt;    &lt;head&gt;        &lt;meta charset=&#39;utf8&#39; /&gt;        &lt;link rel=&#39;stylesheet&#39; href=&#39;css/styles.css&#39;&gt;        &lt;title&gt;            verification table        &lt;/title&gt;    &lt;/head&gt;    &lt;style&gt;    $CSS       ##### CSS 美化代码    &lt;/style&gt;    &lt;body&gt;  &lt;table border=1&gt;      &lt;tr&gt;       &lt;th&gt;Test Case &lt;/th&gt;       &lt;th&gt;Description &lt;/th&gt;       &lt;th&gt;Dir &lt;/th&gt;       &lt;th&gt;Result &lt;/th&gt;       &lt;th&gt;Time &lt;/th&gt;      &lt;/tr&gt;      $table       ### 表格一行内容的 html table代码  &lt;/table&gt;      &lt;/body&gt;&lt;/html&gt;&quot;;##########---------------export html and clear some logopen(FILE,&quot;&gt;verification.html&quot;);say FILE &quot;$html&quot;;close (FILE);</code></pre><h1 id="三、-table中的html-table代码"><a href="#三、-table中的html-table代码" class="headerlink" title="三、$table中的html table代码"></a>三、$table中的html table代码</h1><p>将for循环产生的相关单元格变量填入html table中相应位置，每一次for循环都会产生一行数据</p><pre><code class="perl">$table .= &quot;&lt;tr&gt;\n\t\t              &lt;td&gt;&lt;a href= \&quot;../tb/$case_name.v\&quot;&gt;test_$i&lt;/a&gt;&lt;/td&gt;\n\t\t              &lt;td&gt;$description&lt;/td&gt;\n\t\t              &lt;td&gt;&lt;a href= \&quot;**$dir_log\**&quot;&gt;log_file_test_$i&lt;/a&gt;&lt;/td&gt;\n\t\t              &lt;td bgcolor= $color &gt; $result&lt;/td&gt;\n\t\t              &lt;td&gt;$time&lt;/td&gt;\n           &lt;/tr&gt;\n&quot;</code></pre><h1 id="四、html-table-CSS美化代码"><a href="#四、html-table-CSS美化代码" class="headerlink" title="四、html table CSS美化代码"></a>四、html table CSS美化代码</h1><pre><code class="perl">#########-------------------------CSS for table style$CSS=&#39;table &#123;    width: 90%;    background: #ccc;    margin: 10px auto;    border-collapse: collapse;    border: 2px inset black;&#125;th,td &#123;    height: 25px;    line-height: 25px;    text-align: center;    border: 1px solid #ccc;&#125;th &#123;    background: #eee;    font-weight: bold;    font-size:15px;&#125;tr &#123;    background: #fff;&#125;tr:hover &#123;    background: #cc0;&#125;td a &#123;    color: #06f;    text-decoration: none;&#125;td a:hover &#123;    color: #06f;    text-decoration: underline;&#125;&#39;;</code></pre><p>注意，这里使用的单引号对<code>$CSS</code>变量赋值，防止其中内容在双引号中当作perl的关键字被识别导致语法错误。</p><h1 id="五、总结"><a href="#五、总结" class="headerlink" title="五、总结"></a>五、总结</h1><p>到这，此次简单的perl回归测试报告脚本就完成了。这算是学完perl后，第一次写的一个原创的perl脚本，中间的逻辑可能不是最优解，但好歹能完成基本功能。通过这个脚本的书写，我第一次体会到了perl的强大和复杂，也深知自己之前仅仅学习了皮毛而已。同时我也了解了html、CSS相关的一些网页知识，这和我搭建blog的想法正不谋而合，高级的用法虽然不会，但底层逻辑大概了解了，算是打开了又一个世界的大门了！</p>]]></content>
       
@@ -115,8 +115,8 @@
     
     <entry>
       <title>2--Perl处理log文件-项目3.2</title>
-      <link href="/1%20%E9%A1%B9%E7%9B%AE/%E9%A1%B9%E7%9B%AE3%EF%BC%9APerl%E5%9B%9E%E5%BD%92%E6%B5%8B%E8%AF%95%E8%84%9A%E6%9C%AC/2--Perl%E5%A4%84%E7%90%86log%E6%96%87%E4%BB%B6-%E9%A1%B9%E7%9B%AE3.2.html"/>
-      <url>/1%20%E9%A1%B9%E7%9B%AE/%E9%A1%B9%E7%9B%AE3%EF%BC%9APerl%E5%9B%9E%E5%BD%92%E6%B5%8B%E8%AF%95%E8%84%9A%E6%9C%AC/2--Perl%E5%A4%84%E7%90%86log%E6%96%87%E4%BB%B6-%E9%A1%B9%E7%9B%AE3.2.html</url>
+      <link href="/7db75eba1192.html"/>
+      <url>/7db75eba1192.html</url>
       
         <content type="html"><![CDATA[<h1 id="一、主要功能"><a href="#一、主要功能" class="headerlink" title="一、主要功能"></a>一、主要功能</h1><ul><li>逐个打开<code>logfile</code>文件夹中的log文件</li><li>处理文件，判断是否有<code>ERROR</code>产生</li></ul><h1 id="二、代码块说明"><a href="#二、代码块说明" class="headerlink" title="二、代码块说明"></a>二、代码块说明</h1><h2 id="1、变量定义及其作用"><a href="#1、变量定义及其作用" class="headerlink" title="1、变量定义及其作用"></a>1、变量定义及其作用</h2><pre><code class="perl">my $dir_log;      #仿真目录my $case_name;    #testcase名字，例如test1.vmy $description;  #testcase功能的描述,例如normal_erasemy $result;       #存储结果的变量,PASS或者FAILmy $time;         #储存仿真时间my $table;        #表格的一行,(html语法)my $color;        #将FAIL或者PASS设置成不同的颜色</code></pre><h2 id="2、通过文件句柄将log文件逐个传进来，并将所有内容（单个log文件）存储到变量-log中"><a href="#2、通过文件句柄将log文件逐个传进来，并将所有内容（单个log文件）存储到变量-log中" class="headerlink" title="2、通过文件句柄将log文件逐个传进来，并将所有内容（单个log文件）存储到变量$log中"></a>2、通过文件句柄将log文件逐个传进来，并将所有内容（单个log文件）存储到变量<code>$log</code>中</h2><pre><code class="perl">for my $i (96..$total)&#123;     $dir_log   = &quot;./logfile/test$i.log&quot;;     $case_name = &quot;test$i&quot;;    open(LOG, &quot;&lt;$dir_log&quot;)or die $!;    my $log = do &#123; local $/; &lt;LOG&gt; &#125;;………        close LOG;………&#125;</code></pre><p>这里对文件句柄有更深的了解，LOG相当于一个从文件——&gt;Perl中的桥梁，要把文件中所有内容读出来并存储到变量<code>$log</code>中用到了<code>my $log = do &#123; local $/; &lt;LOG&gt; &#125;;</code></p><h3 id="解释my-log-do-local-lt-LOG-gt"><a href="#解释my-log-do-local-lt-LOG-gt" class="headerlink" title="******解释my $log = do { local $/; &lt;LOG&gt; };"></a>******解释<code>my $log = do &#123; local $/; &lt;LOG&gt; &#125;;</code></h3><p>正常<LOG>一次只能读取一行，可以通过while循环将其全部读出来储存到一个变量中：</p><pre><code class="perl">my $log;while (&lt;LOG&gt;) &#123;    $log .= $_;&#125;</code></pre><p>而直接将其赋给变量有两种情况：</p><pre><code class="perl">my $log = &lt;LOG&gt;;    # 等号左边为标量时，返回文件的单行内容my @log = &lt;LOG&gt;;    # 等号左边为数组时，返回文件的全部内容（文件的每行对应数组的每个元素）</code></pre><p><code>**my $log = do &#123; local $/; &lt;LOG&gt; &#125;;</code>的实现方式：</p><p>通过 <code>do &#123;&#125;</code>创建一个临时的作用域，在作用域中改变 <code>$\</code> 的值，改变了 <code>&lt;LOG&gt;</code>在标量上下文中的分隔符（由 <code>\n</code>变为 <code>undef</code>），达到了读取整个文件内容的目的，</p><p><strong><code>local $/</code>等价于<code>local $/ = undef</code>，而<code>$/</code>输入记录分隔符，默认是新行字符，如用undef这个变量，将读到文件结尾</strong></p><p>参考：<a href="https://www.ogura.io/posts/2018/09/read-file-the-perl-way/">perl 关于 do { local $&#x2F;; <FILEHANDLE> } 语法糖 (ogura.io)</a></p><h2 id="3、通过正则匹配判断，对log文件处理，并给相应变量赋值"><a href="#3、通过正则匹配判断，对log文件处理，并给相应变量赋值" class="headerlink" title="3、通过正则匹配判断，对log文件处理，并给相应变量赋值"></a>3、通过正则匹配判断，对log文件处理，并给相应变量赋值</h2><pre><code class="perl">#捕获变量截取log中的descriptionif($log =~ /TEST.*:(.*)/)&#123;         $description = &quot;$1&quot;;        &#125;  #捕获变量截取log中的仿真时间 if($log =~ /on(.*)CST/)&#123;         $time = &quot;$1&quot;;        &#125;  #正则匹配ERROR关键此，给结果变量赋值为PASS或者FAIL  if($log =~ /ERROR:/)&#123;                          $result = (&quot;FAIL&quot;);   &#125;elsif($log =~ /errors: [^0]/)&#123;                          $result = (&quot;FAIL&quot;);   &#125;else&#123;                          $result = (&quot;PASS&quot;);   &#125;#判断结果变量，给$color变量赋值，便于后期html赋值   if($result eq &quot;FAIL&quot;)&#123;                      $color = &quot;\&quot;#FF0000\&quot;&quot;;   &#125;elsif($result eq &quot;PASS&quot;)&#123;                      $color = &quot;\&quot;#00FF00\&quot;&quot;;       &#125;</code></pre><h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>这一块的代码的难点在与对句柄的理解，以及文件传进来的状态（一行一行地读）。最初我直接让其等于变量，发现打印出来存储了一行。然后考虑整个存入数组中，但是又无法对数组中的所有元素进行文字处理，因为数组中的一个元素是log文件中的一行内容。后来才找到方法<code>my $log = do &#123; local $/; &lt;LOG&gt; &#125;;</code>，让一个文件的所有内容都读出来储存到变量中，然后进行文字处理。</p><p>可以看到，<code>close LOG；</code>前后省略了两段代码，第一段代码为第3点中的内容，第二段内容是在相关变量产生后生成<code>$table</code>变量（储存了一行html表格的html格式代码），因为每一个testcase产生一个log文件，产生一行数据结果。</p>]]></content>
       
@@ -142,8 +142,8 @@
     
     <entry>
       <title>Hello World</title>
-      <link href="/6%20%E5%85%B6%E4%BB%96/hello-world.html"/>
-      <url>/6%20%E5%85%B6%E4%BB%96/hello-world.html</url>
+      <link href="/466fcf604596.html"/>
+      <url>/466fcf604596.html</url>
       
         <content type="html"><![CDATA[<p>Welcome to <a href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p><h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><pre><code class="bash">$ hexo new &quot;My New Post&quot;</code></pre><p>More info: <a href="https://hexo.io/docs/writing.html">Writing</a></p><h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><pre><code class="bash">$ hexo server</code></pre><p>More info: <a href="https://hexo.io/docs/server.html">Server</a></p><h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><pre><code class="bash">$ hexo generate</code></pre><p>More info: <a href="https://hexo.io/docs/generating.html">Generating</a></p><h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><pre><code class="bash">$ hexo deploy</code></pre><p>More info: <a href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>]]></content>
       
@@ -161,8 +161,8 @@
     
     <entry>
       <title>1、NAND简述</title>
-      <link href="/1%20%E9%A1%B9%E7%9B%AE/%E9%A1%B9%E7%9B%AE2%EF%BC%9AErase%20of%20NAND%20behavior%20model/1%E3%80%81NAND%E7%AE%80%E8%BF%B0.html"/>
-      <url>/1%20%E9%A1%B9%E7%9B%AE/%E9%A1%B9%E7%9B%AE2%EF%BC%9AErase%20of%20NAND%20behavior%20model/1%E3%80%81NAND%E7%AE%80%E8%BF%B0.html</url>
+      <link href="/ea90c40a8e6c.html"/>
+      <url>/ea90c40a8e6c.html</url>
       
         <content type="html"><![CDATA[]]></content>
       
@@ -182,8 +182,8 @@
     
     <entry>
       <title>Verilog第一</title>
-      <link href="/3%20%E8%AF%AD%E8%A8%80/Verilog/Verilog.html"/>
-      <url>/3%20%E8%AF%AD%E8%A8%80/Verilog/Verilog.html</url>
+      <link href="/04cca258d7c7.html"/>
+      <url>/04cca258d7c7.html</url>
       
         <content type="html"><![CDATA[]]></content>
       
@@ -203,8 +203,8 @@
     
     <entry>
       <title>1--perl回归测试（regression）代码逻辑-项目3.2</title>
-      <link href="/1%20%E9%A1%B9%E7%9B%AE/%E9%A1%B9%E7%9B%AE3%EF%BC%9APerl%E5%9B%9E%E5%BD%92%E6%B5%8B%E8%AF%95%E8%84%9A%E6%9C%AC/1--perl%E5%9B%9E%E5%BD%92%E6%B5%8B%E8%AF%95%EF%BC%88regression%EF%BC%89%E4%BB%A3%E7%A0%81%E9%80%BB%E8%BE%91-%E9%A1%B9%E7%9B%AE3.1.html"/>
-      <url>/1%20%E9%A1%B9%E7%9B%AE/%E9%A1%B9%E7%9B%AE3%EF%BC%9APerl%E5%9B%9E%E5%BD%92%E6%B5%8B%E8%AF%95%E8%84%9A%E6%9C%AC/1--perl%E5%9B%9E%E5%BD%92%E6%B5%8B%E8%AF%95%EF%BC%88regression%EF%BC%89%E4%BB%A3%E7%A0%81%E9%80%BB%E8%BE%91-%E9%A1%B9%E7%9B%AE3.1.html</url>
+      <link href="/e569eff33ac2.html"/>
+      <url>/e569eff33ac2.html</url>
       
         <content type="html"><![CDATA[<h1 id="一、主要功能（总）"><a href="#一、主要功能（总）" class="headerlink" title="一、主要功能（总）"></a>一、主要功能（总）</h1><ol><li>调用Xrun，回归测试所有的testcase。</li><li>可选择，Run单个的testcase。</li><li>当DEBUG时，可对单个testcase调用Simvision仿真。</li><li>处理分析log文件，判断FAIL还是PASS</li><li>用perl将结果生成html表格。</li></ol><h1 id="二、效果展示"><a href="#二、效果展示" class="headerlink" title="二、效果展示"></a>二、效果展示</h1><p>html table如下，可直接通过点击打开相应的testcase和log文件。</p><center><img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/1.1html-table1.png" width="75%" height="75%" alt="1.1html table效果1"/></center><center><img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/1.2html-table2.png" width="75%" height="75%" alt="1.2html table效果2"/></center><h1 id="三、目录说明"><a href="#三、目录说明" class="headerlink" title="三、目录说明"></a>三、目录说明</h1><p>项目文件如下，一级目录分为三级，其中sim目录下，run即为perl回归测试脚本，verification.html为perl最终生成的结果报告，logfile为创建的用于储存仿真结果的文件夹（run脚本中指定logfile路径）。</p><center><img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/1.3%E6%96%87%E4%BB%B6%E7%9B%AE%E5%BD%95.png" width="25%" height="25%" alt="1.3项目目录结构"/></center><h1 id="四、回归测试主要思路"><a href="#四、回归测试主要思路" class="headerlink" title="四、回归测试主要思路"></a>四、回归测试主要思路</h1><ul><li>第一步，通过GetOption操作，设置几个自定义的option</li></ul><pre><code class="perl">#! /usr/bin/perl#use strict;use feature &#39;say&#39;;use Getopt::Long;use vars qw( $help,  $all,  $simvision           );GetOptions (              &#39;h|help&#39;        =&gt;  \$help,              &#39;all&#39;           =&gt;  \$all,              &#39;gui&#39;           =&gt;  \$simvision);if($help) &#123;    print &quot;            -all          : enter the last testcase number i,can run test_1 to test_i.            -gui          : call simvision for simulation,can&#39;t ust &#39;-all -gui &#39; at the same time.            The default you can choose the single testcase number to sim.            \n&quot;;            exit 0;    &#125;</code></pre><ul><li>第二步，通过条件判断语句，选择run_sim的方式（回归还是单个case）</li></ul><pre><code class="perl">if(defined($all))&#123;  system(&quot;rm -rf ./logfile/*&quot;);   print &quot;Plese enter the last testcase number:\n&quot;;  chomp($total = &lt;STDIN&gt;);  @i = (1..$total);  foreach(@i)&#123;  my $files = &quot; ../tb/test$_.v &quot;;  my $cmd = &quot;xrun -access +rwc -sv -64 -nocopyright -l test$_.log &quot;.&quot; $files&quot;;  print &quot;cmd= $cmd \n&quot;;  system($cmd);  system(&quot;mv *.log logfile&quot;);  &#125;&#125;else&#123;    print &quot;Plese enter the testcase number:\n&quot;;    chomp(my $i = &lt;STDIN&gt;);    my $files = &quot; ../tb/test$i.v &quot;;    my $CMD;    my $cmd1 = &quot;xrun -access +rwc -sv -64 -nocopyright -l test$i.log &quot;.&quot; $files&quot;;    my $cmd2 = &quot;-gui&quot;;    if($simvision)&#123;        $CMD = &quot;$cmd1&quot; . &quot;$cmd2&quot;;    &#125;else&#123;        $CMD = &quot;$cmd1&quot;;    &#125;    print &quot;CMD= $CMD \n&quot;;    system($CMD);    system(&quot;mv *.log logfile&quot;);&#125;</code></pre><p>这一部分的逻辑是：</p><ol><li><p>首先，当输入<code>-all</code>这个option时，会执行if里的语句。先删除掉logfile文件夹里所有的文件，然后输入testcase目前所有的数目（会依次执行第一个case到你输入的case），通过foreach循环调用system函数依次将每个case执行，最后将所有文件移动到logfile文件夹，便于后续log文件的处理。</p></li><li><p>如果不输入<code>-all</code>则会执行else中单独跑一个case的命令。输入你期望跑的testcase编号，然后调用system函数进行仿真。这里有一个option，若执行perl脚本时输入<code>-gui</code>，会对单个的case调用simvision仿真。</p></li></ol>]]></content>
       
@@ -230,8 +230,8 @@
     
     <entry>
       <title>存储第一批</title>
-      <link href="/2%20%E9%A2%86%E5%9F%9F/%E5%AD%98%E5%82%A8/%E5%AD%98%E5%82%A8.html"/>
-      <url>/2%20%E9%A2%86%E5%9F%9F/%E5%AD%98%E5%82%A8/%E5%AD%98%E5%82%A8.html</url>
+      <link href="/ba84e8f6a332.html"/>
+      <url>/ba84e8f6a332.html</url>
       
         <content type="html"><![CDATA[]]></content>
       
@@ -251,8 +251,8 @@
     
     <entry>
       <title>PERL</title>
-      <link href="/3%20%E8%AF%AD%E8%A8%80/Perl/perl.html"/>
-      <url>/3%20%E8%AF%AD%E8%A8%80/Perl/perl.html</url>
+      <link href="/9d937c5617b2.html"/>
+      <url>/9d937c5617b2.html</url>
       
         <content type="html"><![CDATA[]]></content>
       
@@ -272,8 +272,8 @@
     
     <entry>
       <title>工具的第一篇</title>
-      <link href="/4%20%E5%B7%A5%E5%85%B7/%E5%B7%A5%E5%85%B7.html"/>
-      <url>/4%20%E5%B7%A5%E5%85%B7/%E5%B7%A5%E5%85%B7.html</url>
+      <link href="/468cb073126f.html"/>
+      <url>/468cb073126f.html</url>
       
         <content type="html"><![CDATA[]]></content>
       
@@ -291,8 +291,8 @@
     
     <entry>
       <title>杂记的第一篇</title>
-      <link href="/5%20%E6%9D%82%E8%AE%B0/%E6%9D%82%E8%AE%B0.html"/>
-      <url>/5%20%E6%9D%82%E8%AE%B0/%E6%9D%82%E8%AE%B0.html</url>
+      <link href="/91ec02967d80.html"/>
+      <url>/91ec02967d80.html</url>
       
         <content type="html"><![CDATA[]]></content>
       
@@ -310,8 +310,8 @@
     
     <entry>
       <title>eMMC</title>
-      <link href="/2%20%E9%A2%86%E5%9F%9F/eMMC/eMMC.html"/>
-      <url>/2%20%E9%A2%86%E5%9F%9F/eMMC/eMMC.html</url>
+      <link href="/455df7b96f79.html"/>
+      <url>/455df7b96f79.html</url>
       
         <content type="html"><![CDATA[]]></content>
       
@@ -331,8 +331,8 @@
     
     <entry>
       <title>SV</title>
-      <link href="/3%20%E8%AF%AD%E8%A8%80/SystemVerilog/SystemVerilog.html"/>
-      <url>/3%20%E8%AF%AD%E8%A8%80/SystemVerilog/SystemVerilog.html</url>
+      <link href="/6ae897748117.html"/>
+      <url>/6ae897748117.html</url>
       
         <content type="html"><![CDATA[]]></content>
       
@@ -352,8 +352,8 @@
     
     <entry>
       <title>项目1的第一篇</title>
-      <link href="/1%20%E9%A1%B9%E7%9B%AE/%E9%A1%B9%E7%9B%AE1%EF%BC%9ANand_behavior_model/%E9%A1%B9%E7%9B%AE%E4%B8%80.html"/>
-      <url>/1%20%E9%A1%B9%E7%9B%AE/%E9%A1%B9%E7%9B%AE1%EF%BC%9ANand_behavior_model/%E9%A1%B9%E7%9B%AE%E4%B8%80.html</url>
+      <link href="/09e6c6a170f7.html"/>
+      <url>/09e6c6a170f7.html</url>
       
         <content type="html"><![CDATA[<pre><code class="verilog">    if (Io_mirror [7 : 0] === 8&#39;h60) begin        1、program cache 未完成时，60h会被忽略，直到状态变为E0h        2、~Wp_n 和 OTP_mode 时均不允许 ERASE        3、60h有效时，判断是否处于Multi-Plane ERASE，      if lastCmd为60h，或D1h，则继续让lastCmd=60h      else if (~multiplane_op_erase) begin                              saw_cmnd_60h = 1&#39;b1;                              saw_cmnd_60h_clear = 1&#39;b1;                          end else begin                             saw_cmnd_60h = 1&#39;b1;                              saw_cmnd_60h_clear = 1&#39;b0;                          end        4、调用 disable_rdStatus，复位 status flag，让device返Read mode        endss</code></pre><p>   <img src="https://cdn.jsdelivr.net/gh/icmarktian/blog_img@master/data/blog_background2.jpg" alt="博客背景" title="github"></p><p>   <img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/%E5%8D%9A%E5%AE%A2%E8%83%8C%E6%99%AF.jpg" alt="博客背景" title="腾讯云"></p>]]></content>
       
