@@ -223,8 +223,8 @@
     
     <entry>
       <title>其他分类保留</title>
-      <link href="/clffkw40a0006g4ub88c1fio6.html"/>
-      <url>/clffkw40a0006g4ub88c1fio6.html</url>
+      <link href="/clffl7fpp0003zcubblk6djie.html"/>
+      <url>/clffl7fpp0003zcubblk6djie.html</url>
       
         <content type="html"><![CDATA[<p>Welcome to <a href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p><h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><pre><code class="bash">$ hexo new &quot;My New Post&quot;</code></pre><p>More info: <a href="https://hexo.io/docs/writing.html">Writing</a></p><h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><pre><code class="bash">$ hexo server</code></pre><p>More info: <a href="https://hexo.io/docs/server.html">Server</a></p><h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><pre><code class="bash">$ hexo generate</code></pre><p>More info: <a href="https://hexo.io/docs/generating.html">Generating</a></p><h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><pre><code class="bash">$ hexo deploy</code></pre><p>More info: <a href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>]]></content>
       
@@ -242,8 +242,8 @@
     
     <entry>
       <title>Verilog分类保留</title>
-      <link href="/clffkw414002jg4ub2i9a0ky3.html"/>
-      <url>/clffkw414002jg4ub2i9a0ky3.html</url>
+      <link href="/clffl7fpw000czcub3gas2lx3.html"/>
+      <url>/clffl7fpw000czcub3gas2lx3.html</url>
       
         <content type="html"><![CDATA[]]></content>
       
@@ -290,8 +290,8 @@
     
     <entry>
       <title>存储分类保留</title>
-      <link href="/clffkw40m000sg4ubgrgzdnbd.html"/>
-      <url>/clffkw40m000sg4ubgrgzdnbd.html</url>
+      <link href="/clffl7fq0000kzcub6141hhau.html"/>
+      <url>/clffl7fq0000kzcub6141hhau.html</url>
       
         <content type="html"><![CDATA[]]></content>
       
@@ -311,8 +311,8 @@
     
     <entry>
       <title>perl分类保留</title>
-      <link href="/clffkw413002hg4ubdgkbc44q.html"/>
-      <url>/clffkw413002hg4ubdgkbc44q.html</url>
+      <link href="/clffl7fpt0007zcub021ec6bd.html"/>
+      <url>/clffl7fpt0007zcub021ec6bd.html</url>
       
         <content type="html"><![CDATA[]]></content>
       
@@ -332,8 +332,8 @@
     
     <entry>
       <title>工具分类保留</title>
-      <link href="/clffkw4020001g4ub8bmf4lfe.html"/>
-      <url>/clffkw4020001g4ub8bmf4lfe.html</url>
+      <link href="/clffl7fpl0001zcubftrp0s5d.html"/>
+      <url>/clffl7fpl0001zcubftrp0s5d.html</url>
       
         <content type="html"><![CDATA[]]></content>
       
@@ -351,8 +351,8 @@
     
     <entry>
       <title>杂记分类保留</title>
-      <link href="/clffkw4060003g4ubek7c9iy6.html"/>
-      <url>/clffkw4060003g4ubek7c9iy6.html</url>
+      <link href="/clffl7fpt0006zcub66gy6wof.html"/>
+      <url>/clffl7fpt0006zcub66gy6wof.html</url>
       
         <content type="html"><![CDATA[]]></content>
       
@@ -370,8 +370,8 @@
     
     <entry>
       <title>eMMC分类保留</title>
-      <link href="/clffkw40n000wg4ub2njv91xm.html"/>
-      <url>/clffkw40n000wg4ub2njv91xm.html</url>
+      <link href="/clffl7fq1000lzcubh4755ipl.html"/>
+      <url>/clffl7fq1000lzcubh4755ipl.html</url>
       
         <content type="html"><![CDATA[]]></content>
       
@@ -391,8 +391,8 @@
     
     <entry>
       <title>SV分类保留</title>
-      <link href="/clffkw413002ig4ubh4btbtoo.html"/>
-      <url>/clffkw413002ig4ubh4btbtoo.html</url>
+      <link href="/clffl7fpv000azcub3jufdyf7.html"/>
+      <url>/clffl7fpv000azcub3jufdyf7.html</url>
       
         <content type="html"><![CDATA[]]></content>
       
@@ -412,8 +412,8 @@
     
     <entry>
       <title>项目1分类保留</title>
-      <link href="/clffkw40a0007g4ub644g9sgh.html"/>
-      <url>/clffkw40a0007g4ub644g9sgh.html</url>
+      <link href="/clffl7fq2000pzcub5xvp46eu.html"/>
+      <url>/clffl7fq2000pzcub5xvp46eu.html</url>
       
         <content type="html"><![CDATA[<pre><code class="verilog">    if (Io_mirror [7 : 0] === 8&#39;h60) begin        1、program cache 未完成时，60h会被忽略，直到状态变为E0h        2、~Wp_n 和 OTP_mode 时均不允许 ERASE        3、60h有效时，判断是否处于Multi-Plane ERASE，      if lastCmd为60h，或D1h，则继续让lastCmd=60h      else if (~multiplane_op_erase) begin                              saw_cmnd_60h = 1&#39;b1;                              saw_cmnd_60h_clear = 1&#39;b1;                          end else begin                             saw_cmnd_60h = 1&#39;b1;                              saw_cmnd_60h_clear = 1&#39;b0;                          end        4、调用 disable_rdStatus，复位 status flag，让device返Read mode        endss</code></pre><p>   <img src="https://cdn.jsdelivr.net/gh/icmarktian/blog_img@master/data/blog_background2.jpg" alt="博客背景" title="github"></p><p>   <img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/%E5%8D%9A%E5%AE%A2%E8%83%8C%E6%99%AF.jpg" alt="博客背景" title="腾讯云"></p>]]></content>
       
