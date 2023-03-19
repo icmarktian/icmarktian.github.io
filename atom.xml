@@ -6,7 +6,7 @@
   <link href="https://mkdbook.com/atom.xml" rel="self"/>
   
   <link href="https://mkdbook.com/"/>
-  <updated>2023-03-18T07:34:11.081Z</updated>
+  <updated>2023-03-19T05:30:16.110Z</updated>
   <id>https://mkdbook.com/</id>
   
   <author>
@@ -15,6 +15,32 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>6--NAND基本的读、写、擦除功能</title>
+    <link href="https://mkdbook.com/2%20%E9%A2%86%E5%9F%9F/NAND/6--NAND%E5%9F%BA%E6%9C%AC%E7%9A%84%E8%AF%BB%E3%80%81%E5%86%99%E3%80%81%E6%93%A6%E9%99%A4%E5%8A%9F%E8%83%BD.html"/>
+    <id>https://mkdbook.com/2%20%E9%A2%86%E5%9F%9F/NAND/6--NAND%E5%9F%BA%E6%9C%AC%E7%9A%84%E8%AF%BB%E3%80%81%E5%86%99%E3%80%81%E6%93%A6%E9%99%A4%E5%8A%9F%E8%83%BD.html</id>
+    <published>2023-03-19T04:13:19.000Z</published>
+    <updated>2023-03-19T05:30:16.110Z</updated>
+    
+    <content type="html"><![CDATA[<p>NAND Flash的读（READ）、写（PROGRAM）、擦除（ERASE）功能有很多种类型，例如就读而言，有READ page、READ ID等，这些功能和命令不同厂商可能不完全相同，具体要参照该NAND Flash厂商提供的Datasheet。本文总结一下NAND基本的几种读、写、擦除功能。</p><h1 id="一、NAND-Flash-读操作"><a href="#一、NAND-Flash-读操作" class="headerlink" title="一、NAND Flash 读操作"></a>一、NAND Flash 读操作</h1><p>这里介绍两种重要的读，一种是正常的<code>Page Read</code>：即读取由指定LUN的ROW地址表示的 一个page的数据；一种是<code>Cache Read</code>：当数据从Memory Array复制到Data Register的同时，允许前一拍数据从Cache Register读取出去，实现Pipeline方式工作。</p><h2 id="00h-30h：READ-PAGE-operation"><a href="#00h-30h：READ-PAGE-operation" class="headerlink" title="00h-30h：READ PAGE operation"></a>00h-30h：READ PAGE operation</h2><center><img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/6.1Read%20Page.png" width="40%" height="40%" alt="6.1 Read Page"/></center><p>如6.1所示，从Memory Array读出数据时，会经过Buffer。在每个Plane中会有两个Buffer：<code>Data Buffer</code>和<code>Cache Buffer</code>，它们的大小均为一个Page的大小。<br>当收到00h-30h命令串后，就会开始从指定位置读出Memory数据的功能。这种方式只能一次读取一个Page的数据，操作逻辑是数据从Memory Array到Cache Buffer，然后从Cache Buffer读出到IO口。</p><h2 id="Cache-read（31h和00h-31h）"><a href="#Cache-read（31h和00h-31h）" class="headerlink" title="Cache read（31h和00h-31h）"></a>Cache read（31h和00h-31h）</h2><center><img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/6.2Cache%20Read.png" width="70%" height="70%" alt="6.2 Cache Read"/></center><p>Cache Read会同时用到Data Buffer和Cache Buffer。如6.2所示，当Page N的数据从Cache Buffer读出到IO口的同时，Page N+1的数据从Memory Array读出到了Data buffer。<br>Cache Read又分为两种，一种是了连续Cache Read（31h：Sequential Cache Read），一种是随机Cache Read（00h-31h：Cache Read Random）。它们的区别如下：</p><center><img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/6.3Sequential%20Cache%20Read.png" width="75%" height="75%" alt="6.3 Sequential Cache Read"/></center><p><code>连续Cache Read</code>的操作逻辑如6.3序列图所示，00h-30h输入page M的地址后，后面输入一次31h命令，会读出page M中的数据，后面再输一次31h命令会读出page M+1的数据，以此类推。</p><center><img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/6.4Cache%20Read%20Random.png" width="75%" height="75%" alt="6.4 Cache Read Random"/></center><p><code>随机Cache Read</code>是指可以跳着读取不同Page的数据，如6.4序列图所示，第一次发00h-30h地址M后，第二次发00h-31h地址N之后，读出的是第一次Page M的数据，然后下一次输入Page P的地址之后，读取的是上一次Page N的数据，以此类推。</p><h1 id="二、NAND-Flash-写操作"><a href="#二、NAND-Flash-写操作" class="headerlink" title="二、NAND Flash 写操作"></a>二、NAND Flash 写操作</h1><p>写操作在NAND Flash中被称为Program，逻辑上是将1写成0。操作过程类似于读操作的反操作，数据从IO口进来然后经过两Buffer最后被写入到NAND Flash的Memory Array中。<br>写操作也有两种方式，<code>80h-10h：Program Page</code>；<code>80h-15h：Program Page Cache</code>。这里针对TLC不同厂商有不同的处理方式，例如长存使用One Pass Program，美光使用Two Pass Program。</p><h1 id="三、NAND-Flash-擦除操作"><a href="#三、NAND-Flash-擦除操作" class="headerlink" title="三、NAND Flash 擦除操作"></a>三、NAND Flash 擦除操作</h1><p>NAND Flash的Erase操作可以理解成一种特殊的写操作，它是将所有的数据都写成1（16进制读出来为FF）。命令为<code>60h-D0h</code>。</p><center><img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/6.5Erase%20Block.png" width="75%" height="75%" alt="6.5 Erase Block"/></center><p>如6.5序列图所示，擦除是以Block为单位的，所以只需要Row地址。扩展一下，ERASE相关的操作有如下几种：Erase Block、Multi_Plane Erase、Erase Suspend、 Erase Resume。</p><h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>本篇记录了比较浅显的基本功能，个人认为学习一个功能应该先从功能的描述入手，然后对照这它的序列图理解其命令逻辑。虽然不同厂商的功能描述和实现会有区别，但是大体的功能应该都是类似的（前提都是基于<a href="http://www.onfi.org/">ONFI协议</a>）。</p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;NAND Flash的读（READ）、写（PROGRAM）、擦除（ERASE）功能有很多种类型，例如就读而言，有READ page、READ ID等，这些功能和命令不同厂商可能不完全相同，具体要参照该NAND Flash厂商提供的Datasheet。本文总结一下NAND基本</summary>
+      
+    
+    
+    
+    <category term="领域" scheme="https://mkdbook.com/categories/%E9%A2%86%E5%9F%9F/"/>
+    
+    <category term="NAND" scheme="https://mkdbook.com/categories/%E9%A2%86%E5%9F%9F/NAND/"/>
+    
+    
+    <category term="NAND" scheme="https://mkdbook.com/tags/NAND/"/>
+    
+  </entry>
   
   <entry>
     <title>5--NAND基本概念简述</title>
@@ -47,9 +73,9 @@
     <link href="https://mkdbook.com/3%20%E8%AF%AD%E8%A8%80/Markdown/4--Markdown%E7%AE%80%E8%A6%81%E9%80%9F%E6%9F%A5%E7%AC%94%E8%AE%B0.html"/>
     <id>https://mkdbook.com/3%20%E8%AF%AD%E8%A8%80/Markdown/4--Markdown%E7%AE%80%E8%A6%81%E9%80%9F%E6%9F%A5%E7%AC%94%E8%AE%B0.html</id>
     <published>2023-03-17T15:43:18.000Z</published>
-    <updated>2023-03-17T16:04:45.761Z</updated>
+    <updated>2023-03-19T05:24:01.703Z</updated>
     
-    <content type="html"><![CDATA[<h1 id="1、标题"><a href="#1、标题" class="headerlink" title="1、标题"></a>1、标题</h1><ul><li><code>#(空格)一级标题</code></li><li><code>#(空格)二级标题</code></li></ul><h1 id="2、段落换行"><a href="#2、段落换行" class="headerlink" title="2、段落换行"></a>2、段落换行</h1><ul><li>末尾两个以上空格</li><li>句末加<code>&lt;br&gt;</code></li></ul><h1 id="3、强调语法"><a href="#3、强调语法" class="headerlink" title="3、强调语法"></a>3、强调语法</h1><ol><li><p>粗体：<code>**内容**</code></p></li><li><p>斜体：<code>*内容**</code></p></li><li><p>斜体+粗体：<code>***内容***</code></p></li></ol><h1 id="4、分割线"><a href="#4、分割线" class="headerlink" title="4、分割线"></a>4、分割线</h1><p>一行中三个“<code>-</code>”</p><h1 id="5、删除线"><a href="#5、删除线" class="headerlink" title="5、删除线"></a>5、删除线</h1><p><code>~~内容~~</code></p><h1 id="6、下划线"><a href="#6、下划线" class="headerlink" title="6、下划线"></a>6、下划线</h1><p><code>&lt;u&gt;带下划线文本&lt;/u&gt;</code></p><h1 id="7、列表和引用"><a href="#7、列表和引用" class="headerlink" title="7、列表和引用"></a>7、列表和引用</h1><p>第一种引用：<code>&gt;内容</code></p><p>数字：<code>1.（空格）内容</code></p><p>强调：<code>-（空格）内容</code></p><p>嵌套：</p><pre><code class="markdown">1.（空格）第一    （四个空格，或一个tab）- 小一</code></pre><h1 id="8、代码"><a href="#8、代码" class="headerlink" title="8、代码"></a>8、代码</h1><pre><code class="markdown">    ```代码类型    代码内容    ```</code></pre><p>句子中直接`内容`，内容会变成<code>内容</code></p><h1 id="9、链接"><a href="#9、链接" class="headerlink" title="9、链接"></a>9、链接</h1><p><code>[超链接名](http://XXX  &quot;说明&quot;)</code></p><p>鼠标悬停在链接名上，会显示说明内容</p><h1 id="10、图片插入"><a href="#10、图片插入" class="headerlink" title="10、图片插入"></a>10、图片插入</h1><ol><li>常规插入图片</li></ol><p><code>![alt 属性文本](XXX.img “可选标题”)</code></p><p>alt属性文本：当某种原因看不见图片时会显示该内容</p><p>可选标题：鼠标悬停图片显示该内容</p><ol start="2"><li>点击图片会跳转链接</li></ol><p> <code>[![alt 属性文本](XXX.img “可选标题”)](http://XXX)</code></p><ol start="3"><li>居左</li></ol><pre><code class="markdown">![在这里插入图片描述](https://img-blog.csdnimg.cn/20200822014538211.png#pic_left)</code></pre><ol start="4"><li>居中：<code>#pic_center</code></li></ol><p><strong>5. 等比缩放</strong></p><p><code>&lt;img src=https://xxx.img width=60% /&gt;</code></p><ol start="6"><li>固定宽高</li></ol><p><code>&lt;img src=https://xxx.img width=200 height=100 /&gt;</code></p><p><strong>7. 利用html终极格式</strong></p><pre><code class="html">&lt;center&gt;&lt;img src=&quot;链接&quot; width=&quot;25%&quot; height=&quot;25%&quot; alt=&quot;属性说明&quot;/&gt;&lt;/center&gt;</code></pre><h1 id="11、表格"><a href="#11、表格" class="headerlink" title="11、表格"></a>11、表格</h1><p>可直接通过网址生成markdown语句</p><p><a href="https://www.tablesgenerator.com/markdown_tables">Markdown Tables generator - TablesGenerator.com</a></p>]]></content>
+    <content type="html"><![CDATA[<h1 id="1、标题"><a href="#1、标题" class="headerlink" title="1、标题"></a>1、标题</h1><ul><li><code>#(空格)一级标题</code></li><li><code>#(空格)二级标题</code></li></ul><h1 id="2、段落换行"><a href="#2、段落换行" class="headerlink" title="2、段落换行"></a>2、段落换行</h1><ul><li>末尾两个以上空格</li><li>句末加<code>&lt;br&gt;</code></li></ul><h1 id="3、强调语法"><a href="#3、强调语法" class="headerlink" title="3、强调语法"></a>3、强调语法</h1><ol><li><p>粗体：<code>**内容**</code></p></li><li><p>斜体：<code>*内容**</code></p></li><li><p>斜体+粗体：<code>***内容***</code></p></li></ol><h1 id="4、分割线"><a href="#4、分割线" class="headerlink" title="4、分割线"></a>4、分割线</h1><p>一行中三个“<code>-</code>”</p><h1 id="5、删除线"><a href="#5、删除线" class="headerlink" title="5、删除线"></a>5、删除线</h1><p><code>~~内容~~</code></p><h1 id="6、下划线"><a href="#6、下划线" class="headerlink" title="6、下划线"></a>6、下划线</h1><p><code>&lt;u&gt;带下划线文本&lt;/u&gt;</code></p><h1 id="7、列表和引用"><a href="#7、列表和引用" class="headerlink" title="7、列表和引用"></a>7、列表和引用</h1><p>第一种引用：<code>&gt;内容</code></p><p>数字：<code>1.（空格）内容</code></p><p>强调：<code>-（空格）内容</code></p><p>嵌套：</p><pre><code class="markdown">1.（空格）第一    （四个空格，或一个tab）- 小一</code></pre><h1 id="8、代码"><a href="#8、代码" class="headerlink" title="8、代码"></a>8、代码</h1><pre><code class="markdown">    ```代码类型    代码内容    ```</code></pre><p>句子中直接`内容`，内容会变成<code>内容</code></p><h1 id="9、链接"><a href="#9、链接" class="headerlink" title="9、链接"></a>9、链接</h1><p><code>[超链接名](http://XXX  &quot;说明&quot;)</code></p><p>鼠标悬停在链接名上，会显示说明内容</p><h1 id="10、图片插入"><a href="#10、图片插入" class="headerlink" title="10、图片插入"></a>10、图片插入</h1><ol><li>常规插入图片</li></ol><p><code>![alt 属性文本](XXX.img “可选标题”)</code></p><p>alt属性文本：当某种原因看不见图片时会显示该内容</p><p>可选标题：鼠标悬停图片显示该内容</p><ol start="2"><li>点击图片会跳转链接</li></ol><p> <code>[![alt 属性文本](XXX.img “可选标题”)](http://XXX)</code></p><ol start="3"><li>居左</li></ol><pre><code class="markdown">![在这里插入图片描述](https://img-blog.csdnimg.cn/20200822014538211.png#pic_left)</code></pre><ol start="4"><li>居中：<code>#pic_center</code></li></ol><p><strong>5. 等比缩放</strong></p><p><code>&lt;img src=https://xxx.img width=60% /&gt;</code></p><ol start="6"><li>固定宽高</li></ol><p><code>&lt;img src=https://xxx.img width=200 height=100 /&gt;</code></p><p><strong>7. 利用html终极格式</strong></p><pre><code class="html">&lt;center&gt;&lt;img src=&quot;链接&quot; width=&quot;75%&quot; height=&quot;75%&quot; alt=&quot;属性说明&quot;/&gt;&lt;/center&gt;</code></pre><h1 id="11、表格"><a href="#11、表格" class="headerlink" title="11、表格"></a>11、表格</h1><p>可直接通过网址生成markdown语句</p><p><a href="https://www.tablesgenerator.com/markdown_tables">Markdown Tables generator - TablesGenerator.com</a></p>]]></content>
     
     
       
