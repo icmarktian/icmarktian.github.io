@@ -2,9 +2,9 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>7--[Design]ERASE BLOCK协议及代码实现-项目2-1 | 马克得烂笔头</title>
-  <meta name="keywords" content=" NAND ">
-  <meta name="description" content="7--[Design]ERASE BLOCK协议及代码实现-项目2-1 | 马克得烂笔头">
+  <title>其他分类保留 | 马克得烂笔头</title>
+  <meta name="keywords" content="">
+  <meta name="description" content="其他分类保留 | 马克得烂笔头">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <meta name="description" content="人的精力是有限的，本站作为第二大脑用于存储本人学过的知识">
 <meta property="og:type" content="website">
@@ -634,9 +634,9 @@
 </aside>
 <div id="post">
     <div class="pjax">
-        <article id="post-1 项目/项目2：Erase of NAND behavior model/7--[Design]ERASE BLOCK协议及代码实现-项目2-1" class="article article-type-post" itemscope itemprop="blogPost">
+        <article id="post-6 其他/hello-world" class="article article-type-post" itemscope itemprop="blogPost">
     
-        <h1 class="article-title">7--[Design]ERASE BLOCK协议及代码实现-项目2-1</h1>
+        <h1 class="article-title">其他分类保留</h1>
     
     <div class="article-meta">
         
@@ -646,29 +646,20 @@
             <i class="iconfont icon-category"></i>
             
             
-            <a  data-rel="项目">项目</a> > 
-            
-            <a  data-rel="项目&lt;---&gt;项目2-Erase_of_NAND_behavior_model">项目2-Erase_of_NAND_behavior_model</a>
+            <a  data-rel="其他">其他</a>
             
         </span>
         
         
-        <span class="tag">
-            <i class="iconfont icon-tag"></i>
-            
-            <a class="color5">NAND</a>
-            
-        </span>
+    </div>
+    <div class="article-meta">
+        
+            发布时间 : <time class="date" title='最后更新: 2023-03-19 21:26:02'>2023-03-16 22:56</time>
         
     </div>
     <div class="article-meta">
         
-            发布时间 : <time class="date" title='最后更新: 2023-03-19 20:57:25'>2023-03-19 18:31</time>
-        
-    </div>
-    <div class="article-meta">
-        
-        <span>字数:761</span>
+        <span>字数:75</span>
         
         
         
@@ -676,7 +667,7 @@
     
     <div class="toc-ref">
     
-        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E9%A1%B9%E7%9B%AE%E5%8A%9F%E8%83%BD%E6%8F%8F%E8%BF%B0"><span class="toc-text">一、项目功能描述</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%8C%E3%80%81Erase-Block%E5%8A%9F%E8%83%BD%E6%8F%8F%E8%BF%B0"><span class="toc-text">二、Erase Block功能描述</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%89%E3%80%81ERASE-BLOCK%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0%E6%96%B9%E6%A1%88"><span class="toc-text">三、ERASE BLOCK代码实现方案</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#3-1%E3%80%81%E5%91%BD%E4%BB%A4%E8%BE%93%E5%85%A5always%E5%9D%97"><span class="toc-text">3.1、命令输入always块</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-2%E3%80%81Command-60h"><span class="toc-text">3.2、Command 60h</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-3%E3%80%81Command-D0h"><span class="toc-text">3.3、Command D0h</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-4%E3%80%81Erase%E5%8A%9F%E8%83%BD%E5%AE%9E%E7%8E%B0%E7%9A%84always%E5%9D%97"><span class="toc-text">3.4、Erase功能实现的always块</span></a></li></ol></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Quick-Start"><span class="toc-text">Quick Start</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Create-a-new-post"><span class="toc-text">Create a new post</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Run-server"><span class="toc-text">Run server</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Generate-static-files"><span class="toc-text">Generate static files</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Deploy-to-remote-sites"><span class="toc-text">Deploy to remote sites</span></a></li></ol></li></ol>
     
 <style>
     .left-col .switch-btn,
@@ -692,85 +683,19 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h1 id="一、项目功能描述"><a href="#一、项目功能描述" class="headerlink" title="一、项目功能描述"></a>一、项目功能描述</h1><p>本项目基于长江存储NAND Datasheet，实现了NAND behavior model的<code>擦除功能（Erase Block）</code>，<code>擦除挂起功能（Erase Suspend）</code>，<code>擦除恢复功能（Erase Resume）</code>。</p>
-<h1 id="二、Erase-Block功能描述"><a href="#二、Erase-Block功能描述" class="headerlink" title="二、Erase Block功能描述"></a>二、<strong>Erase Block功能描述</strong></h1><ul>
-<li>以Block为单位对Array进行擦除。</li>
-<li>如图7.1，Command 60h后跟四个周期的Row地址，再发送Command D0h，经tWB时间后，R&#x2F;B_n信号拉低，开始时长tBERS的擦除操作。</li>
-<li>Host端通过监测R&#x2F;B_n信号或者Status Register，判断Erase操作是否完成，<br>SR[0]为0则表示Erase成功（SR[6]为1时，SR[0]才有效）。</li>
-<li>在Erase过程中，只可接受Read Status Command、Reset Command、Suspend Command。</li>
-</ul>
-<center>
-<img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/7.1Block%20Erase%20Sequence.png" width="75%" height="75%" alt="7.1 Block Erase Sequence"/>
-</center>
-
-<h1 id="三、ERASE-BLOCK代码实现方案"><a href="#三、ERASE-BLOCK代码实现方案" class="headerlink" title="三、ERASE BLOCK代码实现方案"></a>三、<strong>ERASE BLOCK代码实现方案</strong></h1><h2 id="3-1、命令输入always块"><a href="#3-1、命令输入always块" class="headerlink" title="3.1、命令输入always块"></a>3.1、<strong>命令输入always块</strong></h2><p>如下所示，在We_n的上升沿会触发command input的always块。</p>
-<pre><code class="verilog">always @ (posedge We_n) begin : cLatch
-          1、判断是否command_enable
-          2、判断power up后第一个命令是否为reset命令，会产生error信息
-          3、Command（60h）
-          4、Command（D0h）
-end
+        <p>Welcome to <a target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a target="_blank" rel="noopener" href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a target="_blank" rel="noopener" href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a target="_blank" rel="noopener" href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
+<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><pre><code class="bash">$ hexo new &quot;My New Post&quot;
 </code></pre>
-<p>command_enbale信号定义如下：</p>
-<pre><code class="verilog">assign command_enable = (Cle &amp; ~Ale &amp; ~Ce_n_vol &amp; Re_n );
+<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/writing.html">Writing</a></p>
+<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><pre><code class="bash">$ hexo server
 </code></pre>
-<h2 id="3-2、Command-60h"><a href="#3-2、Command-60h" class="headerlink" title="3.2、Command 60h"></a>3.2、Command 60h</h2><p>当IO口收到60h时，内部会进行如下操作：</p>
-<pre><code class="verilog">if (Io_mirror [7 : 0] = = = 8&#39;h60) begin
-        1、program cache 未完成时，60h会被忽略，直到状态变为E0h
-        2、~Wp_n 和 OTP_mode 时均不允许 ERASE
-        3、60h有效时，判断是否处于Multi-Plane ERASE，
-           if lastCmd为60h，或D1h，则继续让lastCmd=60h
-        else if (~multiplane_op_erase) begin
-                              saw_cmnd_60h = 1&#39;b1;
-                              saw_cmnd_60h_clear = 1&#39;b1;
-                          end else begin
-                              saw_cmnd_60h = 1&#39;b1;
-                              saw_cmnd_60h_clear = 1&#39;b0;
-                          end
-        4、调用 disable_rdStatus，复位 status flag，让device返Read mode
-
-end
+<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/server.html">Server</a></p>
+<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><pre><code class="bash">$ hexo generate
 </code></pre>
-<h2 id="3-3、Command-D0h"><a href="#3-3、Command-D0h" class="headerlink" title="3.3、Command D0h"></a>3.3、<strong>Command D0h</strong></h2><p>当IO口收到D0h时，内部会进行如下操作：</p>
-<pre><code class="verilog">else if (Io_mirror [7 : 0] = = = 8&#39;hD0) begin
-      1、program cache 未完成时，D0h会被忽略，直到状态变为E0h
-      2、判断是否 die_select，选择了才会往下执行
-      3、if ((lastCmd = = = 8&#39;h60) &amp;&amp; row_valid &amp;&amp; Wp_n) begin
-          3.1、lastCmd = 8&#39;hD0
-          3.2、判断当前LUN是否有被 Erase Suspend 的blcok，若地址相同，将会Resume 被Suspend 的block
-          3.3、调用clear_erase_suspend，清除和 Erase Suspend 相关的 reg
-          3.4、erase_blk_en = ~ erase_blk_en，产生沿降，调用后续always 块开始erase操作
-       end
-    end
+<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/generating.html">Generating</a></p>
+<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><pre><code class="bash">$ hexo deploy
 </code></pre>
-<h2 id="3-4、Erase功能实现的always块"><a href="#3-4、Erase功能实现的always块" class="headerlink" title="3.4、Erase功能实现的always块"></a>3.4、<strong>Erase功能实现的always块</strong></h2><p>第一个always块的作用是通过erase_blk_en和erase_blk_en_r的异或逻辑，使得一旦产生erase_blk_en &#x3D; ~ erase_blk_en的变换时，确保erase_blk_pls都能产生上升沿逻辑，从而驱动Erase操作的always块。</p>
-<pre><code class="verilog">always @(*)
-begin
-    erase_blk_pls &lt;= #tWB_delay ((erase_blk_en &amp; ~erase_blk_en_r) | (~erase_blk_en &amp; erase_blk_en_r));
-    erase_blk_en_r &lt;= #1 erase_blk_en;
-end
-</code></pre>
-<p>当erase_blk_pls产生上升沿的跳变时，会触发如下具有擦除逻辑的always块，从而完成Erase操作。</p>
-<pre><code class="verilog">always @(posedge erase_blk_pls) begin
-      1、进入busy状态，设置SR[5、6]为00；
-      2、调用 check_plane_addresses，检查排队的擦除块是否满足multi-plane寻址要求
-      3、擦除逻辑
-       if (eb_unlocked_erase) begin : unlocked_erase_block
-            3.1、截取擦除的 block 地址 
-             erase_block_addr = row_addr [eb_thisPlane] [BLCK_BITS + PAGE_BITS – 1 : PAGE_BITS];
-            
-        3.2、采用循环将array进行写1擦除
-                      for (e=0; e&lt;memory_used; e=e+1) begin : mem_loop
-                          //check to see if existing used address location matches block being erased
-                          if (memory_addr[e] [BLCK_BITS + PAGE_BITS - 1 : PAGE_BITS] = = = erase_block_addr) begin
-                              mem_array[e] = &#123;PAGE_SIZE&#123;erase_data[0]&#125;&#125;;
-                              seq_page[erase_block_addr] = &#123;PAGE_BITS&#123;1&#39;b0&#125;&#125;;                 
-                 mem_flag[e] = 0;  // 0: not programmed; 1: programmed.
-                                                  end
-                      end //mem_loop end
-         end  // unlocked_erase_block
-end
-</code></pre>
+<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
 
       
        <hr><span style="font-style: italic;color: gray;"> 转载请注明来源，欢迎对文章中的引用来源进行考证，欢迎指出任何有错误或不够清晰的表达。可以在下面评论区评论，也可以邮件至 icmarktian@163.com </span>
