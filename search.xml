@@ -4,11 +4,111 @@
   
     
     <entry>
+      <title>13--perl练习-生成五组不同随机数-双色球</title>
+      <link href="/blog013.html"/>
+      <url>/blog013.html</url>
+      
+        <content type="html"><![CDATA[<h1 id="perl练习，源码"><a href="#perl练习，源码" class="headerlink" title="perl练习，源码"></a>perl练习，源码</h1><pre><code class="perl">#!/usr/bin/perl -w$zhu = 1;do&#123;    my %red;                         #hash    for (0..5) &#123;        my $no;        do &#123;            $no = int rand(33) +1;  # int [1:33]                 &#125; while (exists $red&#123;$no&#125;); # $no is hash&#39;s key           $red&#123;$no&#125; = 1;    &#125;    my $blue=int rand(16) +1;       #int [1:16]              print join(&quot;\t&quot;, keys %red, &quot;$blue&quot;), &quot;\n\n&quot;;    $zhu = $zhu +1;   #initial 5 zhu&#125;while($zhu &lt;= 5);</code></pre><h1 id="知识点"><a href="#知识点" class="headerlink" title="知识点"></a>知识点</h1><ol><li><code>rand(16)</code>表示生成<code>0-15</code>的随机数，要生成<code>1-16</code>直接增加偏移量<code>+1</code>即可。</li><li>hash的用法：这里用到了hash的<code>exists</code>函数检测<code>key</code>，让随机产生的数不同。<br>这里是指，如果<strong>hash</strong><code>%red</code>中存在<strong>key</strong><code>$no</code>，则返回再生成一次随机数；</li></ol><pre><code class="perl">             #keys values my %hash = (&quot;a&quot; =&gt; 9, &quot;b&quot; =&gt; 1, &quot;c&quot; =&gt; 8);my @k = keys %hash;                #取出hash中的 key 或 value，列表上下文my @v = values %hash;my $x = keys %hash;               # 标量上下文，得到的是对数#exists 检测hash中是否存在某一个hashif (exists $hash&#123;&quot;b&quot;&#125;)&#123;    #用 $ 符号，别搞错了print &quot;hash里面有b&quot;&#125;</code></pre><ol start="3"><li><code>jonit</code> 函数是指用分隔符 <code>\t</code> 分割每一个<code>key</code>的值。</li><li><code>do&#123;&#125;…while()</code> 表达式产生5组数据。</li></ol>]]></content>
+      
+      
+      <categories>
+          
+          <category> 语言 </category>
+          
+          <category> Perl </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> perl </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>12--Perl模块-读取文件并修改然后保存</title>
+      <link href="/blog012.html"/>
+      <url>/blog012.html</url>
+      
+        <content type="html"><![CDATA[<h1 id="一、Perl模块，源码"><a href="#一、Perl模块，源码" class="headerlink" title="一、Perl模块，源码"></a>一、Perl模块，源码</h1><pre><code class="perl">#! /usr/bin/perl -wuse strict;open RH, &quot;test28.v&quot; or die $!;chomp(my @lines = &lt;RH&gt;);close (RH);open WH, &quot;&gt;test28.v&quot; or die $!;foreach my $line (@lines) &#123;  $line =~ s/a/b/gi;  print WH &quot;$line\n&quot;;&#125;close (WH);</code></pre><p>第一步，打开文件句柄（RH）读取文件，并将其一行一行地全部存入到数组<code>@lines</code>。</p><p>第二步，打开文件句柄（WH）写入文件通道，用foreach将数组<code>@lines</code>中的一个元素（一行内容）存入到变量<code>$lines</code>。</p><p>第三步，通过变量<code>$lines</code>，对这一行内容进行匹配替换，再重新保存到<code>$line</code>变量。</p><p>最后，将这一行修改后的内容打印出来通过句柄（WH）<code>写入</code>到源文件中。</p><h2 id="Perl文件句柄中的写入操作符"><a href="#Perl文件句柄中的写入操作符" class="headerlink" title="Perl文件句柄中的写入操作符"></a>Perl文件句柄中的写入操作符</h2><pre><code class="perl">&gt;    #覆盖写入， 如果不存在则会创建，然后清空，print重新写入&gt;&gt;   #追加写，文件指针指向末尾，再开始写+&gt;   #Reads, Writes, Creates, and Truncates+&gt;&gt;  #Reads, Writes, Appends, and Creates</code></pre><h2 id="Perl文件句柄中的读取操作符"><a href="#Perl文件句柄中的读取操作符" class="headerlink" title="Perl文件句柄中的读取操作符"></a>Perl文件句柄中的读取操作符</h2><pre><code class="perl">&lt;    #只读模式+&lt;   #Reads and Writes</code></pre><h2 id="为什么要chmop？"><a href="#为什么要chmop？" class="headerlink" title="为什么要chmop？"></a>为什么要chmop？</h2><p>如果文件元素为：</p><pre><code> aaaaaaaa    bbbbbbbbbbCccccccccccc</code></pre><pre><code class="perl">chomp(my @lines = &lt;RH&gt;);print &quot;@lines&quot;;#加上chmop，会删除换行，但是源文件每一行的空格还是会保留下来aaaaaaaa     bbbbbbbbbb Cccccccccccc#不加，原样保留，每一行的换行符被保留了下来aaaaaaaa     bbbbbbbbbb Cccccccccccc</code></pre><p>为了方便数据处理，所以一般加上<code>chomp</code>，比如再对一行元素进行拆分时，拆分后的最后一个元素就会带有换行符，与其他元素不同。如果最后需要加上换行符，可以这样操作：<code>print &quot;$_\n&quot;;</code></p><h1 id="二、通过命令行批量替换文件内容"><a href="#二、通过命令行批量替换文件内容" class="headerlink" title="二、通过命令行批量替换文件内容"></a>二、通过命令行批量替换文件内容</h1><p><code>find ./ -name &quot;*.v&quot; | xargs perl -pi.bak -e &quot;s/Lock &lt;= 1&#39;b0;/&quot;&quot;/gi&quot;</code></p><p><code>xargs</code>：是一个linux命令，作用是捕获一个命令的输出，然后传递给另一个命令（一般和管道一起使用）</p><p><code>perl -e</code>：在命令行中执行代码，即上面执行了通过这个option执行了<code>&quot;s/Lock &lt;= 1&#39;b0;/&quot;&quot;/gi&quot;</code>匹配替换</p><p><code>perl -p</code>：自动循环+自动输出，相当于<code>while(&lt;&gt;)&#123;替换语句;print;&#125;</code></p><p><code>perl -i&lt;扩展名&gt;</code>：原地替换文件，并将旧文件用指定的扩展名备份。不指定扩展名则不备份。</p><p><code>g</code>：修饰符，全局匹配（能匹配到所有的abc，不会因为匹配到一个就停止后面内容的匹配了）</p><p><code>i</code>：修饰符，匹配时忽略大小写</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> 语言 </category>
+          
+          <category> Perl </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> perl </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>11--折腾Blog学到的一些东西</title>
+      <link href="/blog011.html"/>
+      <url>/blog011.html</url>
+      
+        <content type="html"><![CDATA[<h1 id="一、加深了对网络、网站搭建的理解"><a href="#一、加深了对网络、网站搭建的理解" class="headerlink" title="一、加深了对网络、网站搭建的理解"></a>一、加深了对网络、网站搭建的理解</h1><ol><li><p>互联网其实就是一个大型的局域网罢了，所有的网页、网上的资源都处于某一台（多台）实体电脑（服务器）中，然后接入这个大型的Internet，实现我们普通网民的冲浪。</p></li><li><p>关于域名，其实就是一种映射关系，将一些好记的字符映射到你这台服务器的IP地址，实现访问，因为IP地址人类不好记忆。</p></li><li><p>关于<code>https</code>和<code>http</code>：简而言之前者需要SSL&#x2F;TLS加密，而后者是明文更容易遭受中间人攻击。这也是我强迫症使用cloudflare中转的原因之一，如果访问一个网站是http时，浏览器网址栏会提示不安全；而使用https加密后，网址栏会显示一把小锁。</p></li></ol><h1 id="二、动态Blog和静态Blog"><a href="#二、动态Blog和静态Blog" class="headerlink" title="二、动态Blog和静态Blog"></a>二、动态Blog和静态Blog</h1><p>我试着折腾过两种，<code>动态：wordpress</code>。<code>静态：hexo</code>。两者的区别最直观的就是，动态的搭建在VPS上，可以访问后台实时修改和书写文章；静态是需要在本地搭建环境，生成好html文件，然后将这些页面上传到服务器。<br>比较而言，前者功能更加复杂，需要数据库等，可以用于网站的搭建，搭建博客只是其中一个功能。<br>而后者则相对纯粹，静态页面适合专注于文字的书写。</p><h1 id="三、Hexo-GitHub-自定义域名-Cloudflare做CDN中转"><a href="#三、Hexo-GitHub-自定义域名-Cloudflare做CDN中转" class="headerlink" title="三、Hexo+GitHub+自定义域名+Cloudflare做CDN中转"></a>三、Hexo+GitHub+自定义域名+Cloudflare做CDN中转</h1><p>这里不做详细教程，只记录大体步骤；</p><ol><li>Github创建个人仓库（“服务器端”）；</li><li>搭建本地环境（安装Git、Node.js、Hexo）；</li><li>生成本地页面（localhost:4000），则表明搭建成功；</li><li>将Hexo网站推送到Github中，实现互联网访问；</li><li>购买域名，并让其指向你的<code>http://xxxx.github.io/</code>地址，实现自定义域名访问；<ul><li>注：第五步有两种方法，一种是直接在域名购买商那里将DNS指向你的Github，一种是通过Cloudflare做中转解析；后者可以免费申请SSL证书，实现强制<code>https</code>代理，而非<code>http</code>。</li></ul></li><li>SEO配置，让搜索引擎收录你的网站，并允许爬虫你的内容。</li></ol><h1 id="四、踩坑记录"><a href="#四、踩坑记录" class="headerlink" title="四、踩坑记录"></a>四、踩坑记录</h1><ol><li>在添加百度SEO设置主动推送（API，要用到token那种方式），在根目录_config.yaml，修改deploy配置，添加<code>type: baidu_url_submitter</code>报错如下：<code>YAMLException: duplicated mapping key (126:3)</code>。</li></ol><blockquote><p>解决办法是：<code>type</code>变为 ”<code>- type</code>“，且要顶格，即“-”前面不能有空格，后面有空格，且冒号后由空格，如图11.1：</p></blockquote><center><img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/11.1%E5%9D%91%E4%B8%80.png" width="70%" height="70%" alt="11.1 坑一"/></center><p>因为yml的特点是：</p><ul><li>大小写敏感</li><li>使用缩进表示层级关系</li><li>缩进不允许使用tab，只允许空格</li><li>缩进的空格数不重要，只要相同层级的元素<strong>左对齐</strong>即可</li><li>‘#’表示注释</li></ul><hr><br><ol start="2"><li>百度SEO通过文件验证网站后，<code>baidu_verify_codeva-u08yTssVjX.html</code>文件每次都会被Hexo编译，导致认证不成功。</li></ol><blockquote><p>解决办法是：将<code>baidu_verify_codeva-u08yTssVjX.html</code>文件放到<code>\themes\你的主题\source</code>中，而不是在blog根目录下的source文件夹中。</p></blockquote>]]></content>
+      
+      
+      <categories>
+          
+          <category> 杂记 </category>
+          
+      </categories>
+      
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>10--[TEST]Erase of NAND behavior model  验证计划-项目2-4</title>
+      <link href="/blog010.html"/>
+      <url>/blog010.html</url>
+      
+        <content type="html"><![CDATA[<table><thead><tr><th>用例名称</th><th>用例描述</th><th>期望结果</th><th>验证结果</th><th>备注</th><th>验证人</th></tr></thead><tbody><tr><td>after_EraSus_PagePgm1</td><td>擦暂停后执行写操作（同一块）</td><td>数据不可以写入</td><td>OK</td><td></td><td>Mark</td></tr><tr><td>after_EraSus_PagePgm2</td><td>擦暂停后执行写操作（同plane不同块）</td><td>数据可以写入</td><td>OK</td><td></td><td>Mark</td></tr><tr><td>after_EraSus_PagePgm3</td><td>擦暂停后执行写操作（不同plane）</td><td>数据可以写入</td><td>OK</td><td></td><td>Mark</td></tr><tr><td>after_EraSus_CachePgm1</td><td>擦暂停后执行写缓存操作（同一块）</td><td>数据不可以写入</td><td>OK</td><td></td><td>Mark</td></tr><tr><td>after_EraSus_CachePgm2</td><td>擦暂停后执行写缓存操作（同plane不同块）</td><td>数据可以写入</td><td>OK</td><td></td><td>Mark</td></tr><tr><td>after_EraSus_CachePgm3</td><td>擦暂停后执行写缓存操作（不同plane）</td><td>数据可以写入</td><td>OK</td><td></td><td>Mark</td></tr><tr><td>multi_erase_D1</td><td>60–地址–61–delay–60–地址–D0</td><td>擦除成功</td><td>OK</td><td></td><td>Mark</td></tr><tr><td>multi_erase_onfi</td><td>60–地址–60—地址—D0</td><td>擦除成功</td><td>OK</td><td></td><td>Mark</td></tr><tr><td>multi_erase_D1_4P</td><td>D1模式下对4个plane进行擦除</td><td>擦除成功</td><td>OK</td><td></td><td>Mark</td></tr><tr><td>multi_erase_onfi_4P</td><td>onfi模式下对4个plane进行擦除</td><td>擦除成功</td><td>OK</td><td></td><td>Mark</td></tr><tr><td>multi_erase_D1_1P</td><td>D1模式下，发送同一plane的三个block的地址</td><td>只擦除最后一个地址（60–addr–D0）的block</td><td>OK</td><td>增加地址个数，结果一样</td><td>Mark</td></tr><tr><td>multi_erase_onfi_1P</td><td>onfi模式下，发送同一plane的三个block的地址</td><td>只擦除最后一个地址（60–addr–D0）的block</td><td>OK</td><td></td><td>Mark</td></tr><tr><td>multi_erase_D1_4+1</td><td>D1模式下，输入5个block地址，其中四个为不同plande中的block，有两个block是属于同一个block的</td><td>重复的block擦除失败（只擦除同plane中最后出现的那一个block）</td><td>OK</td><td>增加重复地址个数，结果一样</td><td>Mark</td></tr><tr><td>multi_erase_onfi_4+1</td><td>onfi模式下，输入5个block地址，其中四个为不同plande中的block，有两个block是属于同一个block的</td><td>重复的block擦除失败（只擦除同plane中最后出现的那一个block）</td><td>OK</td><td></td><td>Mark</td></tr><tr><td>normal_sus_erase</td><td>先对block 2，page 0，column 8’h0，写入15个数据。再对该位置发送Erase sequence，在wait_ready之前对同一位置发送Erase Suspend sequence，然后读取该位置的值。</td><td>如果Erase Suspend成功，该位置读出的值是不确定的，为x态。</td><td>Erase Suspend逻辑未触发</td><td>已解决。 1、”if (Io_mirror [7 : 0] &#x3D; &#x3D; &#x3D; 8’h60)”,改为else if； 2、 “if (lastCmd &#x3D;&#x3D;&#x3D; 8’h67 &amp;&amp; !cmnd_78h &amp;&amp; !cmnd_71h)”，改为”if (lastCmd &#x3D;&#x3D;&#x3D; 8’h67)”;</td><td>Mark</td></tr><tr><td>twice_sus_erase</td><td>在设备处于erase suspend状态下，再发一次erase suspend sequence。</td><td>第二次发送的suspend命令会被忽略，同时可以看到提示信息。</td><td>OK</td><td></td><td>Mark</td></tr><tr><td>noerase_sus_erase</td><td>在设备未处于erase的状态下发送erase suspend sequence。</td><td>erase suspend命令会被忽略，同时可以看到提示信息。</td><td>OK</td><td></td><td>Mark</td></tr><tr><td>program_sus_erase</td><td>设备处于erase suspend状态下，对同一个block进行program</td><td>program失败，该位置的数据读出来仍为 x。</td><td>OK</td><td></td><td>Mark</td></tr><tr><td>multi_erase_sus</td><td>在进行multi_plane erase时，发送erase suspend命令</td><td>会同时暂停所有这些plane中的erase操作</td><td>OK</td><td></td><td>Mark</td></tr><tr><td>A_era_sus_E_A</td><td>A处于erase suspend时，对A进行ERASE</td><td>Resume ERASE operation to block A</td><td>OK</td><td></td><td>Mark</td></tr><tr><td>A_era_sus_E_B</td><td>A处于erase suspend时，对非suspend的B进行ERASE</td><td>开始B的normal erase，A的suspend状态被取消</td><td>OK</td><td>如何判断A是否处于SUSPEND状态：通过在对B ERASE的前后，各发一次ERASE Resume命令，A处于SUSPEND状态则 RESUME命令生效，否则SUSPEND状态被取消。</td><td>Mark</td></tr><tr><td>A_era_sus_mtE_AB</td><td>A处于erase suspend时，对A和非suspend的B进行multi_plane ERASE</td><td>开始A、B的normal multi_plane erase</td><td>OK</td><td></td><td>Mark</td></tr><tr><td>mtE_ABsus_E_A</td><td>multi_plane erase A、B被suspend后，对A进行ERASE操作</td><td>Resume ERASE operation to block A and B</td><td>OK</td><td></td><td>Mark</td></tr><tr><td>mtE_ABsus_E_B</td><td>multi_plane erase A、B被suspend后，对B进行ERASE操作</td><td></td><td>OK</td><td></td><td>Mark</td></tr><tr><td>mtE_ABsus_mtE_AB</td><td>multi_plane erase A、B被suspend后，对A、B进行mult_plane ERASE操作</td><td></td><td>OK</td><td></td><td>Mark</td></tr><tr><td>mtE_ABsus_mtE_AD</td><td>multi_plane erase A、B被suspend后，对A、D（未suspend）进行mult_plane ERASE操作</td><td>Start normal erase to block A and D. Suspend to block B is canceled</td><td>OK</td><td></td><td>Mark</td></tr><tr><td>mtE_ABsus_mtE_CB</td><td>multi_plane erase A、B被suspend后，对C（未suspend）、B进行mult_plane ERASE操作</td><td>Start normal erase to block C and B. Suspend to block A is canceled</td><td>OK</td><td></td><td>Mark</td></tr><tr><td>erase_resume</td><td>在normal_sus_erase的基础上，发送D7h，然后等待wait_ready后，再对该位置读取一次</td><td>该位置从X态变为FF，说明Erase Resume成功。</td><td>OK</td><td></td><td>Mark</td></tr><tr><td>nosus_erase_resume</td><td>在设备未处于erase suspend的状态下发送erase resume sequence。</td><td>erase resume命令会被忽略。</td><td>OK</td><td></td><td>Mark</td></tr></tbody></table>]]></content>
+      
+      
+      <categories>
+          
+          <category> 项目 </category>
+          
+          <category> 项目2-Erase_of_NAND_behavior_model </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> NAND </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>9--[Design]ERASE RESUME协议及代码实现-项目2-3</title>
       <link href="/blog009.html"/>
       <url>/blog009.html</url>
       
-        <content type="html"><![CDATA[<h1 id="一、ERASE-Resume功能描述"><a href="#一、ERASE-Resume功能描述" class="headerlink" title="一、ERASE Resume功能描述"></a>一、ERASE Resume功能描述</h1><ul><li>重新开始指定LUN被Suspend的Erase操作。</li><li>如图3，发送Command D7h经tWB后，R&#x2F;B_n信号拉低，在tERES时间段内完成Erase Resume操作。</li><li>在发送D7h前，Host应选择被Erase Suspend的LUN。</li><li>如果Device未处于Erase Suspend状态，Erase Resume命令会被忽略。</li><li>如果Multi-Plane Erase 操作被Suspend，则发送 D7h 会同时恢复所有的Erase操作。</li></ul><center><img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/9.1Erase%20Resume%20Sequence.png" width="50%" height="50%" alt="9.1 Erase Resume Sequence"/></center><h1 id="二、ERASE-RESUME代码实现方案"><a href="#二、ERASE-RESUME代码实现方案" class="headerlink" title="二、ERASE RESUME代码实现方案"></a>二、<strong>ERASE RESUME代码实现方案</strong></h1><h2 id="2-1、Command-D7h"><a href="#2-1、Command-D7h" class="headerlink" title="2.1、Command D7h"></a>2.1、<strong>Command D7h</strong></h2><p>代码如下，当IO口的数值为8h’D7会触发此条件语句。</p><pre><code class="verilog">else if (Io_mirror [7 : 0] = = = 8&#39;hD7) begin      1、program cache 未完成时，报错ARRAY is still busy，直到状态变为E0h      2、判断是否处于OTP_mode，OTP mode 不允许 ERASE Resume      3、lastCmd = 8&#39;hD7      4、调用 clear_queued_planes、disable_rdStatus      5、当检测到处于suspend 状态时，则传递待 RESUME 的 block地址        else if (erase_susp_flag) begin              for (eb_thisPlane=0; eb_thisPlane &lt; NUM_PLANES; eb_thisPlane=eb_thisPlane+1) begin           if (erase_susp_blk_addr[eb_thisPlane] ! = = &#123;BLCK_BITS&#123;1&#39;bx&#125;&#125;) begin                queued_plane[eb_thisPlane] = 1;               row_addr[eb_thisPlane][BLCK_BITS+PAGE_BITS-1:PAGE_BITS] = erase_susp_blk_addr[eb_thisPlane];           end         end      6、erase_blk_en = ~ erase_blk_en;      7、调用 clear_erase_suspend，清除与 Erase Suspend 相关的寄存器      8、wait (erase_done);     endend</code></pre><h2 id="2-2、Erase-RESUME实现"><a href="#2-2、Erase-RESUME实现" class="headerlink" title="2.2、Erase RESUME实现"></a>2.2、<strong>Erase RESUME实现</strong></h2><p>如4.1所示，第14行第6点，当IO收到D7h命令后同时满足RESUME条件，则通过“erase_blk_en &#x3D; ~ erase_blk_en”产生擦除行为（如2.4描述）。</p>]]></content>
+        <content type="html"><![CDATA[<h1 id="一、ERASE-Resume功能描述"><a href="#一、ERASE-Resume功能描述" class="headerlink" title="一、ERASE Resume功能描述"></a>一、ERASE Resume功能描述</h1><ul><li>重新开始指定LUN被Suspend的Erase操作。</li><li>如图3，发送Command D7h经tWB后，R&#x2F;B_n信号拉低，在tERES时间段内完成Erase Resume操作。</li><li>在发送D7h前，Host应选择被Erase Suspend的LUN。</li><li>如果Device未处于Erase Suspend状态，Erase Resume命令会被忽略。</li><li>如果Multi-Plane Erase 操作被Suspend，则发送 D7h 会同时恢复所有的Erase操作。</li></ul><center><img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/9.1Erase%20Resume%20Sequence.png" width="50%" height="50%" alt="9.1 Erase Resume Sequence"/></center><h1 id="二、ERASE-RESUME代码实现方案"><a href="#二、ERASE-RESUME代码实现方案" class="headerlink" title="二、ERASE RESUME代码实现方案"></a>二、<strong>ERASE RESUME代码实现方案</strong></h1><h2 id="2-1、Command-D7h"><a href="#2-1、Command-D7h" class="headerlink" title="2.1、Command D7h"></a>2.1、<strong>Command D7h</strong></h2><p>代码如下，当IO口的数值为8h’D7会触发此条件语句。</p><pre><code class="verilog">else if (Io_mirror [7 : 0] = = = 8&#39;hD7) begin      1、program cache 未完成时，报错ARRAY is still busy，直到状态变为E0h      2、判断是否处于OTP_mode，OTP mode 不允许 ERASE Resume      3、lastCmd = 8&#39;hD7      4、调用 clear_queued_planes、disable_rdStatus      5、当检测到处于suspend 状态时，则传递待 RESUME 的 block地址        else if (erase_susp_flag) begin              for (eb_thisPlane=0; eb_thisPlane &lt; NUM_PLANES; eb_thisPlane=eb_thisPlane+1) begin           if (erase_susp_blk_addr[eb_thisPlane] ! = = &#123;BLCK_BITS&#123;1&#39;bx&#125;&#125;) begin                queued_plane[eb_thisPlane] = 1;               row_addr[eb_thisPlane][BLCK_BITS+PAGE_BITS-1:PAGE_BITS] = erase_susp_blk_addr[eb_thisPlane];           end         end      6、erase_blk_en = ~ erase_blk_en;      7、调用 clear_erase_suspend，清除与 Erase Suspend 相关的寄存器      8、wait (erase_done);     endend</code></pre><h2 id="2-2、Erase-RESUME实现"><a href="#2-2、Erase-RESUME实现" class="headerlink" title="2.2、Erase RESUME实现"></a>2.2、<strong>Erase RESUME实现</strong></h2><p>如2.1所示，第14行第6点，当IO收到D7h命令后同时满足RESUME条件，则通过“erase_blk_en &#x3D; ~ erase_blk_en”产生擦除行为（如《7–[Design]ERASE BLOCK协议及代码实现-项目2-1》<a href="https://mkdbook.com/blog007.html#:~:text=3.4%E3%80%81Erase%E5%8A%9F%E8%83%BD%E5%AE%9E%E7%8E%B0%E7%9A%84always%E5%9D%97">3.4描述</a>）。</p>]]></content>
       
       
       <categories>
@@ -222,28 +322,9 @@
     
     
     <entry>
-      <title>其他分类保留</title>
-      <link href="/clfflk5px0006q4ubhrmv1g8s.html"/>
-      <url>/clfflk5px0006q4ubhrmv1g8s.html</url>
-      
-        <content type="html"><![CDATA[<p>Welcome to <a href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p><h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><pre><code class="bash">$ hexo new &quot;My New Post&quot;</code></pre><p>More info: <a href="https://hexo.io/docs/writing.html">Writing</a></p><h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><pre><code class="bash">$ hexo server</code></pre><p>More info: <a href="https://hexo.io/docs/server.html">Server</a></p><h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><pre><code class="bash">$ hexo generate</code></pre><p>More info: <a href="https://hexo.io/docs/generating.html">Generating</a></p><h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><pre><code class="bash">$ hexo deploy</code></pre><p>More info: <a href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>]]></content>
-      
-      
-      <categories>
-          
-          <category> 其他 </category>
-          
-      </categories>
-      
-      
-    </entry>
-    
-    
-    
-    <entry>
       <title>Verilog分类保留</title>
-      <link href="/clfflk5qf000xq4ubalcsh14i.html"/>
-      <url>/clfflk5qf000xq4ubalcsh14i.html</url>
+      <link href="/clfgxst7y002mskub5k7vgenr.html"/>
+      <url>/clfgxst7y002mskub5k7vgenr.html</url>
       
         <content type="html"><![CDATA[]]></content>
       
@@ -290,8 +371,8 @@
     
     <entry>
       <title>存储分类保留</title>
-      <link href="/clfflk5r2002qq4ub1h1g21e7.html"/>
-      <url>/clfflk5r2002qq4ub1h1g21e7.html</url>
+      <link href="/clfgxst7k000yskubhfwo4nwm.html"/>
+      <url>/clfgxst7k000yskubhfwo4nwm.html</url>
       
         <content type="html"><![CDATA[]]></content>
       
@@ -310,30 +391,9 @@
     
     
     <entry>
-      <title>perl分类保留</title>
-      <link href="/clfflk5qb000sq4ub4uit1tle.html"/>
-      <url>/clfflk5qb000sq4ub4uit1tle.html</url>
-      
-        <content type="html"><![CDATA[]]></content>
-      
-      
-      <categories>
-          
-          <category> 语言 </category>
-          
-          <category> Perl </category>
-          
-      </categories>
-      
-      
-    </entry>
-    
-    
-    
-    <entry>
       <title>工具分类保留</title>
-      <link href="/clfflk5pu0003q4ubbgki0i2p.html"/>
-      <url>/clfflk5pu0003q4ubbgki0i2p.html</url>
+      <link href="/clfgxst760007skubadlu82og.html"/>
+      <url>/clfgxst760007skubadlu82og.html</url>
       
         <content type="html"><![CDATA[]]></content>
       
@@ -350,28 +410,9 @@
     
     
     <entry>
-      <title>杂记分类保留</title>
-      <link href="/clfflk5pp0001q4ub6poze04t.html"/>
-      <url>/clfflk5pp0001q4ub6poze04t.html</url>
-      
-        <content type="html"><![CDATA[]]></content>
-      
-      
-      <categories>
-          
-          <category> 杂记 </category>
-          
-      </categories>
-      
-      
-    </entry>
-    
-    
-    
-    <entry>
       <title>eMMC分类保留</title>
-      <link href="/clfflk5qj0015q4ubcbf617ar.html"/>
-      <url>/clfflk5qj0015q4ubcbf617ar.html</url>
+      <link href="/clfgxst7i000rskub40ih1nhu.html"/>
+      <url>/clfgxst7i000rskub40ih1nhu.html</url>
       
         <content type="html"><![CDATA[]]></content>
       
@@ -391,8 +432,8 @@
     
     <entry>
       <title>SV分类保留</title>
-      <link href="/clfflk5qd000uq4ub0t2hhl4b.html"/>
-      <url>/clfflk5qd000uq4ub0t2hhl4b.html</url>
+      <link href="/clfgxst7w002kskub0ayd2z6g.html"/>
+      <url>/clfgxst7w002kskub0ayd2z6g.html</url>
       
         <content type="html"><![CDATA[]]></content>
       
@@ -412,8 +453,8 @@
     
     <entry>
       <title>项目1分类保留</title>
-      <link href="/clfflk5q0000bq4ubf6ed2e0f.html"/>
-      <url>/clfflk5q0000bq4ubf6ed2e0f.html</url>
+      <link href="/clfgxst6x0001skub2ge1byhx.html"/>
+      <url>/clfgxst6x0001skub2ge1byhx.html</url>
       
         <content type="html"><![CDATA[<pre><code class="verilog">    if (Io_mirror [7 : 0] === 8&#39;h60) begin        1、program cache 未完成时，60h会被忽略，直到状态变为E0h        2、~Wp_n 和 OTP_mode 时均不允许 ERASE        3、60h有效时，判断是否处于Multi-Plane ERASE，      if lastCmd为60h，或D1h，则继续让lastCmd=60h      else if (~multiplane_op_erase) begin                              saw_cmnd_60h = 1&#39;b1;                              saw_cmnd_60h_clear = 1&#39;b1;                          end else begin                             saw_cmnd_60h = 1&#39;b1;                              saw_cmnd_60h_clear = 1&#39;b0;                          end        4、调用 disable_rdStatus，复位 status flag，让device返Read mode        endss</code></pre><p>   <img src="https://cdn.jsdelivr.net/gh/icmarktian/blog_img@master/data/blog_background2.jpg" alt="博客背景" title="github"></p><p>   <img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/%E5%8D%9A%E5%AE%A2%E8%83%8C%E6%99%AF.jpg" alt="博客背景" title="腾讯云"></p>]]></content>
       
