@@ -323,8 +323,8 @@
     
     <entry>
       <title>Verilog分类保留</title>
-      <link href="/clfgxxzt6000b3kubgtrkbpwe.html"/>
-      <url>/clfgxxzt6000b3kubgtrkbpwe.html</url>
+      <link href="/clfgy0896002d5oubhgdx3nhy.html"/>
+      <url>/clfgy0896002d5oubhgdx3nhy.html</url>
       
         <content type="html"><![CDATA[]]></content>
       
@@ -371,8 +371,8 @@
     
     <entry>
       <title>存储分类保留</title>
-      <link href="/clfgxxztc000n3kub1xk6c9rf.html"/>
-      <url>/clfgxxztc000n3kub1xk6c9rf.html</url>
+      <link href="/clfgy0897002f5oub14s1de6e.html"/>
+      <url>/clfgy0897002f5oub14s1de6e.html</url>
       
         <content type="html"><![CDATA[]]></content>
       
@@ -392,8 +392,8 @@
     
     <entry>
       <title>工具分类保留</title>
-      <link href="/clfgxxzsy00033kub3wtq69p0.html"/>
-      <url>/clfgxxzsy00033kub3wtq69p0.html</url>
+      <link href="/clfgy088b00035oub0m9s8ged.html"/>
+      <url>/clfgy088b00035oub0m9s8ged.html</url>
       
         <content type="html"><![CDATA[]]></content>
       
@@ -411,8 +411,8 @@
     
     <entry>
       <title>eMMC分类保留</title>
-      <link href="/clfgxxztb000l3kubgcgf1yhv.html"/>
-      <url>/clfgxxztb000l3kubgcgf1yhv.html</url>
+      <link href="/clfgy0897002g5oub97sb7flq.html"/>
+      <url>/clfgy0897002g5oub97sb7flq.html</url>
       
         <content type="html"><![CDATA[]]></content>
       
@@ -432,8 +432,8 @@
     
     <entry>
       <title>SV分类保留</title>
-      <link href="/clfgxxzt500093kub9npsbkf8.html"/>
-      <url>/clfgxxzt500093kub9npsbkf8.html</url>
+      <link href="/clfgy088p000r5oub8ih6fvm9.html"/>
+      <url>/clfgy088p000r5oub8ih6fvm9.html</url>
       
         <content type="html"><![CDATA[]]></content>
       
@@ -453,8 +453,8 @@
     
     <entry>
       <title>项目1分类保留</title>
-      <link href="/clfgxxztd000r3kub8wv41dph.html"/>
-      <url>/clfgxxztd000r3kub8wv41dph.html</url>
+      <link href="/clfgy088800015oub54r82ldb.html"/>
+      <url>/clfgy088800015oub54r82ldb.html</url>
       
         <content type="html"><![CDATA[<pre><code class="verilog">    if (Io_mirror [7 : 0] === 8&#39;h60) begin        1、program cache 未完成时，60h会被忽略，直到状态变为E0h        2、~Wp_n 和 OTP_mode 时均不允许 ERASE        3、60h有效时，判断是否处于Multi-Plane ERASE，      if lastCmd为60h，或D1h，则继续让lastCmd=60h      else if (~multiplane_op_erase) begin                              saw_cmnd_60h = 1&#39;b1;                              saw_cmnd_60h_clear = 1&#39;b1;                          end else begin                             saw_cmnd_60h = 1&#39;b1;                              saw_cmnd_60h_clear = 1&#39;b0;                          end        4、调用 disable_rdStatus，复位 status flag，让device返Read mode        endss</code></pre><p>   <img src="https://cdn.jsdelivr.net/gh/icmarktian/blog_img@master/data/blog_background2.jpg" alt="博客背景" title="github"></p><p>   <img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/%E5%8D%9A%E5%AE%A2%E8%83%8C%E6%99%AF.jpg" alt="博客背景" title="腾讯云"></p>]]></content>
       
