@@ -2,9 +2,9 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>12--Perl模块-读取文件并修改然后保存 | 马克得烂笔头</title>
-  <meta name="keywords" content=" perl ">
-  <meta name="description" content="12--Perl模块-读取文件并修改然后保存 | 马克得烂笔头">
+  <title>16--eMMC命令整体概述 | 马克得烂笔头</title>
+  <meta name="keywords" content=" eMMC ">
+  <meta name="description" content="16--eMMC命令整体概述 | 马克得烂笔头">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <meta name="description" content="人的精力是有限的，本站作为第二大脑用于存储本人学过的知识">
 <meta property="og:type" content="website">
@@ -642,9 +642,9 @@
 </aside>
 <div id="post">
     <div class="pjax">
-        <article id="post-3 语言/Perl/12--Perl模块-读取文件并修改然后保存" class="article article-type-post" itemscope itemprop="blogPost">
+        <article id="post-2 领域/eMMC/16--eMMC命令整体概述" class="article article-type-post" itemscope itemprop="blogPost">
     
-        <h1 class="article-title">12--Perl模块-读取文件并修改然后保存</h1>
+        <h1 class="article-title">16--eMMC命令整体概述</h1>
     
     <div class="article-meta">
         
@@ -654,9 +654,9 @@
             <i class="iconfont icon-category"></i>
             
             
-            <a  data-rel="语言">语言</a> > 
+            <a  data-rel="领域">领域</a> > 
             
-            <a  data-rel="语言&lt;---&gt;Perl">Perl</a>
+            <a  data-rel="领域&lt;---&gt;eMMC">eMMC</a>
             
         </span>
         
@@ -664,19 +664,19 @@
         <span class="tag">
             <i class="iconfont icon-tag"></i>
             
-            <a class="color5">perl</a>
+            <a class="color5">eMMC</a>
             
         </span>
         
     </div>
     <div class="article-meta">
         
-            发布时间 : <time class="date" title='最后更新: 2023-03-24 16:09:15'>2023-03-20 22:07</time>
+            发布时间 : <time class="date" title='最后更新: 2023-03-26 18:27:59'>2023-03-26 18:01</time>
         
     </div>
     <div class="article-meta">
         
-        <span>字数:639</span>
+        <span>字数:405</span>
         
         
         
@@ -695,7 +695,7 @@
     
     <div class="toc-ref">
     
-        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%80%E3%80%81Perl%E6%A8%A1%E5%9D%97%EF%BC%8C%E6%BA%90%E7%A0%81"><span class="toc-text">一、Perl模块，源码</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Perl%E6%96%87%E4%BB%B6%E5%8F%A5%E6%9F%84%E4%B8%AD%E7%9A%84%E5%86%99%E5%85%A5%E6%93%8D%E4%BD%9C%E7%AC%A6"><span class="toc-text">Perl文件句柄中的写入操作符</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Perl%E6%96%87%E4%BB%B6%E5%8F%A5%E6%9F%84%E4%B8%AD%E7%9A%84%E8%AF%BB%E5%8F%96%E6%93%8D%E4%BD%9C%E7%AC%A6"><span class="toc-text">Perl文件句柄中的读取操作符</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81chmop%EF%BC%9F"><span class="toc-text">为什么要chmop？</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E9%80%9A%E8%BF%87%E5%91%BD%E4%BB%A4%E8%A1%8C%E6%89%B9%E9%87%8F%E6%9B%BF%E6%8D%A2%E6%96%87%E4%BB%B6%E5%86%85%E5%AE%B9"><span class="toc-text">二、通过命令行批量替换文件内容</span></a></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#eMMC-5-1%E5%8D%8F%E8%AE%AECMD%E4%B8%AD%E6%96%87%E7%BF%BB%E8%AF%91"><span class="toc-text">eMMC 5.1协议CMD中文翻译</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%80%E3%80%81CMD-line%E6%A8%A1%E5%BC%8F"><span class="toc-text">一、CMD line模式</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E5%AF%84%E5%AD%98%E5%99%A8"><span class="toc-text">二、寄存器</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%89%E3%80%81CMD"><span class="toc-text">三、CMD</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#3-1-%E5%91%BD%E4%BB%A4%E7%9A%8413%E4%B8%AAClass%EF%BC%9A"><span class="toc-text">3.1 命令的13个Class：</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-2-%E5%91%BD%E4%BB%A4%E4%B8%80%E5%85%B1%E6%9C%89%E4%B8%80%E5%85%B1%E6%9C%894%E7%A7%8D%E7%B1%BB%E5%9E%8B%EF%BC%9A"><span class="toc-text">3.2 命令一共有一共有4种类型：</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-3-%E5%91%BD%E4%BB%A4%E7%9A%84%E5%BA%94%E7%AD%94%E4%B8%80%E5%85%B1%E6%9C%895%E7%A7%8D%E7%B1%BB%E5%9E%8B%EF%BC%9A"><span class="toc-text">3.3 命令的应答一共有5种类型：</span></a></li></ol></li></ol>
     
 <style>
     .left-col .switch-btn,
@@ -711,58 +711,65 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p><div class='inner-toc'><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%80%E3%80%81Perl%E6%A8%A1%E5%9D%97%EF%BC%8C%E6%BA%90%E7%A0%81"><span class="toc-text">一、Perl模块，源码</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Perl%E6%96%87%E4%BB%B6%E5%8F%A5%E6%9F%84%E4%B8%AD%E7%9A%84%E5%86%99%E5%85%A5%E6%93%8D%E4%BD%9C%E7%AC%A6"><span class="toc-text">Perl文件句柄中的写入操作符</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Perl%E6%96%87%E4%BB%B6%E5%8F%A5%E6%9F%84%E4%B8%AD%E7%9A%84%E8%AF%BB%E5%8F%96%E6%93%8D%E4%BD%9C%E7%AC%A6"><span class="toc-text">Perl文件句柄中的读取操作符</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81chmop%EF%BC%9F"><span class="toc-text">为什么要chmop？</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E9%80%9A%E8%BF%87%E5%91%BD%E4%BB%A4%E8%A1%8C%E6%89%B9%E9%87%8F%E6%9B%BF%E6%8D%A2%E6%96%87%E4%BB%B6%E5%86%85%E5%AE%B9"><span class="toc-text">二、通过命令行批量替换文件内容</span></a></li></ol></div></p>
-<h1 id="一、Perl模块，源码"><a href="#一、Perl模块，源码" class="headerlink" title="一、Perl模块，源码"></a>一、Perl模块，源码</h1><pre><code class="perl">#! /usr/bin/perl -w
-use strict;
+        <p><div class='inner-toc'><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#eMMC-5-1%E5%8D%8F%E8%AE%AECMD%E4%B8%AD%E6%96%87%E7%BF%BB%E8%AF%91"><span class="toc-text">eMMC 5.1协议CMD中文翻译</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%80%E3%80%81CMD-line%E6%A8%A1%E5%BC%8F"><span class="toc-text">一、CMD line模式</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E5%AF%84%E5%AD%98%E5%99%A8"><span class="toc-text">二、寄存器</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%89%E3%80%81CMD"><span class="toc-text">三、CMD</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#3-1-%E5%91%BD%E4%BB%A4%E7%9A%8413%E4%B8%AAClass%EF%BC%9A"><span class="toc-text">3.1 命令的13个Class：</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-2-%E5%91%BD%E4%BB%A4%E4%B8%80%E5%85%B1%E6%9C%89%E4%B8%80%E5%85%B1%E6%9C%894%E7%A7%8D%E7%B1%BB%E5%9E%8B%EF%BC%9A"><span class="toc-text">3.2 命令一共有一共有4种类型：</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-3-%E5%91%BD%E4%BB%A4%E7%9A%84%E5%BA%94%E7%AD%94%E4%B8%80%E5%85%B1%E6%9C%895%E7%A7%8D%E7%B1%BB%E5%9E%8B%EF%BC%9A"><span class="toc-text">3.3 命令的应答一共有5种类型：</span></a></li></ol></li></ol></div></p>
+<h1 id="eMMC-5-1协议CMD中文翻译"><a href="#eMMC-5-1协议CMD中文翻译" class="headerlink" title="eMMC 5.1协议CMD中文翻译"></a>eMMC 5.1协议CMD中文翻译</h1><p><a target="_blank" rel="noopener" href="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/pdf-share/eMMC5.1CMD%E4%B8%AD%E6%96%87%E8%A7%A3%E9%87%8A.pdf">下载地址</a></p>
+<h1 id="一、CMD-line模式"><a href="#一、CMD-line模式" class="headerlink" title="一、CMD line模式"></a>一、CMD line模式</h1><ul>
+<li>CMD line modes overview</li>
+</ul>
+<center>
+<img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/16.1CMD%20line%20modes.png" width="80%" height="80%" alt="16.1 CMD line modes"/>
+</center>    
 
-open RH, &quot;test28.v&quot; or die $!;
-chomp(my @lines = &lt;RH&gt;);
-close (RH);
+<p>如图16.1所示，eMMC设备共有16种状态，分别分类到5种操作模式中，CMD line mode又有两种类型。</p>
+<h1 id="二、寄存器"><a href="#二、寄存器" class="headerlink" title="二、寄存器"></a>二、寄存器</h1><p>eMMC共有7种不同类型的寄存器。</p>
+<ul>
+<li><code>OCR</code>：Operation Conditons Register</li>
+<li><code>CID</code>：Device IDentification Register</li>
+<li><code>CSD</code>：Device-Specific Data register</li>
+<li><code>EXT_CSD</code>：Extend CSD</li>
+<li><code>RCA</code>：Relative Decive Address register</li>
+<li><code>DSR</code>：Driver Stage Register</li>
+<li><code>QSR</code>：Queue Status Register</li>
+</ul>
+<h1 id="三、CMD"><a href="#三、CMD" class="headerlink" title="三、CMD"></a>三、CMD</h1><ul>
+<li>Command Format，一条命令的格式如图所示：<blockquote>
+<p>固定为48个bit；<br>起始位分别为0和1；<br>bit[46]，为1则命令由host发出，为0则为Device发出；<br>bit[39:8]，有些CMD需要带参数（例如带address）；<br>每条命令被7bit的CRC保护</p>
+</blockquote>
+</li>
+</ul>
+<center>
+<img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/16.2CMD%20Format.png" width="90%" height="90" alt="16.2 CMD token"/>
+</center>
 
-open WH, &quot;&gt;test28.v&quot; or die $!;
-foreach my $line (@lines) &#123;
-  $line =~ s/a/b/gi;
-  print WH &quot;$line\n&quot;;
-&#125;
-close (WH);
-</code></pre>
-<p>第一步，打开文件句柄（RH）读取文件，并将其一行一行地全部存入到数组<code>@lines</code>。</p>
-<p>第二步，打开文件句柄（WH）写入文件通道，用foreach将数组<code>@lines</code>中的一个元素（一行内容）存入到变量<code>$lines</code>。</p>
-<p>第三步，通过变量<code>$lines</code>，对这一行内容进行匹配替换，再重新保存到<code>$line</code>变量。</p>
-<p>最后，将这一行修改后的内容打印出来通过句柄（WH）<code>写入</code>到源文件中。</p>
-<h2 id="Perl文件句柄中的写入操作符"><a href="#Perl文件句柄中的写入操作符" class="headerlink" title="Perl文件句柄中的写入操作符"></a>Perl文件句柄中的写入操作符</h2><pre><code class="perl">&gt;    #覆盖写入， 如果不存在则会创建，然后清空，print重新写入
-&gt;&gt;   #追加写，文件指针指向末尾，再开始写
-+&gt;   #Reads, Writes, Creates, and Truncates
-+&gt;&gt;  #Reads, Writes, Appends, and Creates
-</code></pre>
-<h2 id="Perl文件句柄中的读取操作符"><a href="#Perl文件句柄中的读取操作符" class="headerlink" title="Perl文件句柄中的读取操作符"></a>Perl文件句柄中的读取操作符</h2><pre><code class="perl">&lt;    #只读模式
-+&lt;   #Reads and Writes
-</code></pre>
-<h2 id="为什么要chmop？"><a href="#为什么要chmop？" class="headerlink" title="为什么要chmop？"></a>为什么要chmop？</h2><p>如果文件元素为：</p>
-<pre><code> aaaaaaaa
-    bbbbbbbbbb
-Cccccccccccc
-</code></pre>
-<pre><code class="perl">
-chomp(my @lines = &lt;RH&gt;);
-print &quot;@lines&quot;;
-
-#加上chmop，会删除换行，但是源文件每一行的空格还是会保留下来
-aaaaaaaa     bbbbbbbbbb Cccccccccccc
-
-#不加，原样保留，每一行的换行符被保留了下来
-aaaaaaaa
-     bbbbbbbbbb
- Cccccccccccc
-</code></pre>
-<p>为了方便数据处理，所以一般加上<code>chomp</code>，比如再对一行元素进行拆分时，拆分后的最后一个元素就会带有换行符，与其他元素不同。如果最后需要加上换行符，可以这样操作：<code>print &quot;$_\n&quot;;</code></p>
-<h1 id="二、通过命令行批量替换文件内容"><a href="#二、通过命令行批量替换文件内容" class="headerlink" title="二、通过命令行批量替换文件内容"></a>二、通过命令行批量替换文件内容</h1><p><code>find ./ -name &quot;*.v&quot; | xargs perl -pi.bak -e &quot;s/Lock &lt;= 1&#39;b0;/&quot;&quot;/gi&quot;</code></p>
-<p><code>xargs</code>：是一个linux命令，作用是捕获一个命令的输出，然后传递给另一个命令（一般和管道一起使用）</p>
-<p><code>perl -e</code>：在命令行中执行代码，即上面执行了通过这个option执行了<code>&quot;s/Lock &lt;= 1&#39;b0;/&quot;&quot;/gi&quot;</code>匹配替换</p>
-<p><code>perl -p</code>：自动循环+自动输出，相当于<code>while(&lt;&gt;)&#123;替换语句;print;&#125;</code></p>
-<p><code>perl -i&lt;扩展名&gt;</code>：原地替换文件，并将旧文件用指定的扩展名备份。不指定扩展名则不备份。</p>
-<p><code>g</code>：修饰符，全局匹配（能匹配到所有的abc，不会因为匹配到一个就停止后面内容的匹配了）</p>
-<p><code>i</code>：修饰符，匹配时忽略大小写</p>
+<p>eMMC的命令一共有64个，从<code>CMD0</code>-<code>CMD63</code> ，在Command token的bit[45:40]表征。它们按照不同的功能集划分，又隶属于13个Class。</p>
+<h2 id="3-1-命令的13个Class："><a href="#3-1-命令的13个Class：" class="headerlink" title="3.1 命令的13个Class："></a>3.1 <strong>命令的13个Class：</strong></h2><ul>
+<li>Class 0：<code>basic</code></li>
+<li>Class 1：<code>Obsolete</code></li>
+<li>Class 2：<code>block read</code></li>
+<li>Class 3 ：<code>Obsolete</code></li>
+<li>Class 4：<code>block write</code></li>
+<li>Class 5：<code>erase</code></li>
+<li>Class 6：<code>write protection</code></li>
+<li>Class 7：<code>lock Device</code></li>
+<li>Class 8：<code>Application-specific</code></li>
+<li>Class 9：<code>I/O mode</code></li>
+<li>Class10：<code>Security Protocols</code></li>
+<li>Class11：<code>Command Queuing</code></li>
+<li>Class12：<code>Reserved</code></li>
+</ul>
+<h2 id="3-2-命令一共有一共有4种类型："><a href="#3-2-命令一共有一共有4种类型：" class="headerlink" title="3.2 命令一共有一共有4种类型："></a>3.2 <strong>命令一共有一共有4种类型：</strong></h2><ul>
+<li><code>bc</code>：Broadcast CMD，no Respose。</li>
+<li><code>bcr</code>：广播、有应答。</li>
+<li><code>ac</code>：Addressed（point-to-point）CMD，DAT线上无数据。</li>
+<li><code>adtc</code>：Addressed（point-to-point）data transfer CMD，DAT线上有数据。</li>
+</ul>
+<h2 id="3-3-命令的应答一共有5种类型："><a href="#3-3-命令的应答一共有5种类型：" class="headerlink" title="3.3 命令的应答一共有5种类型："></a>3.3 <strong>命令的应答一共有5种类型：</strong></h2><ul>
+<li><code>R1</code>：normal response command。响应常用命令。<br><code>R1b</code>：和R1区别是，有一个可选的busy信号（和R1属于同一类型）。</li>
+<li><code>R2</code>：CID，CSD register。响应CMD2、10、9，并将CID和CSD的值作为响应的返回数据。</li>
+<li><code>R3</code>：OCR register。OCR的值作为对CMD1的响应发送给host。</li>
+<li><code>R4</code>：Fast I&#x2F;O。</li>
+<li><code>R5</code>：Interrupt request。</li>
+</ul>
 
       
        <hr><span style="font-style: italic;color: gray;"> 转载请注明来源，欢迎对文章中的引用来源进行考证，欢迎指出任何有错误或不够清晰的表达。可以在下面评论区评论，也可以邮件至 icmarktian@163.com </span>

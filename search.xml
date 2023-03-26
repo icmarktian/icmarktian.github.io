@@ -4,6 +4,33 @@
   
     
     <entry>
+      <title>16--eMMC命令整体概述</title>
+      <link href="/blog016.html"/>
+      <url>/blog016.html</url>
+      
+        <content type="html"><![CDATA[<p>[toc]</p><h1 id="eMMC-5-1协议CMD中文翻译"><a href="#eMMC-5-1协议CMD中文翻译" class="headerlink" title="eMMC 5.1协议CMD中文翻译"></a>eMMC 5.1协议CMD中文翻译</h1><p><a href="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/pdf-share/eMMC5.1CMD%E4%B8%AD%E6%96%87%E8%A7%A3%E9%87%8A.pdf">下载地址</a></p><h1 id="一、CMD-line模式"><a href="#一、CMD-line模式" class="headerlink" title="一、CMD line模式"></a>一、CMD line模式</h1><ul><li>CMD line modes overview</li></ul><center><img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/16.1CMD%20line%20modes.png" width="80%" height="80%" alt="16.1 CMD line modes"/></center>    <p>如图16.1所示，eMMC设备共有16种状态，分别分类到5种操作模式中，CMD line mode又有两种类型。</p><h1 id="二、寄存器"><a href="#二、寄存器" class="headerlink" title="二、寄存器"></a>二、寄存器</h1><p>eMMC共有7种不同类型的寄存器。</p><ul><li><code>OCR</code>：Operation Conditons Register</li><li><code>CID</code>：Device IDentification Register</li><li><code>CSD</code>：Device-Specific Data register</li><li><code>EXT_CSD</code>：Extend CSD</li><li><code>RCA</code>：Relative Decive Address register</li><li><code>DSR</code>：Driver Stage Register</li><li><code>QSR</code>：Queue Status Register</li></ul><h1 id="三、CMD"><a href="#三、CMD" class="headerlink" title="三、CMD"></a>三、CMD</h1><ul><li>Command Format，一条命令的格式如图所示：<blockquote><p>固定为48个bit；<br>起始位分别为0和1；<br>bit[46]，为1则命令由host发出，为0则为Device发出；<br>bit[39:8]，有些CMD需要带参数（例如带address）；<br>每条命令被7bit的CRC保护</p></blockquote></li></ul><center><img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/16.2CMD%20Format.png" width="90%" height="90" alt="16.2 CMD token"/></center><p>eMMC的命令一共有64个，从<code>CMD0</code>-<code>CMD63</code> ，在Command token的bit[45:40]表征。它们按照不同的功能集划分，又隶属于13个Class。</p><h2 id="3-1-命令的13个Class："><a href="#3-1-命令的13个Class：" class="headerlink" title="3.1 命令的13个Class："></a>3.1 <strong>命令的13个Class：</strong></h2><ul><li>Class 0：<code>basic</code></li><li>Class 1：<code>Obsolete</code></li><li>Class 2：<code>block read</code></li><li>Class 3 ：<code>Obsolete</code></li><li>Class 4：<code>block write</code></li><li>Class 5：<code>erase</code></li><li>Class 6：<code>write protection</code></li><li>Class 7：<code>lock Device</code></li><li>Class 8：<code>Application-specific</code></li><li>Class 9：<code>I/O mode</code></li><li>Class10：<code>Security Protocols</code></li><li>Class11：<code>Command Queuing</code></li><li>Class12：<code>Reserved</code></li></ul><h2 id="3-2-命令一共有一共有4种类型："><a href="#3-2-命令一共有一共有4种类型：" class="headerlink" title="3.2 命令一共有一共有4种类型："></a>3.2 <strong>命令一共有一共有4种类型：</strong></h2><ul><li><code>bc</code>：Broadcast CMD，no Respose。</li><li><code>bcr</code>：广播、有应答。</li><li><code>ac</code>：Addressed（point-to-point）CMD，DAT线上无数据。</li><li><code>adtc</code>：Addressed（point-to-point）data transfer CMD，DAT线上有数据。</li></ul><h2 id="3-3-命令的应答一共有5种类型："><a href="#3-3-命令的应答一共有5种类型：" class="headerlink" title="3.3 命令的应答一共有5种类型："></a>3.3 <strong>命令的应答一共有5种类型：</strong></h2><ul><li><code>R1</code>：normal response command。响应常用命令。<br><code>R1b</code>：和R1区别是，有一个可选的busy信号（和R1属于同一类型）。</li><li><code>R2</code>：CID，CSD register。响应CMD2、10、9，并将CID和CSD的值作为响应的返回数据。</li><li><code>R3</code>：OCR register。OCR的值作为对CMD1的响应发送给host。</li><li><code>R4</code>：Fast I&#x2F;O。</li><li><code>R5</code>：Interrupt request。</li></ul>]]></content>
+      
+      
+      <categories>
+          
+          <category> 领域 </category>
+          
+          <category> eMMC </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> eMMC </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>15--Program、Read、Erase实现逻辑-项目1-2</title>
       <link href="/blog015.html"/>
       <url>/blog015.html</url>
@@ -377,8 +404,8 @@
     
     <entry>
       <title>Verilog分类保留</title>
-      <link href="/clfm9i0ai001b5subb7azfyct.html"/>
-      <url>/clfm9i0ai001b5subb7azfyct.html</url>
+      <link href="/clfph8ced00150subgy3j9co2.html"/>
+      <url>/clfph8ced00150subgy3j9co2.html</url>
       
         <content type="html"><![CDATA[]]></content>
       
@@ -425,8 +452,8 @@
     
     <entry>
       <title>存储分类保留</title>
-      <link href="/clfm9i0ac000u5sub4wuu1vsq.html"/>
-      <url>/clfm9i0ac000u5sub4wuu1vsq.html</url>
+      <link href="/clfph8cez00320subghs9e89g.html"/>
+      <url>/clfph8cez00320subghs9e89g.html</url>
       
         <content type="html"><![CDATA[]]></content>
       
@@ -446,8 +473,8 @@
     
     <entry>
       <title>工具分类保留</title>
-      <link href="/clfm9i09t00015subg4eo5b5g.html"/>
-      <url>/clfm9i09t00015subg4eo5b5g.html</url>
+      <link href="/clfph8cdk00010subepjfbnnl.html"/>
+      <url>/clfph8cdk00010subepjfbnnl.html</url>
       
         <content type="html"><![CDATA[]]></content>
       
@@ -464,30 +491,9 @@
     
     
     <entry>
-      <title>eMMC分类保留</title>
-      <link href="/clfm9i0ah00175subcrryf8kh.html"/>
-      <url>/clfm9i0ah00175subcrryf8kh.html</url>
-      
-        <content type="html"><![CDATA[]]></content>
-      
-      
-      <categories>
-          
-          <category> 领域 </category>
-          
-          <category> eMMC </category>
-          
-      </categories>
-      
-      
-    </entry>
-    
-    
-    
-    <entry>
       <title>SV分类保留</title>
-      <link href="/clfm9i0ag00155sub4dafb2gf.html"/>
-      <url>/clfm9i0ag00155sub4dafb2gf.html</url>
+      <link href="/clfph8ceb00110subbh2951wd.html"/>
+      <url>/clfph8ceb00110subbh2951wd.html</url>
       
         <content type="html"><![CDATA[]]></content>
       
