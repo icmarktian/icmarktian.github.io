@@ -2,9 +2,9 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>17--eMMC的Erase、TRIM、Sanitize、Discard操作 | 马克得烂笔头</title>
-  <meta name="keywords" content=" eMMC ">
-  <meta name="description" content="17--eMMC的Erase、TRIM、Sanitize、Discard操作 | 马克得烂笔头">
+  <title>工具分类保留 | 马克得烂笔头</title>
+  <meta name="keywords" content="">
+  <meta name="description" content="工具分类保留 | 马克得烂笔头">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <meta name="description" content="人的精力是有限的，本站作为第二大脑用于存储本人学过的知识">
 <meta property="og:type" content="website">
@@ -669,9 +669,9 @@
 </aside>
 <div id="post">
     <div class="pjax">
-        <article id="post-2 领域/eMMC/17--eMMC的Erase、TRIM、Sanitize、Discard操作" class="article article-type-post" itemscope itemprop="blogPost">
+        <article id="post-4 工具/工具" class="article article-type-post" itemscope itemprop="blogPost">
     
-        <h1 class="article-title">17--eMMC的Erase、TRIM、Sanitize、Discard操作</h1>
+        <h1 class="article-title">工具分类保留</h1>
     
     <div class="article-meta">
         
@@ -681,29 +681,20 @@
             <i class="iconfont icon-category"></i>
             
             
-            <a  data-rel="领域">领域</a> > 
-            
-            <a  data-rel="领域&lt;---&gt;eMMC">eMMC</a>
+            <a  data-rel="工具">工具</a>
             
         </span>
         
         
-        <span class="tag">
-            <i class="iconfont icon-tag"></i>
-            
-            <a class="color5">eMMC</a>
-            
-        </span>
+    </div>
+    <div class="article-meta">
+        
+            发布时间 : <time class="date" title='最后更新: 2023-03-19 21:25:41'>2023-03-10 14:02</time>
         
     </div>
     <div class="article-meta">
         
-            发布时间 : <time class="date" title='最后更新: 2023-04-05 12:51:23'>2023-04-05 11:38</time>
-        
-    </div>
-    <div class="article-meta">
-        
-        <span>字数:1.4k</span>
+        <span>字数:0</span>
         
         
         
@@ -722,7 +713,7 @@
     
     <div class="toc-ref">
     
-        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%80%E3%80%81eMMC%E5%9C%B0%E5%9D%80%E7%A9%BA%E9%97%B4%EF%BC%88mapped-or-unmapped%EF%BC%89"><span class="toc-text">一、eMMC地址空间（mapped or unmapped）</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%98%A0%E5%B0%84%E4%B8%BE%E4%BE%8B%E8%AF%A6%E8%A7%A3"><span class="toc-text">映射举例详解</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#unmapped-block%E4%B8%AD%E6%AE%8B%E7%95%99%E6%95%B0%E6%8D%AE%E7%9A%84%E7%94%B1%E6%9D%A5"><span class="toc-text">unmapped block中残留数据的由来</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%8C%E3%80%81Erase"><span class="toc-text">二、Erase</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%89%E3%80%81TRIM"><span class="toc-text">三、TRIM</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%9B%9B%E3%80%81Sanitize"><span class="toc-text">四、Sanitize</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%94%E3%80%81Discard"><span class="toc-text">五、Discard</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%85%AD%E3%80%81%E6%80%BB%E7%BB%93%E5%9B%9B%E7%A7%8D%E6%96%B9%E5%BC%8F%E5%8C%BA%E5%88%AB"><span class="toc-text">六、总结四种方式区别</span></a></li></ol>
+        
     
 <style>
     .left-col .switch-btn,
@@ -738,80 +729,7 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p><div class='inner-toc'><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%80%E3%80%81eMMC%E5%9C%B0%E5%9D%80%E7%A9%BA%E9%97%B4%EF%BC%88mapped-or-unmapped%EF%BC%89"><span class="toc-text">一、eMMC地址空间（mapped or unmapped）</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%98%A0%E5%B0%84%E4%B8%BE%E4%BE%8B%E8%AF%A6%E8%A7%A3"><span class="toc-text">映射举例详解</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#unmapped-block%E4%B8%AD%E6%AE%8B%E7%95%99%E6%95%B0%E6%8D%AE%E7%9A%84%E7%94%B1%E6%9D%A5"><span class="toc-text">unmapped block中残留数据的由来</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%8C%E3%80%81Erase"><span class="toc-text">二、Erase</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%89%E3%80%81TRIM"><span class="toc-text">三、TRIM</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%9B%9B%E3%80%81Sanitize"><span class="toc-text">四、Sanitize</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%94%E3%80%81Discard"><span class="toc-text">五、Discard</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%85%AD%E3%80%81%E6%80%BB%E7%BB%93%E5%9B%9B%E7%A7%8D%E6%96%B9%E5%BC%8F%E5%8C%BA%E5%88%AB"><span class="toc-text">六、总结四种方式区别</span></a></li></ol></div></p>
-<h1 id="一、eMMC地址空间（mapped-or-unmapped）"><a href="#一、eMMC地址空间（mapped-or-unmapped）" class="headerlink" title="一、eMMC地址空间（mapped or unmapped）"></a>一、eMMC地址空间（mapped or unmapped）</h1><p>可以粗略地将Flash分为两种类型：<code>raw</code>和<code>managed</code>。原始的Flash（raw类型）单个cell的P&#x2F;E寿命是有限的，如果长期只对某些固定的block或cell进行使用，很容易造成局部损坏，故需要进行“<code>wear leveling</code>”减少这种损坏概率。显然eMMC属于managed的Flash设备。</p>
-<p>在eMMC中有三种类型的地址空间：</p>
-<ul>
-<li><code>Mapped Host Address Space</code>：e•MMC设备中，<strong>可通过</strong>host的读取命令访问的区域。</li>
-<li><code>Unmapped Host Address Space</code>：<strong>不能</strong>被host通过读取命令访问。它可能包含old host data或者copies of host data。</li>
-<li><code>Private Vendor Specific Address Space</code>：<strong>不能</strong>被host通过读取命令访问。包含如mapping tables、Firmware等数据。</li>
-</ul>
-<h2 id="映射举例详解"><a href="#映射举例详解" class="headerlink" title="映射举例详解"></a>映射举例详解</h2><center>
-<img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/17.1%E4%BE%8B1.png" width="58%" height="58%" alt="17.1 例1"/>
-</center>
-
-<p>例1比较简单，物理地址空间有12个，实际映射了8个block，即3-bit的address space。当从编号3的block开始写入3-block-data时，实际映射到了物理空间的3-5；</p>
-<center>
-<img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/17.2%E4%BE%8B2.png" width="37%" height="37%" alt="17.2 例2"/>
-</center>
-
-<p>例2，实际中3、4、5已经被写入数据了，若修改编号5的数据。<br>理论上应该擦除物理地址空间的5，然后再写入，<code>但擦除时间远长于写入时间</code>，因此不采用此方法。</p>
-<p>实际上操作如下：（前提是这里假设的Erase最小对齐长度为2个block）</p>
-<ul>
-<li>1、<code>重新map 4、5</code>到物理地址空间的<code>8、9</code>，</li>
-<li>2、将之前<code>4</code>的数据写到<code>8</code>，因为没有改变4的值，</li>
-<li>3、最后将改变的新数据写入第<code>9</code>。</li>
-</ul>
-<h2 id="unmapped-block中残留数据的由来"><a href="#unmapped-block中残留数据的由来" class="headerlink" title="unmapped block中残留数据的由来"></a>unmapped block中残留数据的由来</h2><p>如例2，通过更新映射表，将数据写入到之前未映射的空block，比直接擦除第4、5块再写入同一位置的速度快的多（因为擦除速度很慢）。<br>但是，由于通过修改映射表写入了空block，导致了之前映射的block就变成了<code>未映射但有数据</code>。</p>
-<h1 id="二、Erase"><a href="#二、Erase" class="headerlink" title="二、Erase"></a>二、Erase</h1><p>基本Erase的单元是“<code>Erase Group</code>”，如果EXT_CSD中<code>ERASE_GROUP_DEF [175]</code> 处于<code>enabled</code>时，则Erase Group在<strong>EXT_CSD</strong>中定义。<code>disabled</code>时，在<strong>CSD</strong>中定义。<br>当Erase成功后，设备中被擦除的<code>mapped device address range</code>为全0&#x2F;1（取决于memory技术，在EXT_CSD[181]中<code>ERASE_MEM_CONT</code>定义）。</p>
-<p>启动Erase分为三步：</p>
-<ul>
-<li>1、Host 通过 ERASE_GROUP_START（CMD35）命令，定义范围的起始地址；</li>
-<li>2、接下来用 ERASE_GROUP_END（CMD36）命令，定义范围的最后地址；</li>
-<li>3、最后终通过发送参数设置为 0 的 ERASE（CMD38）命令，启动Erase进程。（CMD38 参数见下表）</li>
-</ul>
-<center>
-<img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/17.3CMD38%E5%8F%82%E6%95%B0%E5%AE%9A%E4%B9%89.png" width="60%" height="60%" alt="17.3 CMD38参数定义"/>
-</center>
-
-<h1 id="三、TRIM"><a href="#三、TRIM" class="headerlink" title="三、TRIM"></a>三、TRIM</h1><p>TRIM适用于对“<code>write blocks</code>”进行擦除。可以允许host识别不需要的data，然后device在后台擦除事件中擦除数据。当TRIM成功后，设备中被擦除的<code>mapped device address range</code>为全0&#x2F;1。<br>TRIM的结果是简单地将<code>mapped host address range</code>变为<code>unmapped host address range</code> 。</p>
-<p>启动TRIM分为三步：</p>
-<ul>
-<li>1、Host 通过 ERASE_GROUP_START（CMD35）命令，定义范围的起始地址；（指定write block，非erase group）</li>
-<li>2、接下来用 ERASE_GROUP_END（CMD36）命令，定义范围的最后地址；指定write block，非erase group）</li>
-<li>3、最后发送参数 bit[0] 为1，其他bit位为 0 的 ERASE（CMD38）命令启动TRIM过程；</li>
-</ul>
-<h1 id="四、Sanitize"><a href="#四、Sanitize" class="headerlink" title="四、Sanitize"></a>四、Sanitize</h1><p>Sanitize从设备<code>unmapped user address space</code>中physically移除数据，根据<code>Secure_Removal_type(EXT_CSD [16])</code>。当完成Sanitize操作后，<code>unmapped host address space</code>就不存在数据了。</p>
-<center>
-<img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/17.4Secure_Removal_type.png" width="75%" height="75%" alt="17.4 Secure_Removal_type"/>
-</center>
-
-<blockquote>
-<p>bit[5:4]：配置安全移除类型（可读可写）<br>  <em><code>0x0</code>：通过擦除物理内存来删除信息；</em><br>  <em><code>0x1</code>：用一个字符覆盖寻址位置，然后进行擦除，从而删除信息；</em><br>  <em><code>0x2</code>：通过用一个字符、其补码和一个随机字符覆盖寻址位置来删除信息；</em><br>  <em><code>0x3</code>：用供应商定义的方法删除信息；</em><br>bit[3:0]：支持的安全移除类型（可读）<br>bit[0]、bit[1]、bit[2]、bit[3]的描述分别对应上述的0x0、0x1、0x2、0x3</p>
-</blockquote>
-<p><strong>启动Sanitize的方法：向EXT_CSD[165]——<code>SANITIZE_START</code>写入任何值</strong>。当设备执行Sanitize操作时，busy信号建立，直到如下事件发生时结束：</p>
-<ul>
-<li>Sanitize操作完成；</li>
-<li>利用HPI中止此操作；</li>
-<li>power failure；</li>
-<li>硬件复位；</li>
-</ul>
-<h1 id="五、Discard"><a href="#五、Discard" class="headerlink" title="五、Discard"></a>五、Discard</h1><p>类似于TRIM，区别如下：</p>
-<ul>
-<li>对被 Discard 区域进行读取，可能返回一些或全部原来的数据。<br>但是，在 TRIM 的情况下，整个区域将成为未映射或被移除，并将取决于存储器工艺返回 0 或 1。</li>
-<li>当执行 Sanitize 时，只有被Discard命令丢弃的<strong>未映射区域的数据</strong>，这部分才能被 Sanitize 移除。<br>Device 不能保证在实施 Sanitize 时，被Discard 的数据完全从 Device 中移除。</li>
-</ul>
-<p>启动Discard分为三步：</p>
-<ul>
-<li>1、Host 通过 ERASE_GROUP_START（CMD35）命令，定义范围的起始地址；（指定write block，非erase group）</li>
-<li>2、接下来用 ERASE_GROUP_END（CMD36）命令，定义范围的最后地址；指定write block，非erase group）</li>
-<li>3、最后发送参数 bit[0]，bit[1] 为 1 ，其他bit位为 0 的 ERASE（CMD38）命令启动Discard过程；</li>
-</ul>
-<h1 id="六、总结四种方式区别"><a href="#六、总结四种方式区别" class="headerlink" title="六、总结四种方式区别"></a>六、总结四种方式区别</h1><p>1、Sanitize用于unmapped的地址空间进行<code>物理擦除</code>，而其它三种都是针对mapped的地址空间（仅修改映射，并标记为擦除）。</p>
-<p>2、Erase针对<code>erase group</code>，TRIM和Discard针对独立的<code>write block</code>，后者更加灵活。</p>
-<p>3、<code>Erase/TRIM</code>和<code>Discard</code>（<em><strong>partial or full the actual erase</strong></em>）的区别在一个partial，即Discard的清除是不完整的，部分的、结果是不确定的。</p>
-<p>4、故通过<code>Erase或TRIM</code>擦除<code>mapped address space</code>中的所有数据；<br>再触发<code>Sanitize</code>操作，清除<code>遗留在unmapped address space</code>中的任何数据；</p>
-
+        
       
        <hr><span style="font-style: italic;color: gray;"> 转载请注明来源，欢迎对文章中的引用来源进行考证，欢迎指出任何有错误或不够清晰的表达。可以在下面评论区评论，也可以邮件至 icmarktian@163.com </span>
     </div>

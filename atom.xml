@@ -6,7 +6,7 @@
   <link href="https://mkdbook.com/atom.xml" rel="self"/>
   
   <link href="https://mkdbook.com/"/>
-  <updated>2023-04-05T11:48:14.986Z</updated>
+  <updated>2023-04-05T12:13:36.830Z</updated>
   <id>https://mkdbook.com/</id>
   
   <author>
@@ -17,13 +17,40 @@
   <generator uri="https://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>19--eMMC时序介绍</title>
+    <link href="https://mkdbook.com/blog019.html"/>
+    <id>https://mkdbook.com/blog019.html</id>
+    <published>2023-04-05T11:52:09.000Z</published>
+    <updated>2023-04-05T12:13:36.830Z</updated>
+    
+    <content type="html"><![CDATA[<p>[toc]</p><h1 id="一、时序缩写速查"><a href="#一、时序缩写速查" class="headerlink" title="一、时序缩写速查"></a>一、时序缩写速查</h1><p>看懂eMMC时序的描述图，首先要理解其每个缩写代表的意思：</p><ul><li><code>S</code>：CMD起始位，&#x3D;<code>0</code></li><li><code>T</code>：表示后面的命令是谁发出的，<code>Host=1</code>；<code>Device=0</code>；</li><li><code>P</code>：一个周期时间的上拉，&#x3D;<code>1</code></li><li><code>E</code>：CMD结束位，&#x3D;<code>1</code></li><li><code>L</code>：一周期时间的下拉，&#x3D;<code>0</code></li><li><code>Z</code>：高阻态</li><li><code>X</code>：<code>1或0</code></li><li><code>D</code>：表示数据</li><li><code>*</code>：重复</li><li><code>CRC</code>：<code>7bit</code></li></ul><h1 id="二、命令时序和应答时序"><a href="#二、命令时序和应答时序" class="headerlink" title="二、命令时序和应答时序"></a>二、命令时序和应答时序</h1><p>有两种不同的颜色，蓝色表示Host的命令，红色表示Device的应答。根据不同的命令类型，有的命令需要应答，有的命令不需要应答。</p><h2 id="2-1-设备识别和设备工作条件时序"><a href="#2-1-设备识别和设备工作条件时序" class="headerlink" title="2.1  设备识别和设备工作条件时序"></a>2.1  设备识别和设备工作条件时序</h2><center><img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/19.1.png" width="75%" height="75%" alt="19.1"/></center><p>上图所示为host发送<code>CMD1或CMD2</code>分别请求device的<code>OCR或CID</code>的过程，host发送完命令后经过<code>NID</code>的<code>CLK</code>周期后，device开始<strong>在响应中</strong>返回<code>OCR或CID</code>寄存器中的内容。</p><blockquote><p>注：如果host发送<code>CMD2（ALL_SEND_CID）</code>后没有收到device的应答，host就认为总线上没有device的存在。</p></blockquote><h2 id="2-2-为设备分配相对地址"><a href="#2-2-为设备分配相对地址" class="headerlink" title="2.2  为设备分配相对地址"></a>2.2  为设备分配相对地址</h2><center><img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/19.2.png" width="75%" height="75%" alt="19.2"/></center><p><code>CMD3（SET_RCA）</code>，device接收到其RCA后就切换到Data transfer模式。</p><h2 id="2-3-Data-transfer模式"><a href="#2-3-Data-transfer模式" class="headerlink" title="2.3  Data transfer模式"></a>2.3  Data transfer模式</h2><center><img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/19.3.png" width="75%" height="75%" alt="19.3"/></center><p>可以看着这里和前两个时序的区别是：不是间隔<code>Z</code>，而是间隔<code>P（host/device主动拉高）</code>。</p><blockquote><p>注：只有<code>CMD1、2、3</code>中间全是Z（针对有应答的CMD而言）。</p></blockquote><h2 id="2-4-R1b应答"><a href="#2-4-R1b应答" class="headerlink" title="2.4  R1b应答"></a>2.4  R1b应答</h2><center><img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/19.4.png" width="75%" height="75%" alt="19.4"/></center><p>带Busy信号的的应答，在host命令后隔两个周期<code>DAT0线拉低</code>，<code>表示Busy</code>。其他几根DAT线的值无所谓。</p><h2 id="2-5-上一Device应答——-gt-下一host命令"><a href="#2-5-上一Device应答——-gt-下一host命令" class="headerlink" title="2.5  上一Device应答——&gt;下一host命令"></a>2.5  上一Device应答——&gt;下一host命令</h2><center><img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/19.5.png" width="75%" height="75%" alt="19.5"/></center><h2 id="2-6-上一host命令——-gt-下一host命令"><a href="#2-6-上一host命令——-gt-下一host命令" class="headerlink" title="2.6   上一host命令——&gt;下一host命令"></a>2.6   上一host命令——&gt;下一host命令</h2><center><img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/19.6.png" width="75%" height="75%" alt="19.6"/></center><h1 id="三、总结"><a href="#三、总结" class="headerlink" title="三、总结"></a>三、总结</h1><p>1、两段之间的CLK间隔<code>N**</code>，在协议中<code>Timing Patameters</code>表格中有具体规定。（协议P154）</p><p>2、时序中的<code>CMD</code>格式是和<a href="https://mkdbook.com/blog016.html#:~:text=%E7%9A%84CRC%E4%BF%9D%E6%8A%A4-,16.2%20CMD%20token,-eMMC%E7%9A%84%E5%91%BD%E4%BB%A4">Command Format</a>对的上的。</p><p>3、时序中的**<code>Response</code>**格式取决于每种命令对应的应答类型，每种类型的bit位描述在协议中都有具体表格说明。（P136）</p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;[toc]&lt;/p&gt;
+&lt;h1 id=&quot;一、时序缩写速查&quot;&gt;&lt;a href=&quot;#一、时序缩写速查&quot; class=&quot;headerlink&quot; title=&quot;一、时序缩写速查&quot;&gt;&lt;/a&gt;一、时序缩写速查&lt;/h1&gt;&lt;p&gt;看懂eMMC时序的描述图，首先要理解其每个缩写代表的意思：&lt;/p&gt;</summary>
+      
+    
+    
+    
+    <category term="领域" scheme="https://mkdbook.com/categories/%E9%A2%86%E5%9F%9F/"/>
+    
+    <category term="eMMC" scheme="https://mkdbook.com/categories/%E9%A2%86%E5%9F%9F/eMMC/"/>
+    
+    
+    <category term="eMMC" scheme="https://mkdbook.com/tags/eMMC/"/>
+    
+  </entry>
+  
+  <entry>
     <title>18--eMMC的Secure Erase和Secure Trim操作</title>
     <link href="https://mkdbook.com/blog018.html"/>
     <id>https://mkdbook.com/blog018.html</id>
     <published>2023-04-05T05:11:21.000Z</published>
-    <updated>2023-04-05T11:48:14.986Z</updated>
+    <updated>2023-04-05T11:50:45.089Z</updated>
     
-    <content type="html"><![CDATA[<p>[toc]</p><h1 id="一、Secure-Erase"><a href="#一、Secure-Erase" class="headerlink" title="一、Secure Erase"></a>一、Secure Erase</h1><p><code>Secure Erase</code>命令和基本的<code>Erase</code>命令不同，它要求设备在发出此命令后，device和host在进入下一个操作之前必须<strong>等待Erase物理地完成</strong>。<br><code>Secure Erase</code>命令的执行方式与Erase命令相同，只是CMD38中<code>bit[31]=1</code>，其他参数为0；<br>CMD38 四个重要的bit位说明如图所示：</p><center><img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/18.1CMD38%E9%87%8D%E8%A6%81bit%E4%BD%8D.png" width="75%" height="75%" alt="18.1 CMD38重要bit位"/></center><h1 id="二、Secure-Trim"><a href="#二、Secure-Trim" class="headerlink" title="二、Secure Trim"></a>二、Secure Trim</h1><p><code>Secure Trim</code>是对<code>write block</code>执行安全擦除操作，确保数据完全地从memory中物理擦除。</p><p><strong>启动方法有两步：</strong></p><ol><li><code>步骤1</code>：host定义它标记为Secure TRIM的write block的范围（通过CMD35、CMD36），一旦确定了范围，CMD38（<code>bit[31],bit[0]设置为1</code>，其他位为0）就会被应用。</li></ol><blockquote><p>步骤1可以重复多次，中间允许有其他命令，直到所有需要清除的write block都被明确定义。建议尽可能在多的block上进行Secure TRIM的步骤1，以提高Secure TRIM的效率。</p></blockquote><ol start="2"><li><code>步骤2</code>：发送夹带地址的CMD35和CMD36（注意与这些命令一起使用的参数将被忽略），然后发送CMD38（<code>bit[31],bit[15]为1</code>，其他为0）。这一步实际上是根据<code>Secure_Removal_type(EXT_CSD [16])</code>（<a href="">图17.4</a>），对<strong>所有的write block以及它的所有副本</strong>执行Secure Trim，这些write block在步骤1中已被标记。</li></ol><blockquote><p>在步骤1和步骤2之间，可以向设备发出其他命令。</p></blockquote><h1 id="三、总结"><a href="#三、总结" class="headerlink" title="三、总结"></a>三、总结</h1><h2 id="1、隐式（implicit）擦除和显式（explicit）擦除"><a href="#1、隐式（implicit）擦除和显式（explicit）擦除" class="headerlink" title="1、隐式（implicit）擦除和显式（explicit）擦除"></a>1、隐式（implicit）擦除和显式（explicit）擦除</h2><p><code>隐式擦除</code>是指device中的某些数据被简单地标记成已删除，host可以向device该位置写数据。但是在技术上，memory里面的数据在overwrite之前还存在device中，甚至通过某些手段能够恢复数据。<br><code>显式擦除</code>则是一个更彻底的过程，用新数据（0&#x2F;1）覆盖掉原来的数据，保证删除的数据是无法被恢复的。<br>所以，隐式擦除速度更快、更简单，但是数据有被恢复的潜在风险。显式擦除反之。</p><h2 id="2、Secure-Erase和Erase的区别；Secure-Trim和TRIM的区别；"><a href="#2、Secure-Erase和Erase的区别；Secure-Trim和TRIM的区别；" class="headerlink" title="2、Secure Erase和Erase的区别；Secure Trim和TRIM的区别；"></a>2、Secure Erase和Erase的区别；Secure Trim和TRIM的区别；</h2><p>着重理解这里的<code>Secure</code>，是指要保证数据完全、永久地从device删除，不能被恢复，采取的是显示擦除的overwrite的方法。<br>而不带Secure的操作仅仅<code>被标记为删除</code>，device可能还没有实际进行overwrite，数据可能被恢复。</p><h2 id="3、新的eMMC版本中，Secure操作被取代"><a href="#3、新的eMMC版本中，Secure操作被取代" class="headerlink" title="3、新的eMMC版本中，Secure操作被取代"></a>3、新的eMMC版本中，Secure操作被取代</h2><p>为了向后兼容，保留了Secure Erase和Secure TRIM，但在v4.51之后这两种方式分别以<code>Erase+Sanitize</code>和<code>TRIM+Sanitize</code>的方式实现。<br>Sanitize操作就是能实际地通过overwrite的方式，将数据擦除。故结合使用，<code>标记+删除</code>结合就可以实现<code>Secure</code>的功能。</p>]]></content>
+    <content type="html"><![CDATA[<p>[toc]</p><h1 id="一、Secure-Erase"><a href="#一、Secure-Erase" class="headerlink" title="一、Secure Erase"></a>一、Secure Erase</h1><p><code>Secure Erase</code>命令和基本的<code>Erase</code>命令不同，它要求设备在发出此命令后，device和host在进入下一个操作之前必须<strong>等待Erase物理地完成</strong>。<br><code>Secure Erase</code>命令的执行方式与Erase命令相同，只是CMD38中<code>bit[31]=1</code>，其他参数为0；<br>CMD38 四个重要的bit位说明如图所示：</p><center><img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/18.1CMD38%E9%87%8D%E8%A6%81bit%E4%BD%8D.png" width="75%" height="75%" alt="18.1 CMD38重要bit位"/></center><h1 id="二、Secure-Trim"><a href="#二、Secure-Trim" class="headerlink" title="二、Secure Trim"></a>二、Secure Trim</h1><p><code>Secure Trim</code>是对<code>write block</code>执行安全擦除操作，确保数据完全地从memory中物理擦除。</p><p><strong>启动方法有两步：</strong></p><ol><li><code>步骤1</code>：host定义它标记为Secure TRIM的write block的范围（通过CMD35、CMD36），一旦确定了范围，CMD38（<code>bit[31],bit[0]设置为1</code>，其他位为0）就会被应用。</li></ol><blockquote><p>步骤1可以重复多次，中间允许有其他命令，直到所有需要清除的write block都被明确定义。建议尽可能在多的block上进行Secure TRIM的步骤1，以提高Secure TRIM的效率。</p></blockquote><ol start="2"><li><code>步骤2</code>：发送夹带地址的CMD35和CMD36（注意与这些命令一起使用的参数将被忽略），然后发送CMD38（<code>bit[31],bit[15]为1</code>，其他为0）。这一步实际上是根据<code>Secure_Removal_type(EXT_CSD [16])</code>（<a href="https://mkdbook.com/blog017.html#:~:text=17.4%20Secure_Removal_type">图17.4</a>），对<strong>所有的write block以及它的所有副本</strong>执行Secure Trim，这些write block在步骤1中已被标记。</li></ol><blockquote><p>在步骤1和步骤2之间，可以向设备发出其他命令。</p></blockquote><h1 id="三、总结"><a href="#三、总结" class="headerlink" title="三、总结"></a>三、总结</h1><h2 id="1、隐式（implicit）擦除和显式（explicit）擦除"><a href="#1、隐式（implicit）擦除和显式（explicit）擦除" class="headerlink" title="1、隐式（implicit）擦除和显式（explicit）擦除"></a>1、隐式（implicit）擦除和显式（explicit）擦除</h2><p><code>隐式擦除</code>是指device中的某些数据被简单地标记成已删除，host可以向device该位置写数据。但是在技术上，memory里面的数据在overwrite之前还存在device中，甚至通过某些手段能够恢复数据。<br><code>显式擦除</code>则是一个更彻底的过程，用新数据（0&#x2F;1）覆盖掉原来的数据，保证删除的数据是无法被恢复的。<br>所以，隐式擦除速度更快、更简单，但是数据有被恢复的潜在风险。显式擦除反之。</p><h2 id="2、Secure-Erase和Erase的区别；Secure-Trim和TRIM的区别；"><a href="#2、Secure-Erase和Erase的区别；Secure-Trim和TRIM的区别；" class="headerlink" title="2、Secure Erase和Erase的区别；Secure Trim和TRIM的区别；"></a>2、Secure Erase和Erase的区别；Secure Trim和TRIM的区别；</h2><p>着重理解这里的<code>Secure</code>，是指要保证数据完全、永久地从device删除，不能被恢复，采取的是显示擦除的overwrite的方法。<br>而不带Secure的操作仅仅<code>被标记为删除</code>，device可能还没有实际进行overwrite，数据可能被恢复。</p><h2 id="3、新的eMMC版本中，Secure操作被取代"><a href="#3、新的eMMC版本中，Secure操作被取代" class="headerlink" title="3、新的eMMC版本中，Secure操作被取代"></a>3、新的eMMC版本中，Secure操作被取代</h2><p>为了向后兼容，保留了Secure Erase和Secure TRIM，但在v4.51之后这两种方式分别以<code>Erase+Sanitize</code>和<code>TRIM+Sanitize</code>的方式实现。<br>Sanitize操作就是能实际地通过overwrite的方式，将数据擦除。故结合使用，<code>标记+删除</code>结合就可以实现<code>Secure</code>的功能。</p>]]></content>
     
     
       
@@ -495,8 +522,8 @@
   
   <entry>
     <title>Verilog分类保留</title>
-    <link href="https://mkdbook.com/clg3mlf4b000edoubfebk46a4.html"/>
-    <id>https://mkdbook.com/clg3mlf4b000edoubfebk46a4.html</id>
+    <link href="https://mkdbook.com/clg3nnahv003hhcub6718auyi.html"/>
+    <id>https://mkdbook.com/clg3nnahv003hhcub6718auyi.html</id>
     <published>2023-03-10T06:12:01.000Z</published>
     <updated>2023-03-19T13:25:33.615Z</updated>
     
@@ -535,23 +562,6 @@
     
     
     <category term="perl" scheme="https://mkdbook.com/tags/perl/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>存储分类保留</title>
-    <link href="https://mkdbook.com/clg3mlf4c000idoubbjbj5ote.html"/>
-    <id>https://mkdbook.com/clg3mlf4c000idoubbjbj5ote.html</id>
-    <published>2023-03-10T06:03:01.000Z</published>
-    <updated>2023-03-19T13:25:07.165Z</updated>
-    
-    
-    
-    
-    <category term="领域" scheme="https://mkdbook.com/categories/%E9%A2%86%E5%9F%9F/"/>
-    
-    <category term="存储" scheme="https://mkdbook.com/categories/%E9%A2%86%E5%9F%9F/%E5%AD%98%E5%82%A8/"/>
-    
     
   </entry>
   
