@@ -2,9 +2,9 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>10--[TEST]Erase of NAND behavior model  验证计划-项目2-4 | 马克得烂笔头</title>
-  <meta name="keywords" content=" NAND ">
-  <meta name="description" content="10--[TEST]Erase of NAND behavior model  验证计划-项目2-4 | 马克得烂笔头">
+  <title>Verilog分类保留 | 马克得烂笔头</title>
+  <meta name="keywords" content="">
+  <meta name="description" content="Verilog分类保留 | 马克得烂笔头">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <meta name="description" content="人的精力是有限的，本站作为第二大脑用于存储本人学过的知识">
 <meta property="og:type" content="website">
@@ -682,9 +682,9 @@
 </aside>
 <div id="post">
     <div class="pjax">
-        <article id="post-1 项目/项目2：Erase of NAND behavior model/10--[TEST]Erase of NAND behavior model  验证计划-项目2-4" class="article article-type-post" itemscope itemprop="blogPost">
+        <article id="post-3 语言/Verilog/Verilog" class="article article-type-post" itemscope itemprop="blogPost">
     
-        <h1 class="article-title">10--[TEST]Erase of NAND behavior model  验证计划-项目2-4</h1>
+        <h1 class="article-title">Verilog分类保留</h1>
     
     <div class="article-meta">
         
@@ -694,29 +694,22 @@
             <i class="iconfont icon-category"></i>
             
             
-            <a  data-rel="项目">项目</a> > 
+            <a  data-rel="语言">语言</a> > 
             
-            <a  data-rel="项目&lt;---&gt;项目2-Erase_of_NAND_behavior_model">项目2-Erase_of_NAND_behavior_model</a>
+            <a  data-rel="语言&lt;---&gt;Verilog">Verilog</a>
             
         </span>
         
-        
-        <span class="tag">
-            <i class="iconfont icon-tag"></i>
-            
-            <a class="color5">NAND</a>
-            
-        </span>
         
     </div>
     <div class="article-meta">
         
-            发布时间 : <time class="date" title='最后更新: 2023-03-24 16:08:30'>2023-03-20 19:59</time>
+            发布时间 : <time class="date" title='最后更新: 2023-03-19 21:25:33'>2023-03-10 14:12</time>
         
     </div>
     <div class="article-meta">
         
-        <span>字数:986</span>
+        <span>字数:0</span>
         
         
         
@@ -751,252 +744,7 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p><div class='inner-toc'></div></p>
-<table>
-<thead>
-<tr>
-<th>用例名称</th>
-<th>用例描述</th>
-<th>期望结果</th>
-<th>验证结果</th>
-<th>备注</th>
-<th>验证人</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>after_EraSus_PagePgm1</td>
-<td>擦暂停后执行写操作（同一块）</td>
-<td>数据不可以写入</td>
-<td>OK</td>
-<td></td>
-<td>Mark</td>
-</tr>
-<tr>
-<td>after_EraSus_PagePgm2</td>
-<td>擦暂停后执行写操作（同plane不同块）</td>
-<td>数据可以写入</td>
-<td>OK</td>
-<td></td>
-<td>Mark</td>
-</tr>
-<tr>
-<td>after_EraSus_PagePgm3</td>
-<td>擦暂停后执行写操作（不同plane）</td>
-<td>数据可以写入</td>
-<td>OK</td>
-<td></td>
-<td>Mark</td>
-</tr>
-<tr>
-<td>after_EraSus_CachePgm1</td>
-<td>擦暂停后执行写缓存操作（同一块）</td>
-<td>数据不可以写入</td>
-<td>OK</td>
-<td></td>
-<td>Mark</td>
-</tr>
-<tr>
-<td>after_EraSus_CachePgm2</td>
-<td>擦暂停后执行写缓存操作（同plane不同块）</td>
-<td>数据可以写入</td>
-<td>OK</td>
-<td></td>
-<td>Mark</td>
-</tr>
-<tr>
-<td>after_EraSus_CachePgm3</td>
-<td>擦暂停后执行写缓存操作（不同plane）</td>
-<td>数据可以写入</td>
-<td>OK</td>
-<td></td>
-<td>Mark</td>
-</tr>
-<tr>
-<td>multi_erase_D1</td>
-<td>60–地址–61–delay–60–地址–D0</td>
-<td>擦除成功</td>
-<td>OK</td>
-<td></td>
-<td>Mark</td>
-</tr>
-<tr>
-<td>multi_erase_onfi</td>
-<td>60–地址–60—地址—D0</td>
-<td>擦除成功</td>
-<td>OK</td>
-<td></td>
-<td>Mark</td>
-</tr>
-<tr>
-<td>multi_erase_D1_4P</td>
-<td>D1模式下对4个plane进行擦除</td>
-<td>擦除成功</td>
-<td>OK</td>
-<td></td>
-<td>Mark</td>
-</tr>
-<tr>
-<td>multi_erase_onfi_4P</td>
-<td>onfi模式下对4个plane进行擦除</td>
-<td>擦除成功</td>
-<td>OK</td>
-<td></td>
-<td>Mark</td>
-</tr>
-<tr>
-<td>multi_erase_D1_1P</td>
-<td>D1模式下，发送同一plane的三个block的地址</td>
-<td>只擦除最后一个地址（60–addr–D0）的block</td>
-<td>OK</td>
-<td>增加地址个数，结果一样</td>
-<td>Mark</td>
-</tr>
-<tr>
-<td>multi_erase_onfi_1P</td>
-<td>onfi模式下，发送同一plane的三个block的地址</td>
-<td>只擦除最后一个地址（60–addr–D0）的block</td>
-<td>OK</td>
-<td></td>
-<td>Mark</td>
-</tr>
-<tr>
-<td>multi_erase_D1_4+1</td>
-<td>D1模式下，输入5个block地址，其中四个为不同plande中的block，有两个block是属于同一个block的</td>
-<td>重复的block擦除失败（只擦除同plane中最后出现的那一个block）</td>
-<td>OK</td>
-<td>增加重复地址个数，结果一样</td>
-<td>Mark</td>
-</tr>
-<tr>
-<td>multi_erase_onfi_4+1</td>
-<td>onfi模式下，输入5个block地址，其中四个为不同plande中的block，有两个block是属于同一个block的</td>
-<td>重复的block擦除失败（只擦除同plane中最后出现的那一个block）</td>
-<td>OK</td>
-<td></td>
-<td>Mark</td>
-</tr>
-<tr>
-<td>normal_sus_erase</td>
-<td>先对block 2，page 0，column 8’h0，写入15个数据。再对该位置发送Erase sequence，在wait_ready之前对同一位置发送Erase Suspend sequence，然后读取该位置的值。</td>
-<td>如果Erase Suspend成功，该位置读出的值是不确定的，为x态。</td>
-<td>Erase Suspend逻辑未触发</td>
-<td>已解决。 1、”if (Io_mirror [7 : 0] &#x3D; &#x3D; &#x3D; 8’h60)”,改为else if； 2、 “if (lastCmd &#x3D;&#x3D;&#x3D; 8’h67 &amp;&amp; !cmnd_78h &amp;&amp; !cmnd_71h)”，改为”if (lastCmd &#x3D;&#x3D;&#x3D; 8’h67)”;</td>
-<td>Mark</td>
-</tr>
-<tr>
-<td>twice_sus_erase</td>
-<td>在设备处于erase suspend状态下，再发一次erase suspend sequence。</td>
-<td>第二次发送的suspend命令会被忽略，同时可以看到提示信息。</td>
-<td>OK</td>
-<td></td>
-<td>Mark</td>
-</tr>
-<tr>
-<td>noerase_sus_erase</td>
-<td>在设备未处于erase的状态下发送erase suspend sequence。</td>
-<td>erase suspend命令会被忽略，同时可以看到提示信息。</td>
-<td>OK</td>
-<td></td>
-<td>Mark</td>
-</tr>
-<tr>
-<td>program_sus_erase</td>
-<td>设备处于erase suspend状态下，对同一个block进行program</td>
-<td>program失败，该位置的数据读出来仍为 x。</td>
-<td>OK</td>
-<td></td>
-<td>Mark</td>
-</tr>
-<tr>
-<td>multi_erase_sus</td>
-<td>在进行multi_plane erase时，发送erase suspend命令</td>
-<td>会同时暂停所有这些plane中的erase操作</td>
-<td>OK</td>
-<td></td>
-<td>Mark</td>
-</tr>
-<tr>
-<td>A_era_sus_E_A</td>
-<td>A处于erase suspend时，对A进行ERASE</td>
-<td>Resume ERASE operation to block A</td>
-<td>OK</td>
-<td></td>
-<td>Mark</td>
-</tr>
-<tr>
-<td>A_era_sus_E_B</td>
-<td>A处于erase suspend时，对非suspend的B进行ERASE</td>
-<td>开始B的normal erase，A的suspend状态被取消</td>
-<td>OK</td>
-<td>如何判断A是否处于SUSPEND状态：通过在对B ERASE的前后，各发一次ERASE Resume命令，A处于SUSPEND状态则 RESUME命令生效，否则SUSPEND状态被取消。</td>
-<td>Mark</td>
-</tr>
-<tr>
-<td>A_era_sus_mtE_AB</td>
-<td>A处于erase suspend时，对A和非suspend的B进行multi_plane ERASE</td>
-<td>开始A、B的normal multi_plane erase</td>
-<td>OK</td>
-<td></td>
-<td>Mark</td>
-</tr>
-<tr>
-<td>mtE_ABsus_E_A</td>
-<td>multi_plane erase A、B被suspend后，对A进行ERASE操作</td>
-<td>Resume ERASE operation to block A and B</td>
-<td>OK</td>
-<td></td>
-<td>Mark</td>
-</tr>
-<tr>
-<td>mtE_ABsus_E_B</td>
-<td>multi_plane erase A、B被suspend后，对B进行ERASE操作</td>
-<td></td>
-<td>OK</td>
-<td></td>
-<td>Mark</td>
-</tr>
-<tr>
-<td>mtE_ABsus_mtE_AB</td>
-<td>multi_plane erase A、B被suspend后，对A、B进行mult_plane ERASE操作</td>
-<td></td>
-<td>OK</td>
-<td></td>
-<td>Mark</td>
-</tr>
-<tr>
-<td>mtE_ABsus_mtE_AD</td>
-<td>multi_plane erase A、B被suspend后，对A、D（未suspend）进行mult_plane ERASE操作</td>
-<td>Start normal erase to block A and D. Suspend to block B is canceled</td>
-<td>OK</td>
-<td></td>
-<td>Mark</td>
-</tr>
-<tr>
-<td>mtE_ABsus_mtE_CB</td>
-<td>multi_plane erase A、B被suspend后，对C（未suspend）、B进行mult_plane ERASE操作</td>
-<td>Start normal erase to block C and B. Suspend to block A is canceled</td>
-<td>OK</td>
-<td></td>
-<td>Mark</td>
-</tr>
-<tr>
-<td>erase_resume</td>
-<td>在normal_sus_erase的基础上，发送D7h，然后等待wait_ready后，再对该位置读取一次</td>
-<td>该位置从X态变为FF，说明Erase Resume成功。</td>
-<td>OK</td>
-<td></td>
-<td>Mark</td>
-</tr>
-<tr>
-<td>nosus_erase_resume</td>
-<td>在设备未处于erase suspend的状态下发送erase resume sequence。</td>
-<td>erase resume命令会被忽略。</td>
-<td>OK</td>
-<td></td>
-<td>Mark</td>
-</tr>
-</tbody></table>
-
+        
       
        <hr><span style="font-style: italic;color: gray;"> 转载请注明来源，欢迎对文章中的引用来源进行考证，欢迎指出任何有错误或不够清晰的表达。可以在下面评论区评论，也可以邮件至 icmarktian@163.com </span>
     </div>

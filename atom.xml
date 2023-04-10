@@ -6,7 +6,7 @@
   <link href="https://mkdbook.com/atom.xml" rel="self"/>
   
   <link href="https://mkdbook.com/"/>
-  <updated>2023-04-10T06:25:33.749Z</updated>
+  <updated>2023-04-10T07:44:43.199Z</updated>
   <id>https://mkdbook.com/</id>
   
   <author>
@@ -17,13 +17,41 @@
   <generator uri="https://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>21--eMMC的分区设置和分区访问</title>
+    <link href="https://mkdbook.com/blog%E7%AC%AC%E5%87%A0%E7%AF%87.html"/>
+    <id>https://mkdbook.com/blog%E7%AC%AC%E5%87%A0%E7%AF%87.html</id>
+    <published>2023-04-10T07:20:57.000Z</published>
+    <updated>2023-04-10T07:44:43.199Z</updated>
+    
+    <content type="html"><![CDATA[<p>[toc]</p><h1 id="一、eMMC分区介绍"><a href="#一、eMMC分区介绍" class="headerlink" title="一、eMMC分区介绍"></a>一、eMMC分区介绍</h1><center><img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/21.1%E5%88%86%E5%8C%BA%E7%A4%BA%E4%BE%8B.png" width="75%" height="75%" alt="21.1 分区示例"/></center><p>eMMC主要有三块大的分区，两个<strong>Boot Area Patition</strong>，一个<strong>RPMB</strong>分区，一块<strong>User Data Area（UDA）。</strong>UDA中可以最多划分出<code>四个General Purpose Patitions</code>，又可以为UDA某一段设置Enhanced属性，成为<code>Enhanced UDA</code>。</p><h1 id="二、分区配置流程"><a href="#二、分区配置流程" class="headerlink" title="二、分区配置流程"></a>二、分区配置流程</h1><ul><li>1、先判断设备是否支持分区。</li><li>2、如果支持，判断host是否要对该分区设置<strong>Enhanced attribute</strong>。</li><li>2.1、如果<strong>需要</strong>设置<strong>ENH attribute</strong>：</li></ul><blockquote><p><code>1、General Purpose Partition的数量</code><br><code>2、General Purpose Partition sizes</code>和enhanced attribute<br>3、Enhanced User Data Area sizes，start address和enhanced attribute</p></blockquote><ul><li>2.2、如果<strong>不需要</strong>设置<strong>ENH attribute</strong>：</li></ul><blockquote><p><code>1、General Purpose Partition的数量</code><br><code>2、General Purpose Partition sizes</code></p></blockquote><p>3、PARTITIONING_SETTING_COMPLETED置位</p><h2 id="2-1-如何判断是否支持分区"><a href="#2-1-如何判断是否支持分区" class="headerlink" title="2.1  如何判断是否支持分区"></a>2.1  如何判断是否支持分区</h2><p><code>EXT_CSD[160]</code>中<code>PARTITIONING_SUPPORT</code>的bit0，如下图21.2所示：</p><center><img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/21.2.png" width="75%" height="75%" alt="21.2"/></center><p><code>bit[0]</code>表示设备是否支持分区，<code>bit[1]</code>表示分区（partitions and user data area）是否支持Enhance 属性，<code>bit[2]</code>表示设备是否支持extended 分区属性。本协议中规定这三种特性都支持，bit[0-2]&#x3D;1。</p><h2 id="2-2-General-Purpose-Partition的数量-x2F-Size设置"><a href="#2-2-General-Purpose-Partition的数量-x2F-Size设置" class="headerlink" title="2.2  General Purpose Partition的数量&#x2F;Size设置"></a>2.2  General Purpose Partition的数量&#x2F;Size设置</h2><p>EXT_CSD[154:143]的<code>GP_SIZE_MULT_GP0 - GP_SIZE_MULT_GP3</code>，共12个byte。</p><p><code>X</code>表示General Purpose Partition的<code>编号（1-4）</code>，<code>0-2</code>表示设置一个size这个公式的<code>3个因子</code>。</p><center><img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/21.3.png" width="75%" height="75%" alt="21.3"/></center><p>分区Size的计算公式，以及每一个byte代表的意义，如下21.4所示，</p><center><img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/21.4.png" width="75%" height="75%" alt="21.4"/></center><p>这里有一个疑问：设置此分区的<code>数量</code>（最大4），是否是把分区的Size设置为0，就表示该分区不存在，从而分区数量减一？</p><h2 id="2-3-General-Purpose-Partition的Enh-x2F-EXT属性设置"><a href="#2-3-General-Purpose-Partition的Enh-x2F-EXT属性设置" class="headerlink" title="2.3  General Purpose Partition的Enh&#x2F;EXT属性设置"></a>2.3  General Purpose Partition的Enh&#x2F;EXT属性设置</h2><p>EXT_CSD[156]的<code>PARTITIONS_ATTRIBUTE</code>设置Enh属性（如图21.5），EXT_CSD[53:52]的<code>EXT_PARTITIONS_ATTRIBUTE</code>设置EXT属性（p255）。</p><center><img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/21.5.png" width="75%" height="75%" alt="21.5"/></center><h2 id="2-4-Enhanced-User-Data-Area的start-address-x2F-Size设置"><a href="#2-4-Enhanced-User-Data-Area的start-address-x2F-Size设置" class="headerlink" title="2.4  Enhanced User Data Area的start address&#x2F;Size设置"></a>2.4  Enhanced User Data Area的start address&#x2F;Size设置</h2><p>EXT_CSD[139:136]的<code>ENH_START_ADD</code>设置地址，EXT_CSD[142:140]的<code>ENH_SIZE_MULT</code>设置Size。（p220）</p><p>EXT_CSD[156]的<code>PARTITIONS_ATTRIBUTE</code>设置Enh属性（如图21.5）。</p><h2 id="2-5-总结"><a href="#2-5-总结" class="headerlink" title="2.5  总结"></a>2.5  总结</h2><ul><li><code>General Purpose Partition</code>和<code>User Data Area</code>是两种不同的分区，它们各自设置大小、Enhanced和Extend属性。</li></ul>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;[toc]&lt;/p&gt;
+&lt;h1 id=&quot;一、eMMC分区介绍&quot;&gt;&lt;a href=&quot;#一、eMMC分区介绍&quot; class=&quot;headerlink&quot; title=&quot;一、eMMC分区介绍&quot;&gt;&lt;/a&gt;一、eMMC分区介绍&lt;/h1&gt;&lt;center&gt;
+&lt;img src=&quot;https://b</summary>
+      
+    
+    
+    
+    <category term="领域" scheme="https://mkdbook.com/categories/%E9%A2%86%E5%9F%9F/"/>
+    
+    <category term="eMMC" scheme="https://mkdbook.com/categories/%E9%A2%86%E5%9F%9F/eMMC/"/>
+    
+    
+    <category term="eMMC" scheme="https://mkdbook.com/tags/eMMC/"/>
+    
+  </entry>
+  
+  <entry>
     <title>20--IMC初级使用教程</title>
     <link href="https://mkdbook.com/blog020.html"/>
     <id>https://mkdbook.com/blog020.html</id>
     <published>2023-04-10T06:18:11.000Z</published>
-    <updated>2023-04-10T06:25:33.749Z</updated>
+    <updated>2023-04-10T07:32:07.946Z</updated>
     
-    <content type="html"><![CDATA[<p>[toc]</p><h1 id="IMC收集覆盖率"><a href="#IMC收集覆盖率" class="headerlink" title="IMC收集覆盖率"></a>IMC收集覆盖率</h1><h1 id="一、前言"><a href="#一、前言" class="headerlink" title="一、前言"></a>一、前言</h1><p>类似于Simvision，IMC（Incisive Metrics Center）是Cadence集成在Incisive中的一个用于覆盖率收集、分析、报告的工具。</p><p>踩坑：新版的Cadence工具已经从Incisive升级到了Xcelium，但是Xcelium不再集成IMC工具，因为IMC工具被集成在了新版的vManager工具中。</p><p>另外，由于仿真工具升级的原因，通过Xcelium仿真生成的Coverage Database无法通过Incisive中集成的IMC工具打开。故后续教程基于Incisive 151版本。</p><h1 id="二、IMC的三种启动模式"><a href="#二、IMC的三种启动模式" class="headerlink" title="二、IMC的三种启动模式"></a>二、IMC的三种启动模式</h1><h2 id="1、GUI-modo"><a href="#1、GUI-modo" class="headerlink" title="1、GUI modo"></a>1、GUI modo</h2><p>启动命令：<code>imc -gui</code></p><p><strong>IMC图形化界面。</strong></p><h2 id="2、Interactive-Command-line-modo"><a href="#2、Interactive-Command-line-modo" class="headerlink" title="2、Interactive Command-line modo"></a>2、Interactive Command-line modo</h2><p>启动命令：<code>imc -batch</code></p><p><strong>交互式命令行模式。</strong></p><h2 id="3、Batch-modo"><a href="#3、Batch-modo" class="headerlink" title="3、Batch modo"></a>3、Batch modo</h2><p>启动命令：<code>imc -exec &lt;command_file&gt;</code></p><p><strong>允许执行批量处理脚本或命令并退出，如TCL脚本。</strong></p><h1 id="三、IMC的option"><a href="#三、IMC的option" class="headerlink" title="三、IMC的option"></a>三、IMC的option</h1><p>可通过<code>imc -help</code>命令查询所有option的作用。</p><pre><code class="yaml">-batch                               run in non-gui mode-32bit                               invokes 32 bit executable-64bit                               invokes 64 bit executable-appendkey                           append keystrokes to an existing keyfile-appendlog                           append the log to an existing logfile-context                             specify application context-df                                  use default font-display &lt;arg&gt;                       display (and screen) on which to display window-enc                                 set input encoding-exec &lt;script name&gt;                  execute a script and exit-execcmd &lt;command&gt;                   execute the given tcl commands and exit-filter                              apply changes on the main table in the Regression Center-gui                                 run in gui mode-help                                print this message-init &lt;file&gt;                         run tcl commands in the given file at startup-initcmd &lt;command&gt;                   execute the given tcl commands at startup-jp                                  japanese input support-keyfile &lt;file&gt;                      specifies the file to capture keyboard input-licqueue                            use license queue mechanism-load &lt;run&gt;                          load given run at the start-load_refinement &lt;refinement file&gt;   load given refinement file at the start-logfile &lt;file&gt;                      use given file for log-memlimit &lt;limit&gt;                    determines final Java Memory limit-nocopyright                         do not print copyright information at start-nostdout                            no output on stdout-quiet                               be extra quiet-sessions_view &lt;filter&gt;              sets the specified session view at startup-sourcemap &lt;file&gt;                    use contents of given file as list of source location mappings in the form of source and                                     destination directories-status                              prints runtime statistics at the session end-verbose                             be extra verbose-version                             print the version information and exit</code></pre><h1 id="四、IMC-merge-coverage"><a href="#四、IMC-merge-coverage" class="headerlink" title="四、IMC merge coverage"></a>四、IMC merge coverage</h1><p>第一步，<code>imc -batch</code>打开batch模式。</p><p>第二步，<code>merge &lt;文件&gt; -out &lt;输出文件名&gt;</code> ，例如 merge cov_work&#x2F;scope&#x2F;* -out ALL。</p><p>第三步，<code>exit</code>，退出batch模式。然后打开 imc gui界面，把merge生成的文件load进去。</p><p>注意：如果想覆盖掉之前merge生成的文件，可以添加<code>-overwrite</code>选项。</p><h1 id="五、IMC-GUI的基本使用"><a href="#五、IMC-GUI的基本使用" class="headerlink" title="五、IMC GUI的基本使用"></a>五、IMC GUI的基本使用</h1><p>第一步，<code>imc -gui &amp;</code>启动GUI界面，并将coverage database加载进来。</p><center><img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/20.1IMC.png" width="75%" height="75%" alt=""/></center><p>第二步，点击界面相关按钮进行分析。</p><center><img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/20.2IMC.png" width="75%" height="75%" alt=""/></center>]]></content>
+    <content type="html"><![CDATA[<p>[toc]</p><h1 id="IMC收集覆盖率"><a href="#IMC收集覆盖率" class="headerlink" title="IMC收集覆盖率"></a>IMC收集覆盖率</h1><h1 id="一、前言"><a href="#一、前言" class="headerlink" title="一、前言"></a>一、前言</h1><p>类似于Simvision，IMC（Incisive Metrics Center）是Cadence集成在Incisive中的一个用于覆盖率收集、分析、报告的工具。</p><p>踩坑：新版的Cadence工具已经从Incisive升级到了Xcelium，但是Xcelium不再集成IMC工具，因为IMC工具被集成在了新版的vManager工具中。</p><p>另外，由于仿真工具升级的原因，通过Xcelium仿真生成的Coverage Database无法通过Incisive中集成的IMC工具打开。故后续教程基于Incisive 151版本。</p><h1 id="二、IMC的三种启动模式"><a href="#二、IMC的三种启动模式" class="headerlink" title="二、IMC的三种启动模式"></a>二、IMC的三种启动模式</h1><h2 id="1、GUI-modo"><a href="#1、GUI-modo" class="headerlink" title="1、GUI modo"></a>1、GUI modo</h2><p>启动命令：<code>imc -gui</code></p><p><strong>IMC图形化界面。</strong></p><h2 id="2、Interactive-Command-line-modo"><a href="#2、Interactive-Command-line-modo" class="headerlink" title="2、Interactive Command-line modo"></a>2、Interactive Command-line modo</h2><p>启动命令：<code>imc -batch</code></p><p><strong>交互式命令行模式。</strong></p><h2 id="3、Batch-modo"><a href="#3、Batch-modo" class="headerlink" title="3、Batch modo"></a>3、Batch modo</h2><p>启动命令：<code>imc -exec &lt;command_file&gt;</code></p><p><strong>允许执行批量处理脚本或命令并退出，如TCL脚本。</strong></p><h1 id="三、IMC的option"><a href="#三、IMC的option" class="headerlink" title="三、IMC的option"></a>三、IMC的option</h1><p>可通过<code>imc -help</code>命令查询所有option的作用。</p><pre><code class="yaml">-batch                               run in non-gui mode-32bit                               invokes 32 bit executable-64bit                               invokes 64 bit executable-appendkey                           append keystrokes to an existing keyfile-appendlog                           append the log to an existing logfile-context                             specify application context-df                                  use default font-display &lt;arg&gt;                       display (and screen) on which to display window-enc                                 set input encoding-exec &lt;script name&gt;                  execute a script and exit-execcmd &lt;command&gt;                   execute the given tcl commands and exit-filter                              apply changes on the main table in the Regression Center-gui                                 run in gui mode-help                                print this message-init &lt;file&gt;                         run tcl commands in the given file at startup-initcmd &lt;command&gt;                   execute the given tcl commands at startup-jp                                  japanese input support-keyfile &lt;file&gt;                      specifies the file to capture keyboard input-licqueue                            use license queue mechanism-load &lt;run&gt;                          load given run at the start-load_refinement &lt;refinement file&gt;   load given refinement file at the start-logfile &lt;file&gt;                      use given file for log-memlimit &lt;limit&gt;                    determines final Java Memory limit-nocopyright                         do not print copyright information at start-nostdout                            no output on stdout-quiet                               be extra quiet-sessions_view &lt;filter&gt;              sets the specified session view at startup-sourcemap &lt;file&gt;                    use contents of given file as list of source location mappings in the form of source and                                     destination directories-status                              prints runtime statistics at the session end-verbose                             be extra verbose-version                             print the version information and exit</code></pre><h1 id="四、IMC-merge-coverage"><a href="#四、IMC-merge-coverage" class="headerlink" title="四、IMC merge coverage"></a>四、IMC merge coverage</h1><p>第一步，<code>imc -batch</code>打开batch模式。</p><p>第二步，<code>merge &lt;文件&gt; -out &lt;输出文件名&gt;</code> ，例如 merge cov_work&#x2F;scope&#x2F;* -out ALL。</p><p>第三步，<code>exit</code>，退出batch模式。然后打开 imc gui界面，把merge生成的文件load进去。</p><p>注意：如果想覆盖掉之前merge生成的文件，可以添加<code>-overwrite</code>选项。</p><h1 id="五、IMC-GUI的基本使用"><a href="#五、IMC-GUI的基本使用" class="headerlink" title="五、IMC GUI的基本使用"></a>五、IMC GUI的基本使用</h1><p>第一步，<code>imc -gui &amp;</code>启动GUI界面，并将coverage database加载进来。</p><center><img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/20.1IMC.png" width="75%" height="75%" alt="20.1"/></center><p>第二步，点击界面相关按钮进行分析。</p><center><img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/20.2IMC.png" width="75%" height="75%" alt="20.2"/></center>]]></content>
     
     
       
@@ -542,23 +570,6 @@
     
     
     <category term="perl" scheme="https://mkdbook.com/tags/perl/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Verilog分类保留</title>
-    <link href="https://mkdbook.com/clgagatqv0017fcubd9uza38h.html"/>
-    <id>https://mkdbook.com/clgagatqv0017fcubd9uza38h.html</id>
-    <published>2023-03-10T06:12:01.000Z</published>
-    <updated>2023-03-19T13:25:33.615Z</updated>
-    
-    
-    
-    
-    <category term="语言" scheme="https://mkdbook.com/categories/%E8%AF%AD%E8%A8%80/"/>
-    
-    <category term="Verilog" scheme="https://mkdbook.com/categories/%E8%AF%AD%E8%A8%80/Verilog/"/>
-    
     
   </entry>
   
