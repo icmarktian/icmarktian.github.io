@@ -2,9 +2,9 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>18--eMMC的Secure Erase和Secure Trim操作 | 马克得烂笔头</title>
-  <meta name="keywords" content=" eMMC ">
-  <meta name="description" content="18--eMMC的Secure Erase和Secure Trim操作 | 马克得烂笔头">
+  <title>Verilog分类保留 | 马克得烂笔头</title>
+  <meta name="keywords" content="">
+  <meta name="description" content="Verilog分类保留 | 马克得烂笔头">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <meta name="description" content="人的精力是有限的，本站作为第二大脑用于存储本人学过的知识">
 <meta property="og:type" content="website">
@@ -673,9 +673,9 @@
 </aside>
 <div id="post">
     <div class="pjax">
-        <article id="post-2 领域/eMMC/18--eMMC的Secure Erase和Secure Trim操作" class="article article-type-post" itemscope itemprop="blogPost">
+        <article id="post-3 语言/Verilog/Verilog" class="article article-type-post" itemscope itemprop="blogPost">
     
-        <h1 class="article-title">18--eMMC的Secure Erase和Secure Trim操作</h1>
+        <h1 class="article-title">Verilog分类保留</h1>
     
     <div class="article-meta">
         
@@ -685,29 +685,22 @@
             <i class="iconfont icon-category"></i>
             
             
-            <a  data-rel="领域">领域</a> > 
+            <a  data-rel="语言">语言</a> > 
             
-            <a  data-rel="领域&lt;---&gt;eMMC">eMMC</a>
+            <a  data-rel="语言&lt;---&gt;Verilog">Verilog</a>
             
         </span>
         
-        
-        <span class="tag">
-            <i class="iconfont icon-tag"></i>
-            
-            <a class="color5">eMMC</a>
-            
-        </span>
         
     </div>
     <div class="article-meta">
         
-            发布时间 : <time class="date" title='最后更新: 2023-04-05 19:50:45'>2023-04-05 13:11</time>
+            发布时间 : <time class="date" title='最后更新: 2023-03-19 21:25:33'>2023-03-10 14:12</time>
         
     </div>
     <div class="article-meta">
         
-        <span>字数:668</span>
+        <span>字数:0</span>
         
         
         
@@ -726,7 +719,7 @@
     
     <div class="toc-ref">
     
-        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%80%E3%80%81Secure-Erase"><span class="toc-text">一、Secure Erase</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%8C%E3%80%81Secure-Trim"><span class="toc-text">二、Secure Trim</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E6%80%BB%E7%BB%93"><span class="toc-text">三、总结</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1%E3%80%81%E9%9A%90%E5%BC%8F%EF%BC%88implicit%EF%BC%89%E6%93%A6%E9%99%A4%E5%92%8C%E6%98%BE%E5%BC%8F%EF%BC%88explicit%EF%BC%89%E6%93%A6%E9%99%A4"><span class="toc-text">1、隐式（implicit）擦除和显式（explicit）擦除</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2%E3%80%81Secure-Erase%E5%92%8CErase%E7%9A%84%E5%8C%BA%E5%88%AB%EF%BC%9BSecure-Trim%E5%92%8CTRIM%E7%9A%84%E5%8C%BA%E5%88%AB%EF%BC%9B"><span class="toc-text">2、Secure Erase和Erase的区别；Secure Trim和TRIM的区别；</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3%E3%80%81%E6%96%B0%E7%9A%84eMMC%E7%89%88%E6%9C%AC%E4%B8%AD%EF%BC%8CSecure%E6%93%8D%E4%BD%9C%E8%A2%AB%E5%8F%96%E4%BB%A3"><span class="toc-text">3、新的eMMC版本中，Secure操作被取代</span></a></li></ol></li></ol>
+        
     
 <style>
     .left-col .switch-btn,
@@ -742,30 +735,7 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p><div class='inner-toc'><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%80%E3%80%81Secure-Erase"><span class="toc-text">一、Secure Erase</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%8C%E3%80%81Secure-Trim"><span class="toc-text">二、Secure Trim</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E6%80%BB%E7%BB%93"><span class="toc-text">三、总结</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1%E3%80%81%E9%9A%90%E5%BC%8F%EF%BC%88implicit%EF%BC%89%E6%93%A6%E9%99%A4%E5%92%8C%E6%98%BE%E5%BC%8F%EF%BC%88explicit%EF%BC%89%E6%93%A6%E9%99%A4"><span class="toc-text">1、隐式（implicit）擦除和显式（explicit）擦除</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2%E3%80%81Secure-Erase%E5%92%8CErase%E7%9A%84%E5%8C%BA%E5%88%AB%EF%BC%9BSecure-Trim%E5%92%8CTRIM%E7%9A%84%E5%8C%BA%E5%88%AB%EF%BC%9B"><span class="toc-text">2、Secure Erase和Erase的区别；Secure Trim和TRIM的区别；</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3%E3%80%81%E6%96%B0%E7%9A%84eMMC%E7%89%88%E6%9C%AC%E4%B8%AD%EF%BC%8CSecure%E6%93%8D%E4%BD%9C%E8%A2%AB%E5%8F%96%E4%BB%A3"><span class="toc-text">3、新的eMMC版本中，Secure操作被取代</span></a></li></ol></li></ol></div></p>
-<h1 id="一、Secure-Erase"><a href="#一、Secure-Erase" class="headerlink" title="一、Secure Erase"></a>一、Secure Erase</h1><p><code>Secure Erase</code>命令和基本的<code>Erase</code>命令不同，它要求设备在发出此命令后，device和host在进入下一个操作之前必须<strong>等待Erase物理地完成</strong>。<br><code>Secure Erase</code>命令的执行方式与Erase命令相同，只是CMD38中<code>bit[31]=1</code>，其他参数为0；<br>CMD38 四个重要的bit位说明如图所示：</p>
-<center>
-<img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/18.1CMD38%E9%87%8D%E8%A6%81bit%E4%BD%8D.png" width="75%" height="75%" alt="18.1 CMD38重要bit位"/>
-</center>
-
-<h1 id="二、Secure-Trim"><a href="#二、Secure-Trim" class="headerlink" title="二、Secure Trim"></a>二、Secure Trim</h1><p><code>Secure Trim</code>是对<code>write block</code>执行安全擦除操作，确保数据完全地从memory中物理擦除。</p>
-<p><strong>启动方法有两步：</strong></p>
-<ol>
-<li><code>步骤1</code>：host定义它标记为Secure TRIM的write block的范围（通过CMD35、CMD36），一旦确定了范围，CMD38（<code>bit[31],bit[0]设置为1</code>，其他位为0）就会被应用。</li>
-</ol>
-<blockquote>
-<p>步骤1可以重复多次，中间允许有其他命令，直到所有需要清除的write block都被明确定义。建议尽可能在多的block上进行Secure TRIM的步骤1，以提高Secure TRIM的效率。</p>
-</blockquote>
-<ol start="2">
-<li><code>步骤2</code>：发送夹带地址的CMD35和CMD36（注意与这些命令一起使用的参数将被忽略），然后发送CMD38（<code>bit[31],bit[15]为1</code>，其他为0）。这一步实际上是根据<code>Secure_Removal_type(EXT_CSD [16])</code>（<a href="https://mkdbook.com/blog017.html#:~:text=17.4%20Secure_Removal_type">图17.4</a>），对<strong>所有的write block以及它的所有副本</strong>执行Secure Trim，这些write block在步骤1中已被标记。</li>
-</ol>
-<blockquote>
-<p>在步骤1和步骤2之间，可以向设备发出其他命令。</p>
-</blockquote>
-<h1 id="三、总结"><a href="#三、总结" class="headerlink" title="三、总结"></a>三、总结</h1><h2 id="1、隐式（implicit）擦除和显式（explicit）擦除"><a href="#1、隐式（implicit）擦除和显式（explicit）擦除" class="headerlink" title="1、隐式（implicit）擦除和显式（explicit）擦除"></a>1、隐式（implicit）擦除和显式（explicit）擦除</h2><p><code>隐式擦除</code>是指device中的某些数据被简单地标记成已删除，host可以向device该位置写数据。但是在技术上，memory里面的数据在overwrite之前还存在device中，甚至通过某些手段能够恢复数据。<br><code>显式擦除</code>则是一个更彻底的过程，用新数据（0&#x2F;1）覆盖掉原来的数据，保证删除的数据是无法被恢复的。<br>所以，隐式擦除速度更快、更简单，但是数据有被恢复的潜在风险。显式擦除反之。</p>
-<h2 id="2、Secure-Erase和Erase的区别；Secure-Trim和TRIM的区别；"><a href="#2、Secure-Erase和Erase的区别；Secure-Trim和TRIM的区别；" class="headerlink" title="2、Secure Erase和Erase的区别；Secure Trim和TRIM的区别；"></a>2、Secure Erase和Erase的区别；Secure Trim和TRIM的区别；</h2><p>着重理解这里的<code>Secure</code>，是指要保证数据完全、永久地从device删除，不能被恢复，采取的是显示擦除的overwrite的方法。<br>而不带Secure的操作仅仅<code>被标记为删除</code>，device可能还没有实际进行overwrite，数据可能被恢复。</p>
-<h2 id="3、新的eMMC版本中，Secure操作被取代"><a href="#3、新的eMMC版本中，Secure操作被取代" class="headerlink" title="3、新的eMMC版本中，Secure操作被取代"></a>3、新的eMMC版本中，Secure操作被取代</h2><p>为了向后兼容，保留了Secure Erase和Secure TRIM，但在v4.51之后这两种方式分别以<code>Erase+Sanitize</code>和<code>TRIM+Sanitize</code>的方式实现。<br>Sanitize操作就是能实际地通过overwrite的方式，将数据擦除。故结合使用，<code>标记+删除</code>结合就可以实现<code>Secure</code>的功能。</p>
-
+        
       
        <hr><span style="font-style: italic;color: gray;"> 转载请注明来源，欢迎对文章中的引用来源进行考证，欢迎指出任何有错误或不够清晰的表达。可以在下面评论区评论，也可以邮件至 icmarktian@163.com </span>
     </div>

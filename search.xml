@@ -4,6 +4,31 @@
   
     
     <entry>
+      <title>20--IMC初级使用教程</title>
+      <link href="/blog020.html"/>
+      <url>/blog020.html</url>
+      
+        <content type="html"><![CDATA[<p>[toc]</p><h1 id="IMC收集覆盖率"><a href="#IMC收集覆盖率" class="headerlink" title="IMC收集覆盖率"></a>IMC收集覆盖率</h1><h1 id="一、前言"><a href="#一、前言" class="headerlink" title="一、前言"></a>一、前言</h1><p>类似于Simvision，IMC（Incisive Metrics Center）是Cadence集成在Incisive中的一个用于覆盖率收集、分析、报告的工具。</p><p>踩坑：新版的Cadence工具已经从Incisive升级到了Xcelium，但是Xcelium不再集成IMC工具，因为IMC工具被集成在了新版的vManager工具中。</p><p>另外，由于仿真工具升级的原因，通过Xcelium仿真生成的Coverage Database无法通过Incisive中集成的IMC工具打开。故后续教程基于Incisive 151版本。</p><h1 id="二、IMC的三种启动模式"><a href="#二、IMC的三种启动模式" class="headerlink" title="二、IMC的三种启动模式"></a>二、IMC的三种启动模式</h1><h2 id="1、GUI-modo"><a href="#1、GUI-modo" class="headerlink" title="1、GUI modo"></a>1、GUI modo</h2><p>启动命令：<code>imc -gui</code></p><p><strong>IMC图形化界面。</strong></p><h2 id="2、Interactive-Command-line-modo"><a href="#2、Interactive-Command-line-modo" class="headerlink" title="2、Interactive Command-line modo"></a>2、Interactive Command-line modo</h2><p>启动命令：<code>imc -batch</code></p><p><strong>交互式命令行模式。</strong></p><h2 id="3、Batch-modo"><a href="#3、Batch-modo" class="headerlink" title="3、Batch modo"></a>3、Batch modo</h2><p>启动命令：<code>imc -exec &lt;command_file&gt;</code></p><p><strong>允许执行批量处理脚本或命令并退出，如TCL脚本。</strong></p><h1 id="三、IMC的option"><a href="#三、IMC的option" class="headerlink" title="三、IMC的option"></a>三、IMC的option</h1><p>可通过<code>imc -help</code>命令查询所有option的作用。</p><pre><code class="yaml">-batch                               run in non-gui mode-32bit                               invokes 32 bit executable-64bit                               invokes 64 bit executable-appendkey                           append keystrokes to an existing keyfile-appendlog                           append the log to an existing logfile-context                             specify application context-df                                  use default font-display &lt;arg&gt;                       display (and screen) on which to display window-enc                                 set input encoding-exec &lt;script name&gt;                  execute a script and exit-execcmd &lt;command&gt;                   execute the given tcl commands and exit-filter                              apply changes on the main table in the Regression Center-gui                                 run in gui mode-help                                print this message-init &lt;file&gt;                         run tcl commands in the given file at startup-initcmd &lt;command&gt;                   execute the given tcl commands at startup-jp                                  japanese input support-keyfile &lt;file&gt;                      specifies the file to capture keyboard input-licqueue                            use license queue mechanism-load &lt;run&gt;                          load given run at the start-load_refinement &lt;refinement file&gt;   load given refinement file at the start-logfile &lt;file&gt;                      use given file for log-memlimit &lt;limit&gt;                    determines final Java Memory limit-nocopyright                         do not print copyright information at start-nostdout                            no output on stdout-quiet                               be extra quiet-sessions_view &lt;filter&gt;              sets the specified session view at startup-sourcemap &lt;file&gt;                    use contents of given file as list of source location mappings in the form of source and                                     destination directories-status                              prints runtime statistics at the session end-verbose                             be extra verbose-version                             print the version information and exit</code></pre><h1 id="四、IMC-merge-coverage"><a href="#四、IMC-merge-coverage" class="headerlink" title="四、IMC merge coverage"></a>四、IMC merge coverage</h1><p>第一步，<code>imc -batch</code>打开batch模式。</p><p>第二步，<code>merge &lt;文件&gt; -out &lt;输出文件名&gt;</code> ，例如 merge cov_work&#x2F;scope&#x2F;* -out ALL。</p><p>第三步，<code>exit</code>，退出batch模式。然后打开 imc gui界面，把merge生成的文件load进去。</p><p>注意：如果想覆盖掉之前merge生成的文件，可以添加<code>-overwrite</code>选项。</p><h1 id="五、IMC-GUI的基本使用"><a href="#五、IMC-GUI的基本使用" class="headerlink" title="五、IMC GUI的基本使用"></a>五、IMC GUI的基本使用</h1><p>第一步，<code>imc -gui &amp;</code>启动GUI界面，并将coverage database加载进来。</p><center><img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/20.1IMC.png" width="75%" height="75%" alt=""/></center><p>第二步，点击界面相关按钮进行分析。</p><center><img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/20.2IMC.png" width="75%" height="75%" alt=""/></center>]]></content>
+      
+      
+      <categories>
+          
+          <category> 工具 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> IMC </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>19--eMMC时序介绍</title>
       <link href="/blog019.html"/>
       <url>/blog019.html</url>
@@ -485,8 +510,8 @@
     
     <entry>
       <title>Verilog分类保留</title>
-      <link href="/clg3nnahv003hhcub6718auyi.html"/>
-      <url>/clg3nnahv003hhcub6718auyi.html</url>
+      <link href="/clgagatqv0017fcubd9uza38h.html"/>
+      <url>/clgagatqv0017fcubd9uza38h.html</url>
       
         <content type="html"><![CDATA[]]></content>
       
@@ -533,8 +558,8 @@
     
     <entry>
       <title>存储分类保留</title>
-      <link href="/clg3nnagy000qhcub64qy5pc6.html"/>
-      <url>/clg3nnagy000qhcub64qy5pc6.html</url>
+      <link href="/clgagatri003sfcub5m1n1lo4.html"/>
+      <url>/clgagatri003sfcub5m1n1lo4.html</url>
       
         <content type="html"><![CDATA[]]></content>
       
@@ -553,28 +578,9 @@
     
     
     <entry>
-      <title>工具分类保留</title>
-      <link href="/clg3nnagd0001hcubh7b2acfv.html"/>
-      <url>/clg3nnagd0001hcubh7b2acfv.html</url>
-      
-        <content type="html"><![CDATA[]]></content>
-      
-      
-      <categories>
-          
-          <category> 工具 </category>
-          
-      </categories>
-      
-      
-    </entry>
-    
-    
-    
-    <entry>
       <title>SV分类保留</title>
-      <link href="/clg3nnaht003fhcub9zsj6dpu.html"/>
-      <url>/clg3nnaht003fhcub9zsj6dpu.html</url>
+      <link href="/clgagatqr000wfcubeywr5qvh.html"/>
+      <url>/clgagatqr000wfcubeywr5qvh.html</url>
       
         <content type="html"><![CDATA[]]></content>
       
