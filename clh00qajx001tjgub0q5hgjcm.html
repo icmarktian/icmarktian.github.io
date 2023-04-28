@@ -2,9 +2,9 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>13--perl练习-生成五组不同随机数-双色球 | 马克得烂笔头</title>
-  <meta name="keywords" content=" perl ">
-  <meta name="description" content="13--perl练习-生成五组不同随机数-双色球 | 马克得烂笔头">
+  <title>Verilog分类保留 | 马克得烂笔头</title>
+  <meta name="keywords" content="">
+  <meta name="description" content="Verilog分类保留 | 马克得烂笔头">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <meta name="description" content="人的精力是有限的，本站作为第二大脑用于存储本人学过的知识">
 <meta property="og:type" content="website">
@@ -704,9 +704,9 @@
 </aside>
 <div id="post">
     <div class="pjax">
-        <article id="post-3 语言/Perl/13--perl练习-生成五组不同随机数-双色球" class="article article-type-post" itemscope itemprop="blogPost">
+        <article id="post-3 语言/Verilog/Verilog" class="article article-type-post" itemscope itemprop="blogPost">
     
-        <h1 class="article-title">13--perl练习-生成五组不同随机数-双色球</h1>
+        <h1 class="article-title">Verilog分类保留</h1>
     
     <div class="article-meta">
         
@@ -718,27 +718,20 @@
             
             <a  data-rel="语言">语言</a> > 
             
-            <a  data-rel="语言&lt;---&gt;Perl">Perl</a>
+            <a  data-rel="语言&lt;---&gt;Verilog">Verilog</a>
             
         </span>
         
         
-        <span class="tag">
-            <i class="iconfont icon-tag"></i>
-            
-            <a class="color5">perl</a>
-            
-        </span>
+    </div>
+    <div class="article-meta">
+        
+            发布时间 : <time class="date" title='最后更新: 2023-03-19 21:25:33'>2023-03-10 14:12</time>
         
     </div>
     <div class="article-meta">
         
-            发布时间 : <time class="date" title='最后更新: 2023-03-24 16:09:20'>2023-03-20 22:07</time>
-        
-    </div>
-    <div class="article-meta">
-        
-        <span>字数:285</span>
+        <span>字数:0</span>
         
         
         
@@ -757,7 +750,7 @@
     
     <div class="toc-ref">
     
-        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#perl%E7%BB%83%E4%B9%A0%EF%BC%8C%E6%BA%90%E7%A0%81"><span class="toc-text">perl练习，源码</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%9F%A5%E8%AF%86%E7%82%B9"><span class="toc-text">知识点</span></a></li></ol>
+        
     
 <style>
     .left-col .switch-btn,
@@ -773,50 +766,7 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p><div class='inner-toc'><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#perl%E7%BB%83%E4%B9%A0%EF%BC%8C%E6%BA%90%E7%A0%81"><span class="toc-text">perl练习，源码</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%9F%A5%E8%AF%86%E7%82%B9"><span class="toc-text">知识点</span></a></li></ol></div></p>
-<h1 id="perl练习，源码"><a href="#perl练习，源码" class="headerlink" title="perl练习，源码"></a>perl练习，源码</h1><pre><code class="perl">#!/usr/bin/perl -w
-
-$zhu = 1;
-
-do&#123;
-    my %red;                         #hash
-    for (0..5) &#123;
-        my $no;
-        do &#123;
-            $no = int rand(33) +1;  # int [1:33]         
-        &#125; while (exists $red&#123;$no&#125;); # $no is hash&#39;s key
-        	   $red&#123;$no&#125; = 1;
-    &#125;
-
-    my $blue=int rand(16) +1;       #int [1:16]
-          
-    print join(&quot;\t&quot;, keys %red, &quot;$blue&quot;), &quot;\n\n&quot;;
-
-    $zhu = $zhu +1;   #initial 5 zhu
-
-&#125;while($zhu &lt;= 5);
-</code></pre>
-<h1 id="知识点"><a href="#知识点" class="headerlink" title="知识点"></a>知识点</h1><ol>
-<li><code>rand(16)</code>表示生成<code>0-15</code>的随机数，要生成<code>1-16</code>直接增加偏移量<code>+1</code>即可。</li>
-<li>hash的用法：这里用到了hash的<code>exists</code>函数检测<code>key</code>，让随机产生的数不同。<br>这里是指，如果<strong>hash</strong><code>%red</code>中存在<strong>key</strong><code>$no</code>，则返回再生成一次随机数；</li>
-</ol>
-<pre><code class="perl">             #keys values 
-my %hash = (&quot;a&quot; =&gt; 9, &quot;b&quot; =&gt; 1, &quot;c&quot; =&gt; 8);
-my @k = keys %hash;                #取出hash中的 key 或 value，列表上下文
-my @v = values %hash;
-
-my $x = keys %hash;               # 标量上下文，得到的是对数
-
-#exists 检测hash中是否存在某一个hash
-if (exists $hash&#123;&quot;b&quot;&#125;)&#123;    #用 $ 符号，别搞错了
-print &quot;hash里面有b&quot;
-&#125;
-</code></pre>
-<ol start="3">
-<li><code>jonit</code> 函数是指用分隔符 <code>\t</code> 分割每一个<code>key</code>的值。</li>
-<li><code>do&#123;&#125;…while()</code> 表达式产生5组数据。</li>
-</ol>
-
+        
       
        <hr><span style="font-style: italic;color: gray;"> 转载请注明来源，欢迎对文章中的引用来源进行考证，欢迎指出任何有错误或不够清晰的表达。可以在下面评论区评论，也可以邮件至 icmarktian@163.com </span>
     </div>

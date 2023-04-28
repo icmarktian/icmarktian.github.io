@@ -6,7 +6,7 @@
   <link href="https://mkdbook.com/atom.xml" rel="self"/>
   
   <link href="https://mkdbook.com/"/>
-  <updated>2023-04-28T02:41:02.656Z</updated>
+  <updated>2023-04-28T03:51:42.745Z</updated>
   <id>https://mkdbook.com/</id>
   
   <author>
@@ -15,6 +15,61 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>24--SVA语法速查</title>
+    <link href="https://mkdbook.com/blog024.html"/>
+    <id>https://mkdbook.com/blog024.html</id>
+    <published>2023-04-28T03:01:34.000Z</published>
+    <updated>2023-04-28T03:51:42.745Z</updated>
+    
+    <content type="html"><![CDATA[<p>[toc]</p><h1 id="一、内嵌函数"><a href="#一、内嵌函数" class="headerlink" title="一、内嵌函数"></a>一、内嵌函数</h1><h2 id="1-1-rose"><a href="#1-1-rose" class="headerlink" title="1.1  $rose"></a>1.1  $rose</h2><p>信号&#x2F;表达式的<code>LSB</code><strong>跳变</strong>为<code>1</code>，返回真</p><h2 id="1-2-fell"><a href="#1-2-fell" class="headerlink" title="1.2  $fell"></a>1.2  $fell</h2><p>信号&#x2F;表达式的<code>LSB</code><strong>跳变</strong>为<code>0</code>，返回真</p><h2 id="1-3-stable"><a href="#1-3-stable" class="headerlink" title="1.3  $stable"></a>1.3  $stable</h2><p>信号&#x2F;表达式的值保持<code>不变</code>，返回真</p><h2 id="1-4-past"><a href="#1-4-past" class="headerlink" title="1.4  $past"></a>1.4  $past</h2><p>若<code>(c&amp;&amp;d)</code>为真，<code>2</code>个周期前<code>(a&amp;&amp;b)</code>必须为真。默认1个周期。</p><pre><code class="verilog">@(posedge clk)  (c&amp;&amp;d) |-&gt; ($past ( (a&amp;&amp;b) , 2 ) == 1);</code></pre><h3 id="例1：32bit的data-bus，需要检测它在dAck信号为1时，全部bit位跳变为0。"><a href="#例1：32bit的data-bus，需要检测它在dAck信号为1时，全部bit位跳变为0。" class="headerlink" title="例1：32bit的data bus，需要检测它在dAck信号为1时，全部bit位跳变为0。"></a>例1：32bit的data bus，需要检测它在dAck信号为1时，<code>全部bit位跳变为0</code>。</h3><pre><code class="verilog">//$fell只能检测LSB的跳变，不能得到所有信号都变为0的结论aAck |-&gt; $fell(dBus);//用$past：dBus在dAck信号前一个周期不为零，现在全为0了dAck |-&gt; ($past(dBus)!=32&#39;b0) &amp;&amp; (dBus==32&#39;0);</code></pre><h2 id="1-5-onehat"><a href="#1-5-onehat" class="headerlink" title="1.5   $onehat"></a>1.5   $onehat</h2><p>在任意给定的时钟沿，表达式<code>只有1个bit位为高</code>。</p><h2 id="1-6-onehat0"><a href="#1-6-onehat0" class="headerlink" title="1.6  $onehat0"></a>1.6  $onehat0</h2><p>在任意给定的时钟沿，表达式<code>只有1个bit位为高</code>，或者<code>没有任何bit位为高</code>。</p><h2 id="1-7-isunknow"><a href="#1-7-isunknow" class="headerlink" title="1.7  $isunknow"></a>1.7  $isunknow</h2><p>检验表达式的任何bit位，是否是<code>X或Z</code>。</p><h2 id="1-8-countones"><a href="#1-8-countones" class="headerlink" title="1.8  $countones"></a>1.8  $countones</h2><p><code>计算</code>向量中为<code>高</code>的<code>位</code>的<code>数量</code>。</p><pre><code class="verilog">a33a: assert             property(@(posedge clk) $onehot(state)); a33b: assert             property(@(posedge clk) $onehotO(state)); a33c: assert             property(@(posedge clk) $isunkiiovm(bus) ) ; a33d: assert             property(@(posedge clk)$countones(bus)&gt; 1);</code></pre><p>具体结果如下图所示：</p><center><img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/24.1.png" width="75%" height="75%" alt="24.1"/></center><h1 id="二、操作符"><a href="#二、操作符" class="headerlink" title="二、操作符"></a>二、操作符</h1><h2 id="2-1-m-时钟延迟"><a href="#2-1-m-时钟延迟" class="headerlink" title="2.1  ##m 时钟延迟"></a>2.1  ##m 时钟延迟</h2><p>@(posdege clk) <code>a ##2 b;</code>，a高电平两个周期后b为高电平</p><p>m可为0，表示a、b同时为高 ，可用于同一clk沿降时同时发生这两个事件</p><h2 id="2-2-m-n"><a href="#2-2-m-n" class="headerlink" title="2.2  ##[m:n]"></a>2.2  ##[m:n]</h2><p>范围内即可</p><h2 id="2-3-m-重复，连续"><a href="#2-3-m-重复，连续" class="headerlink" title="2.3  [*m]  重复，连续"></a>2.3  [*m]  重复，连续</h2><p><code>@(posdege clk) a ##1 b[*2];</code>，a高电平1个周期后，b高电平维持两个周期（连续两个clk采样到高）</p><h2 id="2-4-m-n"><a href="#2-4-m-n" class="headerlink" title="2.4  [*m:n]"></a>2.4  [*m:n]</h2><p>范围内即可</p><h2 id="2-5-x3D-m-重复，不连续"><a href="#2-5-x3D-m-重复，不连续" class="headerlink" title="2.5  [&#x3D;m]  重复，不连续"></a>2.5  [&#x3D;m]  重复，不连续</h2><p><code>@(posdege clk) a |=&gt; b [=2] ##1 c;</code>，a ture1个周期后，b只要匹配到两个周期ture就可以了，<code>下个周期后只要c为ture就行</code>（即：c前有两个b成功就可）</p><h2 id="2-6-x3D-m-n"><a href="#2-6-x3D-m-n" class="headerlink" title="2.6  [&#x3D;m:n]"></a>2.6  [&#x3D;m:n]</h2><p>范围内即可</p><h2 id="2-7-gt-m-GoTo重复，不连续"><a href="#2-7-gt-m-GoTo重复，不连续" class="headerlink" title="2.7  [-&gt;m]  GoTo重复，不连续"></a>2.7  [-&gt;m]  GoTo重复，不连续</h2><p><code>@(posdege clk)a |=&gt; b [=2] ##1 c;</code>a ture 1个周期后，b只要匹配到两个周期ture就可以了，<code>下个周期c必须为ture</code>（即：c前必须有一次b成功挨着）</p><h2 id="2-8-gt-m-n"><a href="#2-8-gt-m-n" class="headerlink" title="2.8  [-&gt;m:n]"></a>2.8  [-&gt;m:n]</h2><p>范围内即可</p><h2 id="2-9-sig1-“throughout”-seq1"><a href="#2-9-sig1-“throughout”-seq1" class="headerlink" title="2.9  sig1 “throughout” seq1"></a>2.9  sig1 “throughout” seq1</h2><p>信号1在序列1检测过程中，必须一直为真</p><h3 id="例2、在整个检验过程中，start信号保持为低电平"><a href="#例2、在整个检验过程中，start信号保持为低电平" class="headerlink" title="例2、在整个检验过程中，start信号保持为低电平"></a>例2、<strong>在整个检验过程中，start信号保持为低电平</strong></h3><pre><code class="verilog">property p31;     ©&#123;posedge clk) $fell(start) |-&gt;                                     (!start) throughout                                     (##1 (!a&amp;&amp;!b) ##1 (c[-&gt;3]) ##1 (a&amp;&amp;b)); endproperty a31: assert property(p31);//1、在clk上升沿检测到 start 下降沿后开始检测//2、……//3、……//4、在整个检验过程中，start信号保持为低电平</code></pre><h2 id="2-10-seq1-“within”-seq2"><a href="#2-10-seq1-“within”-seq2" class="headerlink" title="2.10  seq1 “within” seq2"></a>2.10  seq1 “within” seq2</h2><p>在一个序列中定义另一个序列，<code>seq1</code>必须在<code>seq2</code>的过程中发生，即<code>seq2</code>的<code>开始</code>匹配点必须在<code>seq1之前</code>，<code>seq1</code>的<code>结束</code>匹配点必须在<code>seq2之前</code>结束。</p><h2 id="2-11-seq1-”and“-seq2"><a href="#2-11-seq1-”and“-seq2" class="headerlink" title="2.11  seq1 ”and“ seq2"></a>2.11  seq1 ”and“ seq2</h2><p>当两个sequence都成功时，整个property才成功。</p><h2 id="2-12-seq1-“or”-seq2"><a href="#2-12-seq1-“or”-seq2" class="headerlink" title="2.12  seq1 “or” seq2"></a>2.12  seq1 “or” seq2</h2><p>只要其中一个sequence成功，整个property才成功</p><h2 id="2-13-seq1-“intersect”-seq2"><a href="#2-13-seq1-“intersect”-seq2" class="headerlink" title="2.13  seq1 “intersect” seq2"></a>2.13  seq1 “intersect” seq2</h2><p>和<code>and</code>类似，区别是：两个sequence必须<strong>在相同时刻开始</strong>，且<strong>结束于同一时刻</strong>。即<code>seq1</code>和<code>seq2</code>长度必须相等。</p><h2 id="2-14-first-match"><a href="#2-14-first-match" class="headerlink" title="2.14  first_match"></a>2.14  first_match</h2><pre><code class="verilog">module assertion_example;  bit clk, a, b, c;    always #1 clk = ~clk;    sequence s1;    first_match(a ##[1:2] b);  endsequence  sequence s2;       a ##[1:2] b;  endsequence  property p1;    @(posedge clk) s1 |-&gt; c;  endproperty  property p2;    @(posedge clk) s2 |-&gt; c;  endproperty   a1: assert property(p1) $display(&quot;%t, success a1\n&quot;, $time); else $error(&quot;Assertion a1 failed!\n&quot;);a2: assert property(p2) $display(&quot;%t, success a2\n&quot;, $time); else $error(&quot;Assertion a2 failed!\n&quot;);      initial begin    a = 0;    b = 0;    c = 1;fork    fork //a      #2 a=1;      #4 a=0;      #8 a=1;    join    fork //b      #2 b=1;      #4 b=0;      #8 b=1;    joinjoin    #20; $finish;  endendmodule</code></pre><center><img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/24.2.png" width="75%" height="75%" alt="24.2"/></center><p> <code>a ##[1:2] b</code>，如果没有<code>|-&gt;</code>或者<code>|=&gt;</code>时，则匹配一次即可进入下一阶段或者断言成功，但是<strong>如果有|-&gt;或者|&#x3D;&gt;时，则必须保证所有情况都满足才能进入下一阶段</strong>，否则卡死。</p><p><code>first_match</code>的作用就是，使得只要出现一种满足情况即可进入下一阶段。</p><p>如图可看到，加了<code>first_match</code>的p1，匹配了1个周期就开始匹配c了；而p2这完成了匹配1、2周期这两项，才进行c的匹配。</p><h2 id="2-15-not"><a href="#2-15-not" class="headerlink" title="2.15  not "></a>2.15  not <property expr></h2><p>禁止属性，当property不成立时，断言为真。用于我们期望property永远为假的情况。</p><h2 id="2-16-ended-和-matched-结构"><a href="#2-16-ended-和-matched-结构" class="headerlink" title="2.16  .ended 和 .matched  结构"></a>2.16  .ended 和 .matched  结构</h2><p>区别：<code>.end</code>要求两个sequence拥有<strong>同一个</strong>clk， <code>.matched</code>允许两个sequence<strong>不同的</strong>clk。</p><p>作用：匹配一个sequence的结束，如果sequence成功匹配并结束，那么<code>.end/.matched</code>为<strong>真</strong>。</p><pre><code class="verilog">sequence s1;     @(posedge clk) a ##1 b; endsequence sequence s2;     @(posedge clk) c ##1 d; endsequence property p1;     s1 |=&gt; s2; endproperty property p2;     s1.ended |-&gt; ##2 s2.ended; endproperty  al: assert property(p1); a2: assert property(p2);</code></pre><p>上面的例子，用两种方法都是检查了一个 <code>a ##1 b ##1 c ##1 d</code> 序列，</p><p>如下图真值表，上面代码中的<code>a1</code>和<code>a2</code> 断言都匹配的是<strong>周期2-5</strong>。只是<code>a1</code>是匹配的开始，<code>a2</code>是匹配的<code>s1和s2</code>的结尾。</p><center><img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/24.3.png" width="75%" height="75%" alt="24.3"/></center><h2 id="2-17-expect-构造——（assert语句层面）"><a href="#2-17-expect-构造——（assert语句层面）" class="headerlink" title="2.17  expect  构造——（assert语句层面）"></a>2.17  expect  构造——（assert语句层面）</h2><p>expect相当于Verilog中的wait，只能用于procedural block中，有阻塞作用</p><pre><code class="verilog">initial begin     @(posedge clk);     #2ns cpu_ready = 1&#39;b1;     expect(@(posedge clk) ##[1:16] memory_ready == 1&#39;b1)                 $display(&quot;Hand shake successful\n&quot;);         else begin                 $display(&quot;Hand shake failed: exiting\n&quot;)                 $finish();         end //如果expect中memory_ready断言失败，后面这段被阻塞，不会执行    for(i=0; i&lt;64; i++)         begin         send_packet();         $display(&quot;PACKET %0d sent\n&quot;, i);         end end</code></pre><h2 id="2-18-disable-iff"><a href="#2-18-disable-iff" class="headerlink" title="2.18  disable iff"></a>2.18  disable iff</h2><p>1、只能用于property，不能用于sequence。</p><p>2、只能声明在先行算子（antecedent condition）之前。</p><pre><code class="verilog">property p34;     @(posedge clk)     disable iff (reset)//当reset信号为高时，后续断言不会执行     $rose&#123;start) |=&gt; a[=2] ##1 b[=2] ##1 !start endproperty a34: assert property(p34);</code></pre>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;[toc]&lt;/p&gt;
+&lt;h1 id=&quot;一、内嵌函数&quot;&gt;&lt;a href=&quot;#一、内嵌函数&quot; class=&quot;headerlink&quot; title=&quot;一、内嵌函数&quot;&gt;&lt;/a&gt;一、内嵌函数&lt;/h1&gt;&lt;h2 id=&quot;1-1-rose&quot;&gt;&lt;a href=&quot;#1-1-rose&quot; class=</summary>
+      
+    
+    
+    
+    <category term="语言" scheme="https://mkdbook.com/categories/%E8%AF%AD%E8%A8%80/"/>
+    
+    <category term="SystemVerilog" scheme="https://mkdbook.com/categories/%E8%AF%AD%E8%A8%80/SystemVerilog/"/>
+    
+    
+    <category term="SVA" scheme="https://mkdbook.com/tags/SVA/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>23--SVA简介</title>
+    <link href="https://mkdbook.com/blog023.html"/>
+    <id>https://mkdbook.com/blog023.html</id>
+    <published>2023-04-28T03:00:31.000Z</published>
+    <updated>2023-04-28T03:22:25.748Z</updated>
+    
+    <content type="html"><![CDATA[<p>[toc]</p><h1 id="一、SVA基本结构"><a href="#一、SVA基本结构" class="headerlink" title="一、SVA基本结构"></a>一、SVA基本结构</h1><p>基本结构包含三个部分，</p><p><code>sequence块</code>：事件。</p><p><code>property块</code>：组合sequence事件形成一个复杂的逻辑行为。</p><p><code>assert/cover关键词</code>：调用property进行判断。</p><pre><code class="systemverilog">//序列中定义事件sequence s1;    a ##2 b;endsequence//属性中调用序列property p1;    @(posedge clk) s1;endsequence//关键词收集属性a1: assert property(p1);c1: cover property(p1);//--------可写在一起----------assert property (@(posedge clk) a ##2 b);</code></pre><p>为了复用性建议分开写，时钟写在property中。个人觉得如果写在代码中只对当前位置进行断言检查，写在一起更为简便。</p><h1 id="二、关键词，assert、cover"><a href="#二、关键词，assert、cover" class="headerlink" title="二、关键词，assert、cover"></a>二、关键词，assert、cover</h1><p><code>assert</code>：property必须一直都是ture。换句话说，忽略PASS，检测Failure。</p><p><code>cover</code>：可统计成功了多少次。换句话说，忽略Failure，有一次成功这个property就算成功。</p><p>区别：‘assert’ checks for failures in your design and ‘cover’ sees if the property did get exercised.</p><blockquote><p>功能覆盖率是按照设计规范衡量验证状态的一个标准，可以分为两类：<br>（1）<code>protocol coverage</code>——specification中所有功能是否都测试过，<br>（2）<code>Test plan coverage</code>——衡量Testbench的穷尽性，例如是否覆盖所有地址。</p></blockquote><p>故，<code>cover</code>语句可以用来获取<code>protocol coverage</code>，结果包含以下信息：</p><ol><li>property<strong>被尝试</strong>检验的次数</li><li>property<strong>成功</strong>的次数</li><li>property<strong>失败</strong>的次数</li><li>property<strong>空成功</strong>的次数</li></ol><h1 id="三、断言位置"><a href="#三、断言位置" class="headerlink" title="三、断言位置"></a>三、断言位置</h1><p>有两种方法将SVA checker连到model中；</p><p>1、内嵌或者直接写在model中；</p><p>2、<code>将SVA checker写成一个独立的model</code>，然后通过<code>bind</code>关键词，将其连接到model；</p><p>bind使用方法：<code>bind &lt;设计model或例化的model&gt; &lt;SVA checker model&gt; &lt;SVA checker例化名&gt; (信号接入);</code></p><pre><code class="systemverilog">module nand_checker;.....断言.....endmodule// bind绑定语句在SVA模块外部bind tb nand_checker U_A (.*);// 相当于SVA模块例化在了tb模块中，与uut平行，结构更清楚// .* 的前提是例化的所有端口类型，名字都相同</code></pre><h1 id="四、关于SVA断言和Verification"><a href="#四、关于SVA断言和Verification" class="headerlink" title="四、关于SVA断言和Verification"></a>四、关于SVA断言和Verification</h1><ol><li><p>SVA可以对硬件设计的<code>期望行为进行编码</code>，可以创建对总线协议的详细检查。</p></li><li><p>Testbech一般包括三项任务：（1）<code>产生激励</code>；（2）<code>自检机制</code>；（3）<code>衡量功能覆盖率</code>；</p> <center> <img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/23.1.png" width="75%" height="75%" alt="23.1"/> </center> </li><li><p><strong>自检</strong>通常着眼两个方面：<br>（1）<code>协议检验</code>——目标是控制信号，控制信号的正确性是验证设计的核心；<br>（2）<code>数据检验</code>——目的是检验正在处理的数据的完整性，如数据包在传输过程中是否损坏；</p></li><li><p>SVA主要解决两类问题：<br>（1）<code>Protocol checking</code>；<br>（2）<code>Protocol coverage</code>；</p> <center> <img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/23.2.png" width="75%" height="75%" alt="23.2"/> </center></li></ol><ul><li>SystemVerilog语言包含4个不同子集：<br>（1）SystemVerilog Object Oriented language for <code>functional verification</code> (using OVM&#x2F;UVM style libraries)<br>（2）SystemVerilog language for <code>Design</code><br>（3）SystemVerilog Assertions <code>(SVA)</code> language<br>（4）SystemVerilog <code>Functional Coverage (FC)</code> Language to see that <strong>the verification environment&#x2F;test-bench have fully verified your design.</strong></li></ul>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;[toc]&lt;/p&gt;
+&lt;h1 id=&quot;一、SVA基本结构&quot;&gt;&lt;a href=&quot;#一、SVA基本结构&quot; class=&quot;headerlink&quot; title=&quot;一、SVA基本结构&quot;&gt;&lt;/a&gt;一、SVA基本结构&lt;/h1&gt;&lt;p&gt;基本结构包含三个部分，&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;sequ</summary>
+      
+    
+    
+    
+    <category term="语言" scheme="https://mkdbook.com/categories/%E8%AF%AD%E8%A8%80/"/>
+    
+    <category term="SystemVerilog" scheme="https://mkdbook.com/categories/%E8%AF%AD%E8%A8%80/SystemVerilog/"/>
+    
+    
+    <category term="SVA" scheme="https://mkdbook.com/tags/SVA/"/>
+    
+  </entry>
   
   <entry>
     <title>22--eMMC的boot分区</title>
@@ -508,67 +563,6 @@
     
     
     <category term="NAND" scheme="https://mkdbook.com/tags/NAND/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>4--Markdown简要速查笔记</title>
-    <link href="https://mkdbook.com/blog004.html"/>
-    <id>https://mkdbook.com/blog004.html</id>
-    <published>2023-03-17T15:43:18.000Z</published>
-    <updated>2023-04-28T02:14:27.277Z</updated>
-    
-    <content type="html"><![CDATA[<p>[toc]</p><h1 id="1、标题"><a href="#1、标题" class="headerlink" title="1、标题"></a>1、标题</h1><ul><li><code>#(空格)一级标题</code></li><li><code>#(空格)二级标题</code></li></ul><h1 id="2、段落换行"><a href="#2、段落换行" class="headerlink" title="2、段落换行"></a>2、段落换行</h1><ul><li>末尾两个以上空格</li><li>句末加<code>&lt;br&gt;</code></li></ul><h1 id="3、强调语法"><a href="#3、强调语法" class="headerlink" title="3、强调语法"></a>3、强调语法</h1><ol><li><p>粗体：<code>**内容**</code></p></li><li><p>斜体：<code>*内容*</code></p></li><li><p>斜体+粗体：<code>***内容***</code></p></li></ol><h1 id="4、分割线"><a href="#4、分割线" class="headerlink" title="4、分割线"></a>4、分割线</h1><p>一行中三个“<code>-</code>”</p><h1 id="5、删除线"><a href="#5、删除线" class="headerlink" title="5、删除线"></a>5、删除线</h1><p><code>~~内容~~</code></p><h1 id="6、下划线"><a href="#6、下划线" class="headerlink" title="6、下划线"></a>6、下划线</h1><p><code>&lt;u&gt;带下划线文本&lt;/u&gt;</code></p><h1 id="7、列表和引用"><a href="#7、列表和引用" class="headerlink" title="7、列表和引用"></a>7、列表和引用</h1><p>第一种引用：<code>&gt;内容</code></p><p>数字：<code>1.（空格）内容</code></p><p>强调：<code>-（空格）内容</code></p><p>嵌套：</p><pre><code class="markdown">1.（空格）第一    （四个空格，或一个tab）- 小一</code></pre><h1 id="8、代码"><a href="#8、代码" class="headerlink" title="8、代码"></a>8、代码</h1><pre><code class="markdown">    ```代码类型    代码内容    ```</code></pre><p>句子中直接`内容`，内容会变成<code>内容</code></p><h1 id="9、链接"><a href="#9、链接" class="headerlink" title="9、链接"></a>9、链接</h1><p><code>[超链接名](http://XXX  &quot;说明&quot;)</code></p><p>鼠标悬停在链接名上，会显示说明内容</p><h1 id="10、图片插入"><a href="#10、图片插入" class="headerlink" title="10、图片插入"></a>10、图片插入</h1><ol><li>常规插入图片</li></ol><p><code>![alt 属性文本](XXX.img “可选标题”)</code></p><p>alt属性文本：当某种原因看不见图片时会显示该内容</p><p>可选标题：鼠标悬停图片显示该内容</p><ol start="2"><li>点击图片会跳转链接</li></ol><p> <code>[![alt 属性文本](XXX.img “可选标题”)](http://XXX)</code></p><ol start="3"><li>居左</li></ol><pre><code class="markdown">![在这里插入图片描述](https://img-blog.csdnimg.cn/20200822014538211.png#pic_left)</code></pre><ol start="4"><li>居中：<code>#pic_center</code></li></ol><p><strong>5. 等比缩放</strong></p><p><code>&lt;img src=https://xxx.img width=60% /&gt;</code></p><ol start="6"><li>固定宽高</li></ol><p><code>&lt;img src=https://xxx.img width=200 height=100 /&gt;</code></p><p><strong>7. 利用html终极格式</strong></p><pre><code class="html">&lt;center&gt;&lt;img src=&quot;链接&quot; width=&quot;75%&quot; height=&quot;75%&quot; alt=&quot;属性说明&quot;/&gt;&lt;/center&gt;</code></pre><h1 id="11、表格"><a href="#11、表格" class="headerlink" title="11、表格"></a>11、表格</h1><p>可直接通过网址生成markdown语句</p><p><a href="https://www.tablesgenerator.com/markdown_tables">Markdown Tables generator - TablesGenerator.com</a></p>]]></content>
-    
-    
-      
-      
-    <summary type="html">&lt;p&gt;[toc]&lt;/p&gt;
-&lt;h1 id=&quot;1、标题&quot;&gt;&lt;a href=&quot;#1、标题&quot; class=&quot;headerlink&quot; title=&quot;1、标题&quot;&gt;&lt;/a&gt;1、标题&lt;/h1&gt;&lt;ul&gt;
-&lt;li&gt;&lt;code&gt;#(空格)一级标题&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;#(空格)</summary>
-      
-    
-    
-    
-    <category term="语言" scheme="https://mkdbook.com/categories/%E8%AF%AD%E8%A8%80/"/>
-    
-    <category term="Markdown" scheme="https://mkdbook.com/categories/%E8%AF%AD%E8%A8%80/Markdown/"/>
-    
-    
-    <category term="速查笔记" scheme="https://mkdbook.com/tags/%E9%80%9F%E6%9F%A5%E7%AC%94%E8%AE%B0/"/>
-    
-    <category term="Markdown" scheme="https://mkdbook.com/tags/Markdown/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>3--perl生成html table报告-项目3.3</title>
-    <link href="https://mkdbook.com/blog003.html"/>
-    <id>https://mkdbook.com/blog003.html</id>
-    <published>2023-03-17T15:22:13.000Z</published>
-    <updated>2023-03-24T08:08:47.470Z</updated>
-    
-    <content type="html"><![CDATA[<p>[toc]</p><h1 id="一、主要功能"><a href="#一、主要功能" class="headerlink" title="一、主要功能"></a>一、主要功能</h1><ul><li>生成html table</li><li>CSS美化表格</li></ul><h1 id="二、html头文件代码"><a href="#二、html头文件代码" class="headerlink" title="二、html头文件代码"></a>二、html头文件代码</h1><p>在perl中定义<code>$html</code>变量，当生成好html代码后，通过文件句柄导出<code>$html</code>中所有内容到<code>verification.html</code>文件，就可以<code>firefox verification.html &amp;</code>看到最终结果的表格文件。</p><pre><code class="perl">my $html = &quot;&lt;html lang=&#39;en&#39;&gt;    &lt;head&gt;        &lt;meta charset=&#39;utf8&#39; /&gt;        &lt;link rel=&#39;stylesheet&#39; href=&#39;css/styles.css&#39;&gt;        &lt;title&gt;            verification table        &lt;/title&gt;    &lt;/head&gt;    &lt;style&gt;    $CSS       ##### CSS 美化代码    &lt;/style&gt;    &lt;body&gt;  &lt;table border=1&gt;      &lt;tr&gt;       &lt;th&gt;Test Case &lt;/th&gt;       &lt;th&gt;Description &lt;/th&gt;       &lt;th&gt;Dir &lt;/th&gt;       &lt;th&gt;Result &lt;/th&gt;       &lt;th&gt;Time &lt;/th&gt;      &lt;/tr&gt;      $table       ### 表格一行内容的 html table代码  &lt;/table&gt;      &lt;/body&gt;&lt;/html&gt;&quot;;##########---------------export html and clear some logopen(FILE,&quot;&gt;verification.html&quot;);say FILE &quot;$html&quot;;close (FILE);</code></pre><h1 id="三、-table中的html-table代码"><a href="#三、-table中的html-table代码" class="headerlink" title="三、$table中的html table代码"></a>三、$table中的html table代码</h1><p>将for循环产生的相关单元格变量填入html table中相应位置，每一次for循环都会产生一行数据</p><pre><code class="perl">$table .= &quot;&lt;tr&gt;\n\t\t              &lt;td&gt;&lt;a href= \&quot;../tb/$case_name.v\&quot;&gt;test_$i&lt;/a&gt;&lt;/td&gt;\n\t\t              &lt;td&gt;$description&lt;/td&gt;\n\t\t              &lt;td&gt;&lt;a href= \&quot;**$dir_log\**&quot;&gt;log_file_test_$i&lt;/a&gt;&lt;/td&gt;\n\t\t              &lt;td bgcolor= $color &gt; $result&lt;/td&gt;\n\t\t              &lt;td&gt;$time&lt;/td&gt;\n           &lt;/tr&gt;\n&quot;</code></pre><h1 id="四、html-table-CSS美化代码"><a href="#四、html-table-CSS美化代码" class="headerlink" title="四、html table CSS美化代码"></a>四、html table CSS美化代码</h1><pre><code class="perl">#########-------------------------CSS for table style$CSS=&#39;table &#123;    width: 90%;    background: #ccc;    margin: 10px auto;    border-collapse: collapse;    border: 2px inset black;&#125;th,td &#123;    height: 25px;    line-height: 25px;    text-align: center;    border: 1px solid #ccc;&#125;th &#123;    background: #eee;    font-weight: bold;    font-size:15px;&#125;tr &#123;    background: #fff;&#125;tr:hover &#123;    background: #cc0;&#125;td a &#123;    color: #06f;    text-decoration: none;&#125;td a:hover &#123;    color: #06f;    text-decoration: underline;&#125;&#39;;</code></pre><p>注意，这里使用的单引号对<code>$CSS</code>变量赋值，防止其中内容在双引号中当作perl的关键字被识别导致语法错误。</p><h1 id="五、总结"><a href="#五、总结" class="headerlink" title="五、总结"></a>五、总结</h1><p>到这，此次简单的perl回归测试报告脚本就完成了。这算是学完perl后，第一次写的一个原创的perl脚本，中间的逻辑可能不是最优解，但好歹能完成基本功能。通过这个脚本的书写，我第一次体会到了perl的强大和复杂，也深知自己之前仅仅学习了皮毛而已。同时我也了解了html、CSS相关的一些网页知识，这和我搭建blog的想法正不谋而合，高级的用法虽然不会，但底层逻辑大概了解了，算是打开了又一个世界的大门了！</p>]]></content>
-    
-    
-      
-      
-    <summary type="html">&lt;p&gt;[toc]&lt;/p&gt;
-&lt;h1 id=&quot;一、主要功能&quot;&gt;&lt;a href=&quot;#一、主要功能&quot; class=&quot;headerlink&quot; title=&quot;一、主要功能&quot;&gt;&lt;/a&gt;一、主要功能&lt;/h1&gt;&lt;ul&gt;
-&lt;li&gt;生成html table&lt;/li&gt;
-&lt;li&gt;CSS美化表格&lt;/li&gt;
-</summary>
-      
-    
-    
-    
-    <category term="项目" scheme="https://mkdbook.com/categories/%E9%A1%B9%E7%9B%AE/"/>
-    
-    <category term="项目3-Perl回归测试脚本" scheme="https://mkdbook.com/categories/%E9%A1%B9%E7%9B%AE/%E9%A1%B9%E7%9B%AE3-Perl%E5%9B%9E%E5%BD%92%E6%B5%8B%E8%AF%95%E8%84%9A%E6%9C%AC/"/>
-    
-    
-    <category term="perl" scheme="https://mkdbook.com/tags/perl/"/>
     
   </entry>
   
