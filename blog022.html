@@ -639,7 +639,7 @@
         
         
         <a  class="全部文章 语言 Verilog "
-           href="/clgzy10w3003lygubgfc4amxr.html"
+           href="/clgzy62uk001w00ubfywz3gb2.html"
            data-tag=""
            data-author="" >
             <span class="post-title" title="Verilog分类保留">Verilog分类保留</span>
@@ -657,7 +657,7 @@
         
         
         <a  class="全部文章 领域 存储 "
-           href="/clgzy10vg001dygub60z9cuhs.html"
+           href="/clgzy62vc004400ub9g5fdoos.html"
            data-tag=""
            data-author="" >
             <span class="post-title" title="存储分类保留">存储分类保留</span>
@@ -666,7 +666,7 @@
         
         
         <a  class="全部文章 语言 SystemVerilog "
-           href="/clgzy10w4003nygubhtzmfm1p.html"
+           href="/clgzy62um002000ubf6c7hrc6.html"
            data-tag=""
            data-author="" >
             <span class="post-title" title="SV分类保留">SV分类保留</span>
@@ -720,7 +720,7 @@
     </div>
     <div class="article-meta">
         
-            发布时间 : <time class="date" title='最后更新: 2023-04-28 10:36:02'>2023-04-28 09:20</time>
+            发布时间 : <time class="date" title='最后更新: 2023-04-28 10:41:02'>2023-04-28 09:20</time>
         
     </div>
     <div class="article-meta">
@@ -771,10 +771,10 @@
 <p>1、保持<code>CMD line low</code>；</p>
 <p>2、在发<code>CMD1</code>之前，发送<code>CMD0（0xFFFFFFFA）</code>；</p>
 <h2 id="3-2-Original-Boot-Operation"><a href="#3-2-Original-Boot-Operation" class="headerlink" title="3.2  Original Boot Operation"></a>3.2  Original Boot Operation</h2><p>1、<code>power-on</code>或<code>reset</code>（硬件复位或CMD0带0xF0F0F0F0）后，在第一个CMD之前 <em><strong>CMD line被拉低超过74个clock</strong></em>，则设备会识别到original boot 模式，并在内部开始准备引导数据。</p>
-<p>2、引导数据哪里来？（<a target="_blank" rel="noopener" href="http://localhost:4000/blog022.html#:~:text=%E5%9C%A8boot%20mode%E3%80%82-,bit%5B5%3A3%5D,-%E2%80%94%E2%80%94%E6%98%AF%E5%90%A6%E4%BD%BF%E7%94%A8boot">EXT_CSD[179]的bit[5:3]</a>）</p>
-<p>3、引导数据有多大？（<a target="_blank" rel="noopener" href="http://localhost:4000/blog022.html#:~:text=EXT_CSD%5B226%5D%EF%BC%8C%E5%A6%82-,%E5%9B%BE22.1,-%E6%89%80%E7%A4%BA%EF%BC%8C%E6%9C%80%E5%A4%A7">EXT_CSD[226]</a>）</p>
-<p>4、以何种速率和方式传输引导数据？（<a target="_blank" rel="noopener" href="http://localhost:4000/blog022.html#:~:text=22.5%20BOOT_BUS_CONDITIONS-,bit%5B4%3A3%5D,-%E2%80%94%E2%80%94%E8%AF%BB%E5%8F%96boot">EXT_CSD[177]</a>）</p>
-<p>5、设备是否需要给host一个“010”的boot模式确认反馈？（<a target="_blank" rel="noopener" href="http://localhost:4000/blog022.html#:~:text=22.4%20PARTITION_CONFIG-,bit%5B6%5D,-%E2%80%94%E2%80%94CPU%E5%8A%A0%E8%BD%BD">EXT_CSD[179]的bit[6]</a>）</p>
+<p>2、引导数据哪里来？（<a href="http://mkdbook.com/blog022.html#:~:text=%E5%9C%A8boot%20mode%E3%80%82-,bit%5B5%3A3%5D,-%E2%80%94%E2%80%94%E6%98%AF%E5%90%A6%E4%BD%BF%E7%94%A8boot">EXT_CSD[179]的bit[5:3]</a>）</p>
+<p>3、引导数据有多大？（<a href="http://mkdbook.com/blog022.html#:~:text=EXT_CSD%5B226%5D%EF%BC%8C%E5%A6%82-,%E5%9B%BE22.1,-%E6%89%80%E7%A4%BA%EF%BC%8C%E6%9C%80%E5%A4%A7">EXT_CSD[226]</a>）</p>
+<p>4、以何种速率和方式传输引导数据？（<a href="http://mkdbook.com/blog022.html#:~:text=22.5%20BOOT_BUS_CONDITIONS-,bit%5B4%3A3%5D,-%E2%80%94%E2%80%94%E8%AF%BB%E5%8F%96boot">EXT_CSD[177]</a>）</p>
+<p>5、设备是否需要给host一个“010”的boot模式确认反馈？（<a href="http://mkdbook.com/blog022.html#:~:text=22.4%20PARTITION_CONFIG-,bit%5B6%5D,-%E2%80%94%E2%80%94CPU%E5%8A%A0%E8%BD%BD">EXT_CSD[179]的bit[6]</a>）</p>
 <center>
 <img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/22.2Original%20Boot%20Operation.png" width="100%" height="100%" alt="22.2 Original Boot Operation"/>
 </center>
