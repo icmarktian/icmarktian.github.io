@@ -2,9 +2,9 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>13--perl练习-生成五组不同随机数-双色球 | 马克得烂笔头</title>
-  <meta name="keywords" content=" perl ">
-  <meta name="description" content="13--perl练习-生成五组不同随机数-双色球 | 马克得烂笔头">
+  <title>27--eMMC的EXT_CSD和CMD6（SWITCH） | 马克得烂笔头</title>
+  <meta name="keywords" content=" eMMC ">
+  <meta name="description" content="27--eMMC的EXT_CSD和CMD6（SWITCH） | 马克得烂笔头">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <meta name="description" content="人的精力是有限的，本站作为第二大脑用于存储本人学过的知识">
 <meta property="og:type" content="website">
@@ -770,9 +770,9 @@
 </aside>
 <div id="post">
     <div class="pjax">
-        <article id="post-3 语言/Perl/13--perl练习-生成五组不同随机数-双色球" class="article article-type-post" itemscope itemprop="blogPost">
+        <article id="post-2 领域/eMMC/27--eMMC的EXT_CSD和CMD6（SWITCH）" class="article article-type-post" itemscope itemprop="blogPost">
     
-        <h1 class="article-title">13--perl练习-生成五组不同随机数-双色球</h1>
+        <h1 class="article-title">27--eMMC的EXT_CSD和CMD6（SWITCH）</h1>
     
     <div class="article-meta">
         
@@ -782,9 +782,9 @@
             <i class="iconfont icon-category"></i>
             
             
-            <a  data-rel="语言">语言</a> > 
+            <a  data-rel="领域">领域</a> > 
             
-            <a  data-rel="语言&lt;---&gt;Perl">Perl</a>
+            <a  data-rel="领域&lt;---&gt;eMMC">eMMC</a>
             
         </span>
         
@@ -792,19 +792,19 @@
         <span class="tag">
             <i class="iconfont icon-tag"></i>
             
-            <a class="color5">perl</a>
+            <a class="color5">eMMC</a>
             
         </span>
         
     </div>
     <div class="article-meta">
         
-            发布时间 : <time class="date" title='最后更新: 2023-03-24 16:09:20'>2023-03-20 22:07</time>
+            发布时间 : <time class="date" title='最后更新: 2023-06-24 13:41:15'>2023-06-24 13:31</time>
         
     </div>
     <div class="article-meta">
         
-        <span>字数:285</span>
+        <span>字数:385</span>
         
         
         
@@ -823,7 +823,7 @@
     
     <div class="toc-ref">
     
-        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#perl%E7%BB%83%E4%B9%A0%EF%BC%8C%E6%BA%90%E7%A0%81"><span class="toc-text">perl练习，源码</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%9F%A5%E8%AF%86%E7%82%B9"><span class="toc-text">知识点</span></a></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%80%E3%80%81EXT-CSD-%E6%95%B4%E4%BD%93%E6%A6%82%E8%BF%B0"><span class="toc-text">一、EXT_CSD 整体概述</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%8C%E3%80%81CMD6-%E8%AF%A6%E7%BB%86%E8%AF%B4%E6%98%8E"><span class="toc-text">二、CMD6 详细说明</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#2-1-Cmd-Set-2-0"><span class="toc-text">2.1  Cmd Set[2:0]</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-2-Index-23-16"><span class="toc-text">2.2  Index[23:16]</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-3-Access-25-24"><span class="toc-text">2.3  Access[25:24]</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-4-%E6%80%BB%E7%BB%93"><span class="toc-text">2.4  总结</span></a></li></ol></li></ol>
     
 <style>
     .left-col .switch-btn,
@@ -839,49 +839,32 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p><div class='inner-toc'><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#perl%E7%BB%83%E4%B9%A0%EF%BC%8C%E6%BA%90%E7%A0%81"><span class="toc-text">perl练习，源码</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%9F%A5%E8%AF%86%E7%82%B9"><span class="toc-text">知识点</span></a></li></ol></div></p>
-<h1 id="perl练习，源码"><a href="#perl练习，源码" class="headerlink" title="perl练习，源码"></a>perl练习，源码</h1><pre><code class="perl">#!/usr/bin/perl -w
+        <p><div class='inner-toc'><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%80%E3%80%81EXT-CSD-%E6%95%B4%E4%BD%93%E6%A6%82%E8%BF%B0"><span class="toc-text">一、EXT_CSD 整体概述</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%8C%E3%80%81CMD6-%E8%AF%A6%E7%BB%86%E8%AF%B4%E6%98%8E"><span class="toc-text">二、CMD6 详细说明</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#2-1-Cmd-Set-2-0"><span class="toc-text">2.1  Cmd Set[2:0]</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-2-Index-23-16"><span class="toc-text">2.2  Index[23:16]</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-3-Access-25-24"><span class="toc-text">2.3  Access[25:24]</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-4-%E6%80%BB%E7%BB%93"><span class="toc-text">2.4  总结</span></a></li></ol></li></ol></div></p>
+<h1 id="一、EXT-CSD-整体概述"><a href="#一、EXT-CSD-整体概述" class="headerlink" title="一、EXT_CSD 整体概述"></a>一、EXT_CSD 整体概述</h1><ul>
+<li>EXT_CSD寄存器中定义了<code>设备的属性</code>和<code>模式选择</code>，一共有512个byte。</li>
+<li>320 byte的<code>property segment</code>，192 byte的<code>mode segment</code>。</li>
+<li>属性段<strong>不可</strong>被host端<strong>修改</strong>，里面包括了device支持的mode、容量等信息。</li>
+<li><strong>模式段可</strong>被host段修改，反映了device当前选定的模式，例如选择哪个command set版本。</li>
+<li>host通过发送CMD8（SEND_EXT_CSD）读取EXT_CSD，device会将其EXT_CSD作为一个512byte大小的数据块发送。</li>
+</ul>
+<h1 id="二、CMD6-详细说明"><a href="#二、CMD6-详细说明" class="headerlink" title="二、CMD6 详细说明"></a>二、CMD6 详细说明</h1><p>CMD6（SWITCH）两种功能：1、<code>切换mode</code>；2、<code>修改EXT_CSD</code>； </p>
+<center>
+<img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/27.1.png" width="100%" height="75%" alt="27.1"/>
+</center>
 
-$zhu = 1;
+<h2 id="2-1-Cmd-Set-2-0"><a href="#2-1-Cmd-Set-2-0" class="headerlink" title="2.1  Cmd Set[2:0]"></a>2.1  Cmd Set[2:0]</h2><p>host可以发送CMD6改变现在的命令集，在EXT_CSD中有两个byte表征它：<code>S_CMD_SET[504]</code>和<code>CMD_SET[191]</code>。</p>
+<p>前者在属性段中，表示该device支持的command set。后者在模式段中，host可以通过CMD6命令修改。</p>
+<p><code>CMD_SET[191]</code>中<code>Cmd Set[2:0]</code>power_on后默认为0x00，表示standard MMC。</p>
+<p>然而，如果是通过CMD6将command set版本修改为standard MMC，则<code>CMD_SET[191]</code>中<code>Cmd Set[2:0]</code>应设置为0x01。</p>
+<h2 id="2-2-Index-23-16"><a href="#2-2-Index-23-16" class="headerlink" title="2.2  Index[23:16]"></a>2.2  Index[23:16]</h2><p>索引虽然可以包含0-255数值，但是<code>只有0-191有效</code>，因为EXT_CSD只有192个byte（mode段）可被修改。</p>
+<h2 id="2-3-Access-25-24"><a href="#2-3-Access-25-24" class="headerlink" title="2.3  Access[25:24]"></a>2.3  Access[25:24]</h2><center>
+<img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/27.2.png" width="100%" height="75%" alt="27.2"/>
+</center>
 
-do&#123;
-    my %red;                         #hash
-    for (0..5) &#123;
-        my $no;
-        do &#123;
-            $no = int rand(33) +1;  # int [1:33]         
-        &#125; while (exists $red&#123;$no&#125;); # $no is hash&#39;s key
-        	   $red&#123;$no&#125; = 1;
-    &#125;
-
-    my $blue=int rand(16) +1;       #int [1:16]
-          
-    print join(&quot;\t&quot;, keys %red, &quot;$blue&quot;), &quot;\n\n&quot;;
-
-    $zhu = $zhu +1;   #initial 5 zhu
-
-&#125;while($zhu &lt;= 5);
-</code></pre>
-<h1 id="知识点"><a href="#知识点" class="headerlink" title="知识点"></a>知识点</h1><ol>
-<li><code>rand(16)</code>表示生成<code>0-15</code>的随机数，要生成<code>1-16</code>直接增加偏移量<code>+1</code>即可。</li>
-<li>hash的用法：这里用到了hash的<code>exists</code>函数检测<code>key</code>，让随机产生的数不同。<br>这里是指，如果<strong>hash</strong><code>%red</code>中存在<strong>key</strong><code>$no</code>，则返回再生成一次随机数；</li>
-</ol>
-<pre><code class="perl">             #keys values 
-my %hash = (&quot;a&quot; =&gt; 9, &quot;b&quot; =&gt; 1, &quot;c&quot; =&gt; 8);
-my @k = keys %hash;                #取出hash中的 key 或 value，列表上下文
-my @v = values %hash;
-
-my $x = keys %hash;               # 标量上下文，得到的是对数
-
-#exists 检测hash中是否存在某一个hash
-if (exists $hash&#123;&quot;b&quot;&#125;)&#123;    #用 $ 符号，别搞错了
-print &quot;hash里面有b&quot;
-&#125;
-</code></pre>
-<ol start="3">
-<li><code>jonit</code> 函数是指用分隔符 <code>\t</code> 分割每一个<code>key</code>的值。</li>
-<li><code>do&#123;&#125;…while()</code> 表达式产生5组数据。</li>
-</ol>
+<h2 id="2-4-总结"><a href="#2-4-总结" class="headerlink" title="2.4  总结"></a>2.4  总结</h2><ul>
+<li>1、如果CMD6用于更改命令集，<code>[23:16]Index</code>和<code>[15:8]Value</code>会被忽略，EXT_CSD不会被写。<code>[25:24]Access</code>为00，根据<code>[2:0]Cmd Set</code>修改命令集。</li>
+<li>2、如果CMD用于写EXT_CSD，<code>[2:0]Cmd Set</code>会被忽略，命令集保持不变。根据<code>[25:24]Access</code>中的访问模式，将<code>[15:8]Value</code>中的值，修改到<code>[23:16]Index</code>指向的EXT_CSD byte中。</li>
+</ul>
 
       
        <hr><span style="font-style: italic;color: gray;"> 转载请注明来源，欢迎对文章中的引用来源进行考证，欢迎指出任何有错误或不够清晰的表达。可以在下面评论区评论，也可以邮件至 icmarktian@163.com </span>

@@ -6,7 +6,7 @@
   <link href="https://mkdbook.com/atom.xml" rel="self"/>
   
   <link href="https://mkdbook.com/"/>
-  <updated>2023-04-28T03:51:42.745Z</updated>
+  <updated>2023-06-24T14:17:50.555Z</updated>
   <id>https://mkdbook.com/</id>
   
   <author>
@@ -15,6 +15,142 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>29--eMMC的Data Write</title>
+    <link href="https://mkdbook.com/blog029.html"/>
+    <id>https://mkdbook.com/blog029.html</id>
+    <published>2023-06-24T06:31:24.000Z</published>
+    <updated>2023-06-24T14:17:50.555Z</updated>
+    
+    <content type="html"><![CDATA[<p>[toc]</p><h1 id="一、Data-Write"><a href="#一、Data-Write" class="headerlink" title="一、Data Write"></a>一、Data Write</h1><p>写操作的数据传输都带有CRC（SDR带一个，DDR带两个）。在写操作执行之前，设备会对每个接收到的data block进行CRC检查，防止错误数据的写入。</p><h2 id="1-1-数据可靠性设置，WR-REL-SET"><a href="#1-1-数据可靠性设置，WR-REL-SET" class="headerlink" title="1.1  数据可靠性设置，WR_REL_SET"></a>1.1  数据可靠性设置，WR_REL_SET</h2><p>写操作进行过程中被打断，通常不会影响其他地址上已有数据的丢失，所以会在<code>保护已有数据</code>和<code>写性能</code>之间做一个折中。如何折中，host 可以决定，在<code>EXT_CSD[167]的WR_REL_SET</code>定义。</p><center><img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/29.1.png" width="75%" height="75%" alt="29.1"/></center><blockquote><p>如上图所示，当相关的bit位<code>为1</code>：如果写数据的时候发生掉电，设备<strong>会保护先前写入的数据</strong>；<code>为0</code>：写操作执行<strong>性能优化</strong>，掉电后该分区<strong>已有的数据可能有风险</strong>。<br>注：<code>HS_CTRL_REL</code>是<code>EXT_CSD[166]的WR_REL_PARAM</code>中的bit[0]，此位置决定了上述参数是否可以修改（一般全为1）</p></blockquote><center><img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/29.2.png" width="75%" height="75%" alt="29.2"/></center><p>上述<code>WR_REL_SET</code>的设置只影响两个分区<code>main user area</code>和<code>general purpose partion</code>。<strong>boot分区</strong>和<strong>RPMB分区</strong>是默认会保护先前数据的，不受该设置影响。</p><p>host可以通过改变该寄存器的bit（不能单独只改某一个，必须全部作为一个数据写入）选择改变上述分区的write reliability，这个过程必须发生在<code>PARTITION_SETTING_COMPLETED</code>之前。</p><p><code>WR_REL_SET</code>在分区设置之后才有效，且参数中的分区如果不存在不会影响设备。</p><h1 id="二、Block-Write"><a href="#二、Block-Write" class="headerlink" title="二、Block Write"></a>二、Block Write</h1><p><code>SDR模式</code>：数据块由<code>WRITE_BL_LEN</code> 定义。如果CRC失败，则device在DAT0上表示失败，所有的数据都被抛弃，多块写模式接下来的步骤也会被忽略。</p><p><code>DDR模式</code>：数据块为<code>512 Byte</code>。每一个数据块有2个CRC，一个对偶字节校验，一个对奇字节校验。</p><blockquote><p><code>WRITE_BL_LEN</code> 是CRC[25:22]，共4个bit，值为0-15；它表示数据块大小的方法为<code>2 的 WRITE_BL_LEN 次方</code></p></blockquote><h2 id="2-1-多块写介绍"><a href="#2-1-多块写介绍" class="headerlink" title="2.1  多块写介绍"></a>2.1  多块写介绍</h2><p><code>CMD25（WRITE_MULTIPLE_BLOCK）</code>开始几个连续的block传输。定义了3种类型的multiple-block write transactions：</p><h3 id="2-1-1-Open-ended-Multiple-block-write"><a href="#2-1-1-Open-ended-Multiple-block-write" class="headerlink" title="2.1.1  Open-ended Multiple-block write"></a>2.1.1  Open-ended Multiple-block write</h3><p><strong>没有定义</strong>多块写的write block<strong>数目</strong>，device将连续地接受和编写数据块，直到收到停止传输命令<code>CMD12（STOP_TRANSMISSION）</code>。</p><h3 id="2-1-2-Multiple-block-write-with-pre-defined-block-count"><a href="#2-1-2-Multiple-block-write-with-pre-defined-block-count" class="headerlink" title="2.1.2  Multiple-block write with pre-defined block count"></a>2.1.2  Multiple-block write with pre-defined block count</h3><p>device将接收预定义的数据块数，终止传输并返回<em><strong>tansfer</strong></em>状态。这种模式下不需要停止命令。<br>启动方法为<code>CMD23（SET_BLOCK_COUNT）</code>后立即发送<code>CMD25（WRITE_MULTIPLE_BLOCK）</code> 。</p><h3 id="2-1-3-Reliable-write"><a href="#2-1-3-Reliable-write" class="headerlink" title="2.1.3  Reliable write"></a>2.1.3  Reliable write</h3><p>有<code>可靠写参数</code>和<code>pre-defined block count</code>，类似于2.12的模式，附加了如下条件：<br><strong>当数据成功写入之前，逻辑地址指向的旧数据必须保持不变，这样即使在编程过程中突然断电，数据也不会出现undefined。</strong></p><ul><li>1、数据传输以<code>512B sectors大小的倍数</code>传输，或<strong>Large Sector</strong>模式被启用下以<code>8*512B Sectors大小的倍数</code>传输。<code>CMD16（SET_BLOCKLEN）</code>定义的<code>WRITE_BL_LEN</code>被忽略。</li><li>2、启用方法：<code>CMD23（SET_BLOCK_COUNT）</code>的<code>bit[31]</code>设置为<code>1</code>。</li><li>3、必须sector aligned，否则CMD23的Rb响应中bit[19]——ERROR位会置1（<em>详见5.1协议 p139. Table68</em>）</li><li>4、若发生断电，会有三种情况：所有扇区都是<strong>新数据</strong>，所有扇区都是<strong>旧数据</strong>，或有些扇区是<strong>新数据</strong>而其余扇区容纳着<strong>旧数据</strong>。</li><li>5、 Reliable write被高优先级命令（CMD12、CMD13）打断后，<code>寄存器</code>中标记为completed的扇区为新数据，其余扇区为旧数据。</li><li>6、<code>REL_WR_SEC_C[222]</code> 寄存器应设置为 1 且对Reliable write操作无影响</li></ul><h2 id="2-2-单块写时序"><a href="#2-2-单块写时序" class="headerlink" title="2.2  单块写时序"></a>2.2  单块写时序</h2><p>数据写操作前，通过<code>CMD7（SELECT/DESELECT_CARD）</code>选定一个设备，再用<code>CMD16（SET_BLOCKLEN）</code>设定有效块长度，发送<code>CMD24（WRITE_BLOCK）</code>开始写数据。（CMD24的参数位为地址）</p><center><img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/29.3.png" width="80%" height="80%" alt="29.3"/></center><p>单块写时序如图所示，当host发送完CMD，device应答后，再Nwr时钟周期，host开始传输数据。<br>Ncrc是为HS200和HS400设置的参数。<br>之后device会在<code>DAT0</code>上返回CRC的校验结果，（<code>101：有错</code>；<code>010：正确，然后开始编程</code>）。<br>当设备正在program时，<strong>DAT0会拉低表示busy</strong>，完成后拉高。</p><h2 id="2-3-多块写时序"><a href="#2-3-多块写时序" class="headerlink" title="2.3  多块写时序"></a>2.3  多块写时序</h2><center><img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/29.4.png" width="85%" height="85%" alt="29.4"/></center><p>如果 Host 发送的是 Multiple Block Write Command，那么 eMMC Device 会持续地将接收到的数据写入到存储器中，直到 Host 主动发送 Stop Command（CMD12）。</p><p>eMMC Device 在接收到一个 Block 的数据后，会进行 CRC 校验，然后将校验结果通过 CRC Token 发送给 Host。</p><p>发送完 CRC Token 后，如果 CRC 校验成功，eMMC Device 会将数据写入到内部存储器时，此时 DAT0 信号会拉低，作为 Busy 信号。Host 会持续检测 DAT0 信号，直到为高电平时，才会接着发送下一个 Block 的数据。如果 CRC 校验失败，那么 eMMC Device 不会进行数据写入，此次传输后续的数据都会被忽略。</p><p>NOTE:向 eMMC Device 写数据都是按 Block 写入的。</p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;[toc]&lt;/p&gt;
+&lt;h1 id=&quot;一、Data-Write&quot;&gt;&lt;a href=&quot;#一、Data-Write&quot; class=&quot;headerlink&quot; title=&quot;一、Data Write&quot;&gt;&lt;/a&gt;一、Data Write&lt;/h1&gt;&lt;p&gt;写操作的数据传输都带有CRC（SD</summary>
+      
+    
+    
+    
+    <category term="领域" scheme="https://mkdbook.com/categories/%E9%A2%86%E5%9F%9F/"/>
+    
+    <category term="eMMC" scheme="https://mkdbook.com/categories/%E9%A2%86%E5%9F%9F/eMMC/"/>
+    
+    
+    <category term="eMMC" scheme="https://mkdbook.com/tags/eMMC/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>28--eMMC的Bus Speed Modes</title>
+    <link href="https://mkdbook.com/blog028.html"/>
+    <id>https://mkdbook.com/blog028.html</id>
+    <published>2023-06-24T05:49:24.000Z</published>
+    <updated>2023-06-24T06:29:31.770Z</updated>
+    
+    <content type="html"><![CDATA[<p>[toc]</p><h1 id="一、Bus-Speed-mode介绍（eMMC-5-1）"><a href="#一、Bus-Speed-mode介绍（eMMC-5-1）" class="headerlink" title="一、Bus Speed mode介绍（eMMC 5.1）"></a>一、Bus Speed mode介绍（eMMC 5.1）</h1><h2 id="1-1-eMMC-Bus，标准接口"><a href="#1-1-eMMC-Bus，标准接口" class="headerlink" title="1.1  eMMC Bus，标准接口"></a>1.1  eMMC Bus，标准接口</h2><center><img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/28.1.png" width="60%" height="60%" alt="28.1"/></center><p>如图28.1所示，eMMC总线共有<code>11根信号线</code>，用于Host端和eMMC device端通信。</p><ul><li><code>CLK</code>：<em><strong>单向，host——&gt;eMMC</strong></em>；时钟频率范围为0-200MHz。</li><li><code>Data Strobe</code>：<em><strong>单向，host&lt;——eMMC</strong></em>；频率和CLK相同，用于host端在HS400模式下进行数据同步，<strong>省去总线tuning过程</strong>。</li><li><code>CMD</code>：<em><strong>双向，host&lt;——&gt;eMMC</strong></em>；命令和响应走这条线。</li><li><code>DAT0-7</code>：<em><strong>双向</strong></em>，有三种bus width模式，1bit，4bit，8bit；power-on默认为1bit模式（DAT0）。</li></ul><center><img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/28.2.png" width="60%" height="60%" alt="28.2"/></center><p>还有一些重要的功能线：</p><ul><li><code>RST</code>：硬件复位。</li><li><code>Vcc</code>：为flash memory供电，和falsh memory与eMMC core的接口I&#x2F;O提供电压。</li><li><code>Vccq</code>：为host接口<strong>I&#x2F;O</strong>提供电压，为<strong>core</strong>提供电压。</li></ul><blockquote><p>注：Vccq一定小于或等于Vcc。</p></blockquote><ul><li><code>Vss，Vssq</code>：<strong>Ground</strong> for supply voltage core and I&#x2F;O</li></ul><h2 id="1-2-Bus-Speed模式"><a href="#1-2-Bus-Speed模式" class="headerlink" title="1.2  Bus Speed模式"></a>1.2  Bus Speed模式</h2><center><img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/28.3.png" width="70%" height="70%" alt="28.3"/></center><p>可以看到，<code>High speed</code>模式有两种（SDR和DDR）。<code>HS200</code>最大频率达到了200MHz，<code>HS400</code>是前者的两倍。</p><p>为了兼容旧版本的eMMC，在power-on或reset后，会默认进入兼容模式（Backward Compatible Mode）。</p><p>可以通过EXT_CSD[185]——<code>HS_TIMING</code>配置Bus speed模式，<br>                EXT_CSD[183]——<code>BUS_WIDTH</code>配置Bus width和Data Strobe。</p><h2 id="1-3-HS-TIMING-185"><a href="#1-3-HS-TIMING-185" class="headerlink" title="1.3  HS_TIMING[185]"></a>1.3  HS_TIMING[185]</h2><center><img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/28.4.png" width="90%" height="90%" alt="28.4"/></center><p><strong>bit[3:0]用于设置接口时序：</strong></p><ul><li>0x0：选择backwards compatibility interface timing</li><li>0x1：选择High Speed</li><li>0x2：选择HS200</li><li>0x3：选择HS400</li></ul><h2 id="1-4-BUS-WIDTH-183"><a href="#1-4-BUS-WIDTH-183" class="headerlink" title="1.4  BUS_WIDTH[183]"></a>1.4  BUS_WIDTH[183]</h2><center><img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/28.5.png" width="90%" height="90%" alt="28.5"/></center><p>HS400是否支持Enhanced Strobe模式，在EXT_CSD[184]——<code>STROBE_SUPPORT</code>中定义，0x1&#x3D;支持，0x0&#x3D;不支持。</p><p><strong>bit[3:0]用于设置总线的宽度：</strong></p><center><img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/28.6.png" width="85%" height="85%" alt="28.6"/></center><h1 id="二、选择high-speed-mode"><a href="#二、选择high-speed-mode" class="headerlink" title="二、选择high-speed mode"></a>二、选择high-speed mode</h1><p>见协议附录A.6.2，在eMMC设备BUS初始化完成后，通过如下步骤切换BUS mode为high-speed mode。参考Data transfer diagram。</p><ul><li>发送CMD7（带RCA）将设备切换到tran-state。</li><li>发送CMD8（SEND_EXT_CSD）。</li><li>发送<code>CMD6（SWITCH）</code>修改<code>HS_TIMING</code>。参数为<code>0x03B9_0100</code>即可。</li></ul><center><img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/28.7.png" width="75%" height="75%" alt="28.7"/></center>    <ul><li>修改clock frequency为high-speed mode支持的范围（0-52MHz）。</li></ul><h1 id="三、选择”HS200“-mode"><a href="#三、选择”HS200“-mode" class="headerlink" title="三、选择”HS200“ mode"></a>三、选择”HS200“ mode</h1><center><img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/28.8.png" width="70%" height="70%" alt="28.8"/></center><h1 id="四、选择“HS400”-mode"><a href="#四、选择“HS400”-mode" class="headerlink" title="四、选择“HS400” mode"></a>四、选择“HS400” mode</h1><p>HS400有两种模式，tuning模式和Enhanced Strobe，它们的启动流程分别如下：</p><h2 id="4-1-需要Tuning-procedure的HS400"><a href="#4-1-需要Tuning-procedure的HS400" class="headerlink" title="4.1  需要Tuning procedure的HS400"></a>4.1  需要Tuning procedure的HS400</h2><center><img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/28.9.png" width="65%" height="65%" alt="28.9"/></center><ul><li>1、初始化设备后进入的是”Backward Compatible Timings“，这时发送<code>CMD7</code>选择设备，再读取<code>DEVICE_TYPE [196]</code>判断是否支持HS400；</li><li>2、读取<code>DRIVER_STRENGTH [197]</code>判断支持的device Driver Strengths，再通过修改<code>HS_TIMING[185]</code>设置HS400的<em><strong>device Driver Strength</strong></em>，并通过<code>0x2</code>将其切换为<em><strong>HS200</strong></em>；</li><li>3、要切换为<code>HS200</code>进行<code>tuning</code> procedure。（<em>因为HS200相对低速，在此模式下进行tuning不容易出错</em>）</li><li>4、再切换为<code>High-speed</code>模式，修改BUS_WIDTH[183]&#x3D;0x06，选择“<code>x8 DDR</code>”bus mode；（<em><strong>为什么？见1.4中规定了</strong></em>）</li><li>5、最后再修改<code>HS_TIMING[185]=0x3</code>，切换成<code>HS400</code>。</li></ul><h2 id="4-2-Enhanced-Strobe模式的HS400"><a href="#4-2-Enhanced-Strobe模式的HS400" class="headerlink" title="4.2  Enhanced Strobe模式的HS400"></a>4.2  Enhanced Strobe模式的HS400</h2><center><img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/28.10.png" width="75%" height="75%" alt="28.10"/></center><p>当使能了Enhanced Strobed就不需要tuning过程了。</p><ul><li>1、初始化设备后进入的是”Backward Compatible Timings“，这时发送<code>CMD7</code>选择设备，再读取<code>DEVICE_TYPE [196]</code>判断是否支持HS400；</li><li>2、读取STROBE_SUPPORT[184]判断是否支持Enhanced Strobe；</li><li>3、切换为<code>High-speed</code>模式（HS_TIMING&#x3D;0x1），频率低于52MHz；修改<code>BUS_WIDTH[183]=0x86</code>，选择“<code>x8 DDR</code>”bus mode；（***这里的0x86是整个BUS_WIDTH byte的值，4.1中第4点0x06是指bit[3:0]***）</li><li>4、最后再修改<code>HS_TIMING[185]=0x3</code>，切换成<code>HS400</code>。</li></ul>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;[toc]&lt;/p&gt;
+&lt;h1 id=&quot;一、Bus-Speed-mode介绍（eMMC-5-1）&quot;&gt;&lt;a href=&quot;#一、Bus-Speed-mode介绍（eMMC-5-1）&quot; class=&quot;headerlink&quot; title=&quot;一、Bus Speed mode介绍（eMMC</summary>
+      
+    
+    
+    
+    <category term="领域" scheme="https://mkdbook.com/categories/%E9%A2%86%E5%9F%9F/"/>
+    
+    <category term="eMMC" scheme="https://mkdbook.com/categories/%E9%A2%86%E5%9F%9F/eMMC/"/>
+    
+    
+    <category term="eMMC" scheme="https://mkdbook.com/tags/eMMC/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>27--eMMC的EXT_CSD和CMD6（SWITCH）</title>
+    <link href="https://mkdbook.com/blog027.html"/>
+    <id>https://mkdbook.com/blog027.html</id>
+    <published>2023-06-24T05:31:24.000Z</published>
+    <updated>2023-06-24T05:41:15.919Z</updated>
+    
+    <content type="html"><![CDATA[<p>[toc]</p><h1 id="一、EXT-CSD-整体概述"><a href="#一、EXT-CSD-整体概述" class="headerlink" title="一、EXT_CSD 整体概述"></a>一、EXT_CSD 整体概述</h1><ul><li>EXT_CSD寄存器中定义了<code>设备的属性</code>和<code>模式选择</code>，一共有512个byte。</li><li>320 byte的<code>property segment</code>，192 byte的<code>mode segment</code>。</li><li>属性段<strong>不可</strong>被host端<strong>修改</strong>，里面包括了device支持的mode、容量等信息。</li><li><strong>模式段可</strong>被host段修改，反映了device当前选定的模式，例如选择哪个command set版本。</li><li>host通过发送CMD8（SEND_EXT_CSD）读取EXT_CSD，device会将其EXT_CSD作为一个512byte大小的数据块发送。</li></ul><h1 id="二、CMD6-详细说明"><a href="#二、CMD6-详细说明" class="headerlink" title="二、CMD6 详细说明"></a>二、CMD6 详细说明</h1><p>CMD6（SWITCH）两种功能：1、<code>切换mode</code>；2、<code>修改EXT_CSD</code>； </p><center><img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/27.1.png" width="100%" height="75%" alt="27.1"/></center><h2 id="2-1-Cmd-Set-2-0"><a href="#2-1-Cmd-Set-2-0" class="headerlink" title="2.1  Cmd Set[2:0]"></a>2.1  Cmd Set[2:0]</h2><p>host可以发送CMD6改变现在的命令集，在EXT_CSD中有两个byte表征它：<code>S_CMD_SET[504]</code>和<code>CMD_SET[191]</code>。</p><p>前者在属性段中，表示该device支持的command set。后者在模式段中，host可以通过CMD6命令修改。</p><p><code>CMD_SET[191]</code>中<code>Cmd Set[2:0]</code>power_on后默认为0x00，表示standard MMC。</p><p>然而，如果是通过CMD6将command set版本修改为standard MMC，则<code>CMD_SET[191]</code>中<code>Cmd Set[2:0]</code>应设置为0x01。</p><h2 id="2-2-Index-23-16"><a href="#2-2-Index-23-16" class="headerlink" title="2.2  Index[23:16]"></a>2.2  Index[23:16]</h2><p>索引虽然可以包含0-255数值，但是<code>只有0-191有效</code>，因为EXT_CSD只有192个byte（mode段）可被修改。</p><h2 id="2-3-Access-25-24"><a href="#2-3-Access-25-24" class="headerlink" title="2.3  Access[25:24]"></a>2.3  Access[25:24]</h2><center><img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/27.2.png" width="100%" height="75%" alt="27.2"/></center><h2 id="2-4-总结"><a href="#2-4-总结" class="headerlink" title="2.4  总结"></a>2.4  总结</h2><ul><li>1、如果CMD6用于更改命令集，<code>[23:16]Index</code>和<code>[15:8]Value</code>会被忽略，EXT_CSD不会被写。<code>[25:24]Access</code>为00，根据<code>[2:0]Cmd Set</code>修改命令集。</li><li>2、如果CMD用于写EXT_CSD，<code>[2:0]Cmd Set</code>会被忽略，命令集保持不变。根据<code>[25:24]Access</code>中的访问模式，将<code>[15:8]Value</code>中的值，修改到<code>[23:16]Index</code>指向的EXT_CSD byte中。</li></ul>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;[toc]&lt;/p&gt;
+&lt;h1 id=&quot;一、EXT-CSD-整体概述&quot;&gt;&lt;a href=&quot;#一、EXT-CSD-整体概述&quot; class=&quot;headerlink&quot; title=&quot;一、EXT_CSD 整体概述&quot;&gt;&lt;/a&gt;一、EXT_CSD 整体概述&lt;/h1&gt;&lt;ul&gt;
+&lt;li&gt;EXT</summary>
+      
+    
+    
+    
+    <category term="领域" scheme="https://mkdbook.com/categories/%E9%A2%86%E5%9F%9F/"/>
+    
+    <category term="eMMC" scheme="https://mkdbook.com/categories/%E9%A2%86%E5%9F%9F/eMMC/"/>
+    
+    
+    <category term="eMMC" scheme="https://mkdbook.com/tags/eMMC/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>26--eMMC的Data transfer mode</title>
+    <link href="https://mkdbook.com/blog026.html"/>
+    <id>https://mkdbook.com/blog026.html</id>
+    <published>2023-06-24T05:17:24.000Z</published>
+    <updated>2023-06-24T05:29:31.078Z</updated>
+    
+    <content type="html"><![CDATA[<p>[toc]</p><p>device identification之后，<code>CMD3</code>生效，device进入<code>Stand-by State</code>。Data transfer mode下，device总共有8种状态，每种状态下涉及的相关命令如下。</p><center><img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/26.1.png" width="100%" height="75%" alt="25.1"/></center><h1 id="一、Sleep-状态"><a href="#一、Sleep-状态" class="headerlink" title="一、Sleep 状态"></a>一、Sleep 状态</h1><ul><li>CMD5：<code>SLEEP_AWAKE</code>  切换sleep和awake模式</li></ul><h1 id="二、Stand-by-状态"><a href="#二、Stand-by-状态" class="headerlink" title="二、Stand-by 状态"></a>二、Stand-by 状态</h1><ul><li><p>1、CMD4：<code>SET_DSR</code>  编程DSR寄存器，使其与应用中的bus length和data transfer frequency相对应。</p></li><li><p>2、CMD9：<code>SEND_CSD</code>  被寻址的设备在CMD线上发送其CSD寄存器内容。如block长度，设备存储容量、最大时钟速率等。</p></li><li><p>3、CMD10：<code>SEND_CID</code>  被寻址的设备在CMD线上发送其CID寄存器内容。</p></li><li><p>4、CMD39：<code>FAST_IO</code></p></li><li><p>5、CMD5：<code>SLEEP_AWAKE</code>  切换sleep和awake模式</p></li><li><p>6、CMD40：<code>GO_IRQ_STATE</code>  进入interrupt模式</p></li><li><p>7、CMD7：<code>SELECT/DESELECT_CARD</code>  切换 <em><strong>Stand-By状态——&gt;Transfer状态</strong></em>；</p></li></ul><h1 id="三、Transfer-状态"><a href="#三、Transfer-状态" class="headerlink" title="三、Transfer 状态"></a>三、Transfer 状态</h1><h2 id="1-读取一些数据-Transfer-State——-gt-Sending-data-State"><a href="#1-读取一些数据-Transfer-State——-gt-Sending-data-State" class="headerlink" title="1  读取一些数据  Transfer State——&gt;Sending-data State"></a>1  读取一些数据  Transfer State——&gt;Sending-data State</h2><ul><li>1、CMD8：<code>SEND_EXT_CSD</code>  设备将其EXT_CSD作为一个数据块发送</li><li>2、<strong>CMD17</strong>：<code>READ_SINGLE_ BLOCK</code></li><li>3、<strong>CMD18</strong>：<code>READ_MULTIPLE_ BLOCK</code></li><li>4、<strong>CMD21</strong>：<code>SEND_TUNING_ BLOCK</code>  为优化 HS200 采样点发送 128 时钟的tuning pattern （4-bit 下 64 字节，8-bit 下128 字节）</li><li>5、<strong>CMD30</strong>：<code>SEND_WRITE_PROT</code>  send write protect</li><li>6、CMD31：<code>SEND_WRITE_PROT _TYPE</code>  写保护相关</li><li>7、CMD46：<code>EXECUTE_READ_TASK</code>  设备应该执行队列中的这些task，它们的ID在参数中已经被编码了</li><li>8、CMD53：<code>PROTOCOL_RD</code></li><li>9、CMD56：<code>GEN_CMD（r）</code></li><li><strong>CMD12</strong>：<code>STOP_TRANSMISSION</code>  ，所有的data read命令都能在任何时刻被CMD12打断，data transfer被终止，设备返回Transfer状态。data read命令包括：CMD17、18、21、30</li></ul><h2 id="2-设置读、写、擦除的一些参数-Transfer-State——-gt-Transfer-State"><a href="#2-设置读、写、擦除的一些参数-Transfer-State——-gt-Transfer-State" class="headerlink" title="2  设置读、写、擦除的一些参数  Transfer State——&gt;Transfer State"></a>2  设置读、写、擦除的一些参数  Transfer State——&gt;Transfer State</h2><ul><li>1、CMD16：SET_BLOCKLEN</li><li>2、CMD23：SET_BLOCK_COUNT</li><li>3、CMD35：ERASE_GROUP_START</li><li>4、CMD36：ERASE_GROUP_END</li><li>5、CMD44：QUEUED_TASK_PARAMS</li><li>6、CMD45：QUEUED_TASK_ADDRESS</li></ul><h2 id="3-写一些数据-Transfer-State——-gt-Receive-data-State"><a href="#3-写一些数据-Transfer-State——-gt-Receive-data-State" class="headerlink" title="3  写一些数据  Transfer State——&gt;Receive-data State"></a>3  写一些数据  Transfer State——&gt;Receive-data State</h2><ul><li>1、<strong>CMD24</strong>：WRITE_BLOCK</li><li>2、<strong>CMD25</strong>：WRITE_MULTIPLE_ BLOCK</li><li>3、<strong>CMD26</strong>：PROGRAM_CID</li><li>4、<strong>CMD27</strong>：PROGRAM_CSD</li><li>5、CMD42： LOCK_UNLOCK</li><li>6、CMD47：EXECUTE_WRITE _TASK</li><li>7、CMD49：SET_TIME</li><li>8、CMD54：PROTOCOL_WR</li><li>9、CMD56：<code>GEN_CMD（w）</code></li><li><strong>CMD12</strong>：<code>STOP_TRANSMISSION</code>  ，所有的data write命令都能在任何时刻被CMD12打断，但data write命令必须在CMD7（取消设备选定）之前停止。data write命令包括：CMD24、25、26、27</li></ul><h2 id="4-Transfer-State——-gt-Programming-State"><a href="#4-Transfer-State——-gt-Programming-State" class="headerlink" title="4  Transfer State——&gt;Programming State"></a>4  Transfer State——&gt;Programming State</h2><ul><li>1、CMD6：<code>SWITCH</code>  切换所选设备的工作模式或都带EXT_CSD。</li><li>2、CMD28：<code>SET_WRITE_PROT</code></li><li>3、CMD29：<code>CLR_WRITE_PROT</code>  clear write protect</li><li>4、CMD38：<code>ERASE</code></li><li>5、CMD48：<code>CMDQ_TASK_MGMT</code></li></ul><h2 id="5-Transfer-State——-gt-Bus-test-State"><a href="#5-Transfer-State——-gt-Bus-test-State" class="headerlink" title="5  Transfer State——&gt;Bus-test State"></a>5  Transfer State——&gt;Bus-test State</h2><ul><li>CMD19：<code>BUSTEST_W</code>  host向设备发送the bus test data pattern</li></ul><h2 id="6-Transfer-State——-gt-Stand-by-State"><a href="#6-Transfer-State——-gt-Stand-by-State" class="headerlink" title="6  Transfer State——&gt;Stand-by State"></a>6  Transfer State——&gt;Stand-by State</h2><ul><li>CMD7：<code>SELECT/DESELECT_CARD</code>  切换 <em><strong>Stand-By状态&lt;——Transfer状态</strong></em>；</li></ul><h1 id="四、Programming-状态"><a href="#四、Programming-状态" class="headerlink" title="四、Programming 状态"></a>四、Programming 状态</h1><ul><li>1、操作完成后返回Transfer State</li><li>2、CMD24、CMD25进入Receive-data State</li><li>3、一些命令可以中断program：CMD12、13，CMD44、45</li><li>4、CMD7：<code>SELECT/DESELECT_CARD</code>  切 换 <em><strong>Disconnect状态&lt;——Programming状态</strong></em>；</li></ul><h1 id="五、Sending-data-状态"><a href="#五、Sending-data-状态" class="headerlink" title="五、Sending-data 状态"></a>五、Sending-data 状态</h1><ul><li>1、CMD12，或操作完成后返回Transfer State</li><li>2、接收CMD44、45</li></ul><h1 id="六、Receive-data-状态"><a href="#六、Receive-data-状态" class="headerlink" title="六、Receive-data 状态"></a>六、Receive-data 状态</h1><ul><li>1、CMD12，或传输完成后返回Transfer State</li><li>2、接收CMD44、45</li></ul><h1 id="七、Bus-test-状态"><a href="#七、Bus-test-状态" class="headerlink" title="七、Bus-test 状态"></a>七、Bus-test 状态</h1><ul><li>CMD14：<code>BUSTEST_R</code>  host从设备中读取the reversed bus testing data pattern</li></ul><h1 id="八、Disconnect-状态"><a href="#八、Disconnect-状态" class="headerlink" title="八、Disconnect 状态"></a>八、Disconnect 状态</h1><ul><li>1、操作完成后返回Stand-by State</li><li>2、CMD7：<code>SELECT/DESELECT_CARD</code>  切换 <em><strong>Disconnect状态——&gt;Programming状态</strong></em>；</li></ul>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;[toc]&lt;/p&gt;
+&lt;p&gt;device identification之后，&lt;code&gt;CMD3&lt;/code&gt;生效，device进入&lt;code&gt;Stand-by State&lt;/code&gt;。Data transfer mode下，device总共有8种状态，每种状态下涉及的相关</summary>
+      
+    
+    
+    
+    <category term="领域" scheme="https://mkdbook.com/categories/%E9%A2%86%E5%9F%9F/"/>
+    
+    <category term="eMMC" scheme="https://mkdbook.com/categories/%E9%A2%86%E5%9F%9F/eMMC/"/>
+    
+    
+    <category term="eMMC" scheme="https://mkdbook.com/tags/eMMC/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>25--eMMC的Device identification mode</title>
+    <link href="https://mkdbook.com/blog025.html"/>
+    <id>https://mkdbook.com/blog025.html</id>
+    <published>2023-06-24T04:56:04.000Z</published>
+    <updated>2023-06-24T05:16:11.650Z</updated>
+    
+    <content type="html"><![CDATA[<p>[toc]</p><h1 id="一、进入Device-identification-mode流程"><a href="#一、进入Device-identification-mode流程" class="headerlink" title="一、进入Device identification mode流程"></a>一、进入Device identification mode流程</h1><center><img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/25.1.png" width="80%" height="75%" alt="25.1"/></center><ul><li>1、power-on后进入Idle State，或通过发送<strong>CMD0</strong>（0x00000000）；</li><li>2、请求处于Idle State中device的<code>OCR</code>内容：host通过发送<strong>CMD1</strong>，接收来自device的反馈；<br>若CMD1应答中<strong>没有“busy bit”（<em>OCR[31]为高时</em>）</strong>，该device则进入<code>Ready State</code>；</li><li>3、请求处于Ready State中device的<code>CID</code>内容：通过<strong>CMD2</strong>；</li><li>5、进入<code>Identification State</code>：当<strong>CMD2应答的device CID编号和host请求的device CID编号一致</strong>时；</li><li>6、给选中的device赋予一个<code>RCA</code>地址：通过<strong>CMD3</strong>；</li><li>7、最后完成identification进程，device进入Stand-by State，之后在数据传输模式中就会通过RCA地址寻址相应设备。</li></ul><h1 id="二、OCR寄存器的内容"><a href="#二、OCR寄存器的内容" class="headerlink" title="二、OCR寄存器的内容"></a>二、OCR寄存器的内容</h1><p>Operation condition register，表明了device的<code>Vdd电压</code>配置和<code>访问模式</code>。</p><p>还有一个<code>状态bit[31]</code>，当上电完成后此位为1。</p><center><img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/25.2.png" width="75%" height="75%" alt="25.2"/></center><p>此寄存器作为CMD1的应答发送给host，host如果支持sector access mode，CMD1的arg应该在<code>bit[30:29]</code>表明。</p><h1 id="三、CID寄存器"><a href="#三、CID寄存器" class="headerlink" title="三、CID寄存器"></a>三、CID寄存器</h1><p>Device IDentification register，保证了在<code>设备识别阶段</code>每一个设备都有独一无二的设备识别号。</p><center><img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/25.3.png" width="80%" height="75%" alt="25.3"/></center><h1 id="四、RCA寄存器"><a href="#四、RCA寄存器" class="headerlink" title="四、RCA寄存器"></a>四、RCA寄存器</h1><p>Relative device address register，携带着<code>设备识别阶段</code>host分配给识别到的device的相对地址，此地址用于device identification mode之后<code>host&lt;——&gt;device通讯</code>。</p><p>默认值为0x0001，值 0x0000 是为将所有设备以 CMD7 置于 Stand-by 状态而保留的。</p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;[toc]&lt;/p&gt;
+&lt;h1 id=&quot;一、进入Device-identification-mode流程&quot;&gt;&lt;a href=&quot;#一、进入Device-identification-mode流程&quot; class=&quot;headerlink&quot; title=&quot;一、进入Device iden</summary>
+      
+    
+    
+    
+    <category term="领域" scheme="https://mkdbook.com/categories/%E9%A2%86%E5%9F%9F/"/>
+    
+    <category term="eMMC" scheme="https://mkdbook.com/categories/%E9%A2%86%E5%9F%9F/eMMC/"/>
+    
+    
+    <category term="eMMC" scheme="https://mkdbook.com/tags/eMMC/"/>
+    
+  </entry>
   
   <entry>
     <title>24--SVA语法速查</title>
@@ -428,140 +564,6 @@
     <category term="项目" scheme="https://mkdbook.com/categories/%E9%A1%B9%E7%9B%AE/"/>
     
     <category term="项目2-Erase_of_NAND_behavior_model" scheme="https://mkdbook.com/categories/%E9%A1%B9%E7%9B%AE/%E9%A1%B9%E7%9B%AE2-Erase-of-NAND-behavior-model/"/>
-    
-    
-    <category term="NAND" scheme="https://mkdbook.com/tags/NAND/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>9--[Design]ERASE RESUME协议及代码实现-项目2-3</title>
-    <link href="https://mkdbook.com/blog009.html"/>
-    <id>https://mkdbook.com/blog009.html</id>
-    <published>2023-03-19T12:59:07.000Z</published>
-    <updated>2023-03-24T08:08:24.634Z</updated>
-    
-    <content type="html"><![CDATA[<p>[toc]</p><h1 id="一、ERASE-Resume功能描述"><a href="#一、ERASE-Resume功能描述" class="headerlink" title="一、ERASE Resume功能描述"></a>一、ERASE Resume功能描述</h1><ul><li>重新开始指定LUN被Suspend的Erase操作。</li><li>如图3，发送Command D7h经tWB后，R&#x2F;B_n信号拉低，在tERES时间段内完成Erase Resume操作。</li><li>在发送D7h前，Host应选择被Erase Suspend的LUN。</li><li>如果Device未处于Erase Suspend状态，Erase Resume命令会被忽略。</li><li>如果Multi-Plane Erase 操作被Suspend，则发送 D7h 会同时恢复所有的Erase操作。</li></ul><center><img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/9.1Erase%20Resume%20Sequence.png" width="50%" height="50%" alt="9.1 Erase Resume Sequence"/></center><h1 id="二、ERASE-RESUME代码实现方案"><a href="#二、ERASE-RESUME代码实现方案" class="headerlink" title="二、ERASE RESUME代码实现方案"></a>二、<strong>ERASE RESUME代码实现方案</strong></h1><h2 id="2-1、Command-D7h"><a href="#2-1、Command-D7h" class="headerlink" title="2.1、Command D7h"></a>2.1、<strong>Command D7h</strong></h2><p>代码如下，当IO口的数值为8h’D7会触发此条件语句。</p><pre><code class="verilog">else if (Io_mirror [7 : 0] = = = 8&#39;hD7) begin      1、program cache 未完成时，报错ARRAY is still busy，直到状态变为E0h      2、判断是否处于OTP_mode，OTP mode 不允许 ERASE Resume      3、lastCmd = 8&#39;hD7      4、调用 clear_queued_planes、disable_rdStatus      5、当检测到处于suspend 状态时，则传递待 RESUME 的 block地址        else if (erase_susp_flag) begin              for (eb_thisPlane=0; eb_thisPlane &lt; NUM_PLANES; eb_thisPlane=eb_thisPlane+1) begin           if (erase_susp_blk_addr[eb_thisPlane] ! = = &#123;BLCK_BITS&#123;1&#39;bx&#125;&#125;) begin                queued_plane[eb_thisPlane] = 1;               row_addr[eb_thisPlane][BLCK_BITS+PAGE_BITS-1:PAGE_BITS] = erase_susp_blk_addr[eb_thisPlane];           end         end      6、erase_blk_en = ~ erase_blk_en;      7、调用 clear_erase_suspend，清除与 Erase Suspend 相关的寄存器      8、wait (erase_done);     endend</code></pre><h2 id="2-2、Erase-RESUME实现"><a href="#2-2、Erase-RESUME实现" class="headerlink" title="2.2、Erase RESUME实现"></a>2.2、<strong>Erase RESUME实现</strong></h2><p>如2.1所示，第14行第6点，当IO收到D7h命令后同时满足RESUME条件，则通过“erase_blk_en &#x3D; ~ erase_blk_en”产生擦除行为（如《7–[Design]ERASE BLOCK协议及代码实现-项目2-1》<a href="https://mkdbook.com/blog007.html#:~:text=3.4%E3%80%81Erase%E5%8A%9F%E8%83%BD%E5%AE%9E%E7%8E%B0%E7%9A%84always%E5%9D%97">3.4描述</a>）。</p>]]></content>
-    
-    
-      
-      
-    <summary type="html">&lt;p&gt;[toc]&lt;/p&gt;
-&lt;h1 id=&quot;一、ERASE-Resume功能描述&quot;&gt;&lt;a href=&quot;#一、ERASE-Resume功能描述&quot; class=&quot;headerlink&quot; title=&quot;一、ERASE Resume功能描述&quot;&gt;&lt;/a&gt;一、ERASE Resume功能描述&lt;</summary>
-      
-    
-    
-    
-    <category term="项目" scheme="https://mkdbook.com/categories/%E9%A1%B9%E7%9B%AE/"/>
-    
-    <category term="项目2-Erase_of_NAND_behavior_model" scheme="https://mkdbook.com/categories/%E9%A1%B9%E7%9B%AE/%E9%A1%B9%E7%9B%AE2-Erase-of-NAND-behavior-model/"/>
-    
-    
-    <category term="NAND" scheme="https://mkdbook.com/tags/NAND/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>8--[Design]ERASE SUSPEND协议及代码实现-项目2-2</title>
-    <link href="https://mkdbook.com/blog008.html"/>
-    <id>https://mkdbook.com/blog008.html</id>
-    <published>2023-03-19T10:53:51.000Z</published>
-    <updated>2023-03-24T08:08:18.238Z</updated>
-    
-    <content type="html"><![CDATA[<p>[toc]</p><h1 id="一、ERASE-SUSPEND功能描述"><a href="#一、ERASE-SUSPEND功能描述" class="headerlink" title="一、ERASE SUSPEND功能描述"></a>一、ERASE SUSPEND<strong>功能描述</strong></h1><ul><li>打断指定LUN的Erase操作。</li><li>如图8.1，Command 67h后跟四个周期的Row地址，tESPD是Erase Suspend的操作时间。</li><li>当SR[6]由0变为1后，判断SR[3]，若SR[3]等于1，则Suspend成功；<br>若SR[3]等于0，则Suspend失败，Erase成功。</li><li>在Erase Suspend操作过程中，允许Reset Command、Page Read Command、Multi-Plane Command、Status Read Command、Mode Switching Command、Set Feature Command、Get Feature Command。</li><li>在Erase Suspend模式下，不能对同一个Block进行Program。</li><li>若在进行Multi-Plane Erase的过程中，发送Erase Suspend命令，会使所有Plane的Erase操作都暂停。</li></ul><center><img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/8.1Erase%20Suspend%20Sequence.png" width="75%" height="75%" alt="8.1 Erase Suspend Sequence"/></center><h1 id="二、ERASE-SUSPEND代码实现方案"><a href="#二、ERASE-SUSPEND代码实现方案" class="headerlink" title="二、ERASE SUSPEND代码实现方案"></a>二、<strong>ERASE SUSPEND代码实现方案</strong></h1><h2 id="2-1、Command-67h"><a href="#2-1、Command-67h" class="headerlink" title="2.1、Command 67h"></a>2.1、<strong>Command 67h</strong></h2><p>代码如下，当IO口的数值为8h’67会触发此条件语句。</p><pre><code class="verilog">else if (Io_mirror [7 : 0] = = = 8&#39;h67) begin     1、program cache 未完成时，67h会被忽略，直到状态变为E0h          LastCmd              = 8&#39;h67;                disable_rdStatus;         Row_valid           = 1&#39;b0;         saw_cmnd_00h_state = 1&#39;b0;         read_out                 = 1&#39;b0;         addr_start            = COL_BYTES +1;         addr_stop            = ADDR_BYTES;end</code></pre><h2 id="2-2、Erase-suspend-实现"><a href="#2-2、Erase-suspend-实现" class="headerlink" title="2.2、Erase suspend 实现"></a>2.2、<strong>Erase suspend 实现</strong></h2><p>主要实现方法是在Address input always块中将unlocked_erase_block擦除逻辑块disable。Address input always块中关于67h的逻辑如下：</p><pre><code class="verilog">    always @ (posedge row_valid) begin    ……      if (lastCmd = = = 8&#39;h67 ) begin : erase_suspend         1、program cache 未完成时，报错ARRAY is still busy，直到状态变为E0h         2、如果 erase_done = = 1 时，忽略 suspend 命令         3、如果 erase 操作正在进行中，67h命令有效            3.1、配置SR寄存器            3.2、开始suspend操作：disable unlocked_erase_block;             3.3、调用corrupt_block (erase_susp_blk_addr[eb_thisPlane]); 标记为坏块，数据为未定态      end    ……end</code></pre>]]></content>
-    
-    
-      
-      
-    <summary type="html">&lt;p&gt;[toc]&lt;/p&gt;
-&lt;h1 id=&quot;一、ERASE-SUSPEND功能描述&quot;&gt;&lt;a href=&quot;#一、ERASE-SUSPEND功能描述&quot; class=&quot;headerlink&quot; title=&quot;一、ERASE SUSPEND功能描述&quot;&gt;&lt;/a&gt;一、ERASE SUSPEND&lt;</summary>
-      
-    
-    
-    
-    <category term="项目" scheme="https://mkdbook.com/categories/%E9%A1%B9%E7%9B%AE/"/>
-    
-    <category term="项目2-Erase_of_NAND_behavior_model" scheme="https://mkdbook.com/categories/%E9%A1%B9%E7%9B%AE/%E9%A1%B9%E7%9B%AE2-Erase-of-NAND-behavior-model/"/>
-    
-    
-    <category term="NAND" scheme="https://mkdbook.com/tags/NAND/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>7--[Design]ERASE BLOCK协议及代码实现-项目2-1</title>
-    <link href="https://mkdbook.com/blog007.html"/>
-    <id>https://mkdbook.com/blog007.html</id>
-    <published>2023-03-19T10:31:20.000Z</published>
-    <updated>2023-03-24T08:08:13.917Z</updated>
-    
-    <content type="html"><![CDATA[<p>[toc]</p><h1 id="一、项目功能描述"><a href="#一、项目功能描述" class="headerlink" title="一、项目功能描述"></a>一、项目功能描述</h1><p>本项目基于长江存储NAND Datasheet，实现了NAND behavior model的<code>擦除功能（Erase Block）</code>，<code>擦除挂起功能（Erase Suspend）</code>，<code>擦除恢复功能（Erase Resume）</code>。</p><h1 id="二、Erase-Block功能描述"><a href="#二、Erase-Block功能描述" class="headerlink" title="二、Erase Block功能描述"></a>二、<strong>Erase Block功能描述</strong></h1><ul><li>以Block为单位对Array进行擦除。</li><li>如图7.1，Command 60h后跟四个周期的Row地址，再发送Command D0h，经tWB时间后，R&#x2F;B_n信号拉低，开始时长tBERS的擦除操作。</li><li>Host端通过监测R&#x2F;B_n信号或者Status Register，判断Erase操作是否完成，<br>SR[0]为0则表示Erase成功（SR[6]为1时，SR[0]才有效）。</li><li>在Erase过程中，只可接受Read Status Command、Reset Command、Suspend Command。</li></ul><center><img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/7.1Block%20Erase%20Sequence.png" width="75%" height="75%" alt="7.1 Block Erase Sequence"/></center><h1 id="三、ERASE-BLOCK代码实现方案"><a href="#三、ERASE-BLOCK代码实现方案" class="headerlink" title="三、ERASE BLOCK代码实现方案"></a>三、<strong>ERASE BLOCK代码实现方案</strong></h1><h2 id="3-1、命令输入always块"><a href="#3-1、命令输入always块" class="headerlink" title="3.1、命令输入always块"></a>3.1、<strong>命令输入always块</strong></h2><p>如下所示，在We_n的上升沿会触发command input的always块。</p><pre><code class="verilog">always @ (posedge We_n) begin : cLatch          1、判断是否command_enable          2、判断power up后第一个命令是否为reset命令，会产生error信息          3、Command（60h）          4、Command（D0h）end</code></pre><p>command_enbale信号定义如下：</p><pre><code class="verilog">assign command_enable = (Cle &amp; ~Ale &amp; ~Ce_n_vol &amp; Re_n );</code></pre><h2 id="3-2、Command-60h"><a href="#3-2、Command-60h" class="headerlink" title="3.2、Command 60h"></a>3.2、Command 60h</h2><p>当IO口收到60h时，内部会进行如下操作：</p><pre><code class="verilog">if (Io_mirror [7 : 0] = = = 8&#39;h60) begin        1、program cache 未完成时，60h会被忽略，直到状态变为E0h        2、~Wp_n 和 OTP_mode 时均不允许 ERASE        3、60h有效时，判断是否处于Multi-Plane ERASE，           if lastCmd为60h，或D1h，则继续让lastCmd=60h        else if (~multiplane_op_erase) begin                              saw_cmnd_60h = 1&#39;b1;                              saw_cmnd_60h_clear = 1&#39;b1;                          end else begin                              saw_cmnd_60h = 1&#39;b1;                              saw_cmnd_60h_clear = 1&#39;b0;                          end        4、调用 disable_rdStatus，复位 status flag，让device返Read modeend</code></pre><h2 id="3-3、Command-D0h"><a href="#3-3、Command-D0h" class="headerlink" title="3.3、Command D0h"></a>3.3、<strong>Command D0h</strong></h2><p>当IO口收到D0h时，内部会进行如下操作：</p><pre><code class="verilog">else if (Io_mirror [7 : 0] = = = 8&#39;hD0) begin      1、program cache 未完成时，D0h会被忽略，直到状态变为E0h      2、判断是否 die_select，选择了才会往下执行      3、if ((lastCmd = = = 8&#39;h60) &amp;&amp; row_valid &amp;&amp; Wp_n) begin          3.1、lastCmd = 8&#39;hD0          3.2、判断当前LUN是否有被 Erase Suspend 的blcok，若地址相同，将会Resume 被Suspend 的block          3.3、调用clear_erase_suspend，清除和 Erase Suspend 相关的 reg          3.4、erase_blk_en = ~ erase_blk_en，产生沿降，调用后续always 块开始erase操作       end    end</code></pre><h2 id="3-4、Erase功能实现的always块"><a href="#3-4、Erase功能实现的always块" class="headerlink" title="3.4、Erase功能实现的always块"></a>3.4、<strong>Erase功能实现的always块</strong></h2><p>第一个always块的作用是通过erase_blk_en和erase_blk_en_r的异或逻辑，使得一旦产生erase_blk_en &#x3D; ~ erase_blk_en的变换时，确保erase_blk_pls都能产生上升沿逻辑，从而驱动Erase操作的always块。</p><pre><code class="verilog">always @(*)begin    erase_blk_pls &lt;= #tWB_delay ((erase_blk_en &amp; ~erase_blk_en_r) | (~erase_blk_en &amp; erase_blk_en_r));    erase_blk_en_r &lt;= #1 erase_blk_en;end</code></pre><p>当erase_blk_pls产生上升沿的跳变时，会触发如下具有擦除逻辑的always块，从而完成Erase操作。</p><pre><code class="verilog">always @(posedge erase_blk_pls) begin      1、进入busy状态，设置SR[5、6]为00；      2、调用 check_plane_addresses，检查排队的擦除块是否满足multi-plane寻址要求      3、擦除逻辑       if (eb_unlocked_erase) begin : unlocked_erase_block            3.1、截取擦除的 block 地址              erase_block_addr = row_addr [eb_thisPlane] [BLCK_BITS + PAGE_BITS – 1 : PAGE_BITS];                    3.2、采用循环将array进行写1擦除                      for (e=0; e&lt;memory_used; e=e+1) begin : mem_loop                          //check to see if existing used address location matches block being erased                          if (memory_addr[e] [BLCK_BITS + PAGE_BITS - 1 : PAGE_BITS] = = = erase_block_addr) begin                              mem_array[e] = &#123;PAGE_SIZE&#123;erase_data[0]&#125;&#125;;                              seq_page[erase_block_addr] = &#123;PAGE_BITS&#123;1&#39;b0&#125;&#125;;                                  mem_flag[e] = 0;  // 0: not programmed; 1: programmed.                                                  end                      end //mem_loop end         end  // unlocked_erase_blockend</code></pre>]]></content>
-    
-    
-      
-      
-    <summary type="html">&lt;p&gt;[toc]&lt;/p&gt;
-&lt;h1 id=&quot;一、项目功能描述&quot;&gt;&lt;a href=&quot;#一、项目功能描述&quot; class=&quot;headerlink&quot; title=&quot;一、项目功能描述&quot;&gt;&lt;/a&gt;一、项目功能描述&lt;/h1&gt;&lt;p&gt;本项目基于长江存储NAND Datasheet，实现了NAND b</summary>
-      
-    
-    
-    
-    <category term="项目" scheme="https://mkdbook.com/categories/%E9%A1%B9%E7%9B%AE/"/>
-    
-    <category term="项目2-Erase_of_NAND_behavior_model" scheme="https://mkdbook.com/categories/%E9%A1%B9%E7%9B%AE/%E9%A1%B9%E7%9B%AE2-Erase-of-NAND-behavior-model/"/>
-    
-    
-    <category term="NAND" scheme="https://mkdbook.com/tags/NAND/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>6--NAND基本的读、写、擦除功能</title>
-    <link href="https://mkdbook.com/blog006.html"/>
-    <id>https://mkdbook.com/blog006.html</id>
-    <published>2023-03-19T04:13:19.000Z</published>
-    <updated>2023-03-24T08:09:03.390Z</updated>
-    
-    <content type="html"><![CDATA[<p>[toc]<br>NAND Flash的读（READ）、写（PROGRAM）、擦除（ERASE）功能有很多种类型，例如就读而言，有READ page、READ ID等，这些功能和命令不同厂商可能不完全相同，具体要参照该NAND Flash厂商提供的Datasheet。本文总结一下NAND基本的几种读、写、擦除功能。</p><h1 id="一、NAND-Flash-读操作"><a href="#一、NAND-Flash-读操作" class="headerlink" title="一、NAND Flash 读操作"></a>一、NAND Flash 读操作</h1><p>这里介绍两种重要的读，一种是正常的<code>Page Read</code>：即读取由指定LUN的ROW地址表示的 一个page的数据；一种是<code>Cache Read</code>：当数据从Memory Array复制到Data Register的同时，允许前一拍数据从Cache Register读取出去，实现Pipeline方式工作。</p><h2 id="00h-30h：READ-PAGE-operation"><a href="#00h-30h：READ-PAGE-operation" class="headerlink" title="00h-30h：READ PAGE operation"></a>00h-30h：READ PAGE operation</h2><center><img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/6.1Read%20Page.png" width="40%" height="40%" alt="6.1 Read Page"/></center><p>如6.1所示，从Memory Array读出数据时，会经过Buffer。在每个Plane中会有两个Buffer：<code>Data Buffer</code>和<code>Cache Buffer</code>，它们的大小均为一个Page的大小。<br>当收到00h-30h命令串后，就会开始从指定位置读出Memory数据的功能。这种方式只能一次读取一个Page的数据，操作逻辑是数据从Memory Array到Cache Buffer，然后从Cache Buffer读出到IO口。</p><h2 id="Cache-read（31h和00h-31h）"><a href="#Cache-read（31h和00h-31h）" class="headerlink" title="Cache read（31h和00h-31h）"></a>Cache read（31h和00h-31h）</h2><center><img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/6.2Cache%20Read.png" width="70%" height="70%" alt="6.2 Cache Read"/></center><p>Cache Read会同时用到Data Buffer和Cache Buffer。如6.2所示，当Page N的数据从Cache Buffer读出到IO口的同时，Page N+1的数据从Memory Array读出到了Data buffer。<br>Cache Read又分为两种，一种是了连续Cache Read（31h：Sequential Cache Read），一种是随机Cache Read（00h-31h：Cache Read Random）。它们的区别如下：</p><center><img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/6.3Sequential%20Cache%20Read.png" width="75%" height="75%" alt="6.3 Sequential Cache Read"/></center><p><code>连续Cache Read</code>的操作逻辑如6.3序列图所示，00h-30h输入page M的地址后，后面输入一次31h命令，会读出page M中的数据，后面再输一次31h命令会读出page M+1的数据，以此类推。</p><center><img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/6.4Cache%20Read%20Random.png" width="75%" height="75%" alt="6.4 Cache Read Random"/></center><p><code>随机Cache Read</code>是指可以跳着读取不同Page的数据，如6.4序列图所示，第一次发00h-30h地址M后，第二次发00h-31h地址N之后，读出的是第一次Page M的数据，然后下一次输入Page P的地址之后，读取的是上一次Page N的数据，以此类推。</p><h1 id="二、NAND-Flash-写操作"><a href="#二、NAND-Flash-写操作" class="headerlink" title="二、NAND Flash 写操作"></a>二、NAND Flash 写操作</h1><p>写操作在NAND Flash中被称为Program，逻辑上是将1写成0。操作过程类似于读操作的反操作，数据从IO口进来然后经过两Buffer最后被写入到NAND Flash的Memory Array中。<br>写操作也有两种方式，<code>80h-10h：Program Page</code>；<code>80h-15h：Program Page Cache</code>。这里针对TLC不同厂商有不同的处理方式，例如长存使用One Pass Program，美光使用Two Pass Program。</p><h1 id="三、NAND-Flash-擦除操作"><a href="#三、NAND-Flash-擦除操作" class="headerlink" title="三、NAND Flash 擦除操作"></a>三、NAND Flash 擦除操作</h1><p>NAND Flash的Erase操作可以理解成一种特殊的写操作，它是将所有的数据都写成1（16进制读出来为FF）。命令为<code>60h-D0h</code>。</p><center><img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/6.5Erase%20Block.png" width="75%" height="75%" alt="6.5 Erase Block"/></center><p>如6.5序列图所示，擦除是以Block为单位的，所以只需要Row地址。扩展一下，ERASE相关的操作有如下几种：Erase Block、Multi_Plane Erase、Erase Suspend、 Erase Resume。</p><h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>本篇记录了比较浅显的基本功能，个人认为学习一个功能应该先从功能的描述入手，然后对照这它的序列图理解其命令逻辑。虽然不同厂商的功能描述和实现会有区别，但是大体的功能应该都是类似的（前提都是基于<a href="http://www.onfi.org/">ONFI协议</a>）。</p>]]></content>
-    
-    
-      
-      
-    <summary type="html">&lt;p&gt;[toc]&lt;br&gt;NAND Flash的读（READ）、写（PROGRAM）、擦除（ERASE）功能有很多种类型，例如就读而言，有READ page、READ ID等，这些功能和命令不同厂商可能不完全相同，具体要参照该NAND Flash厂商提供的Datasheet。本文总</summary>
-      
-    
-    
-    
-    <category term="领域" scheme="https://mkdbook.com/categories/%E9%A2%86%E5%9F%9F/"/>
-    
-    <category term="NAND" scheme="https://mkdbook.com/categories/%E9%A2%86%E5%9F%9F/NAND/"/>
-    
-    
-    <category term="NAND" scheme="https://mkdbook.com/tags/NAND/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>5--NAND基本概念简述</title>
-    <link href="https://mkdbook.com/blog005.html"/>
-    <id>https://mkdbook.com/blog005.html</id>
-    <published>2023-03-18T06:49:14.000Z</published>
-    <updated>2023-03-24T08:08:57.556Z</updated>
-    
-    <content type="html"><![CDATA[<p>[toc]</p><h1 id="一、概述"><a href="#一、概述" class="headerlink" title="一、概述"></a>一、概述</h1><p>NAND Flash可以看作是一个单独的存储器也可以看作是一个存储单元，最早它可以直接和CPU连接，通过CPU发送指令实现对NAND Flash的控制，进行数据的存储和交换。由于计算机功能越来越复杂，通过CPU直接控制NAND Flash这种方式很影响性能，故而基于不同协议的controller作为host端来控制NAND Flash，可以产生不同的存储产品，如eMMC等。本篇主要对基本的NAND Flash做一个整体总结。</p><h1 id="二、接口描述"><a href="#二、接口描述" class="headerlink" title="二、接口描述"></a>二、接口描述</h1><center><img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/5.1NAND%E5%8E%9F%E7%90%86%E5%9B%BE.png" width="50%" height="50%" alt="5.1 NAND原理图"/></center><p>如图5.1所示，黄色部分为NAND Flash原理图，可以看到此NAND flash有六个控制端口，分别是：</p><p><code>ALE</code>：Address Latch enable</p><p><code>CLE</code>：Command Latch enbale</p><p><code>CE_n</code>：Chip enable</p><p><code>RE_n</code>：Read enable，为低时为数据输出，表示允许host端从NAND Flash读取数据出来</p><p><code>WE_n</code>：Write_enable</p><p><code>R/B_n</code>：Ready&#x2F;Besy</p><p>通过控制这六个端口信号的高低状态，可实现对NAND Flash的操作，这里介绍几种基本操作状态的信号描述，详细的需要参考不同厂商的Datashee。</p><ol><li>命令输入模式：CE_n拉低，ALE拉低，CLE拉高，WE_n拉低，RE_n拉高</li></ol><center><img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/5.2NAND%E5%91%BD%E4%BB%A4%E8%BE%93%E5%85%A5%E6%97%B6%E5%BA%8F.png" width="50%" height="50%" alt="5.2 NAND命令输入时序"/></center><ol start="2"><li>地址输入模式：CE_n拉低，ALE拉高，CLE拉低，WE_n拉低，RE_n拉高</li></ol><center><img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/5.3NAND%E5%9C%B0%E5%9D%80%E8%BE%93%E5%85%A5%E6%97%B6%E5%BA%8F.png" width="50%" height="50%" alt="5.3 NAND地址输入时序"/></center><ol start="3"><li>数据输入模式：CE_n拉低，ALE拉低，CLE拉低，WE_n拉低，RE_n拉高</li></ol><center><img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/5.4NAND%E6%95%B0%E6%8D%AE%E8%BE%93%E5%85%A5%E6%97%B6%E5%BA%8F.png" width="50%" height="50%" alt="5.4 NAND数据输入时序"/></center><ol start="4"><li>数据输出模式：CE_n拉低，ALE拉低，CLE拉低，WE_n拉高，RE_n拉低</li></ol><center><img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/5.5NAND%E6%95%B0%E6%8D%AE%E8%BE%93%E5%87%BA%E6%97%B6%E5%BA%8F.png" width="50%" height="50%" alt="5.5 NAND数据输出时序"/></center><h1 id="三、Flash-结构"><a href="#三、Flash-结构" class="headerlink" title="三、Flash 结构"></a>三、Flash 结构</h1><center><img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/5.6NAND%20LUN%E7%BB%93%E6%9E%84%E5%9B%BE.png" width="30%" height="30%" alt="5.6 LUN结构图"/></center><p>图5.6所示，是NAND Flash的一个Die（LUN）的结构图，Logical Unit Number是指NAND Flash能够独立执行命令和报告状态的最小单元，即一个NAND Flash memory可以由多个LUN组成，也可以是单个LUN。</p><p>在单个LUN结构中各个结构从大到小排序依次为：<strong>LUN ——&gt; Plane ——&gt; block ——&gt; page ——&gt; byte</strong>。</p><h1 id="四、地址的寻址"><a href="#四、地址的寻址" class="headerlink" title="四、地址的寻址"></a>四、地址的寻址</h1><p>有两种类型的地址Row Address和Column Address，Row address用于寻址LUN、block、page ，Column address用于寻址page中的byte。不同产品的Flash地址周期可能不一样，一般Datasheet中会有地址表格说明每个周期的地址的意义。如图5.7所示，CA表示Column address，Low表示低电平，PA表示Page address，BA表示Block address，LA表示LUN address。</p><center><img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/5.7Flash%E5%9C%B0%E5%9D%80%E5%AE%9A%E4%B9%89.png" width="75%" height="75%" alt="5.7 Flash地址定义"/></center><h1 id="五、读、写、擦除操作"><a href="#五、读、写、擦除操作" class="headerlink" title="五、读、写、擦除操作"></a>五、读、写、擦除操作</h1><p>Read、Program、Erase是一款存储设备最基本的功能。对于NAND flash，读、写是以page为单位进行的，而擦除是以block为单位进行的；写操作是将1变为0，擦除操作时将0变为1，所以为写的memory array中读出来的数据为FF。</p><h1 id="六、总结"><a href="#六、总结" class="headerlink" title="六、总结"></a>六、总结</h1><p>如图5.8所示，NAND flash的IO口是双向的，在地址输入、命令输入、写操作是数据的流向都是从host端到NAND的，只有RE_n信号拉低处于数据输出模式才能从NAND flash中读出数据。</p><center><img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/5.8NAND%E6%95%B0%E6%8D%AE%E4%BA%A4%E6%8D%A2.png" width="50%" height="50%" alt="5.8 NAND数据交换"/></center>]]></content>
-    
-    
-      
-      
-    <summary type="html">&lt;p&gt;[toc]&lt;/p&gt;
-&lt;h1 id=&quot;一、概述&quot;&gt;&lt;a href=&quot;#一、概述&quot; class=&quot;headerlink&quot; title=&quot;一、概述&quot;&gt;&lt;/a&gt;一、概述&lt;/h1&gt;&lt;p&gt;NAND Flash可以看作是一个单独的存储器也可以看作是一个存储单元，最早它可以直接和CPU连接</summary>
-      
-    
-    
-    
-    <category term="领域" scheme="https://mkdbook.com/categories/%E9%A2%86%E5%9F%9F/"/>
-    
-    <category term="NAND" scheme="https://mkdbook.com/categories/%E9%A2%86%E5%9F%9F/NAND/"/>
     
     
     <category term="NAND" scheme="https://mkdbook.com/tags/NAND/"/>
