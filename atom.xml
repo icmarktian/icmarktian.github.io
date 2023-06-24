@@ -6,7 +6,7 @@
   <link href="https://mkdbook.com/atom.xml" rel="self"/>
   
   <link href="https://mkdbook.com/"/>
-  <updated>2023-06-24T14:17:50.555Z</updated>
+  <updated>2023-06-24T15:20:57.622Z</updated>
   <id>https://mkdbook.com/</id>
   
   <author>
@@ -15,6 +15,118 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>33--eMMC的RPMB分区（Replay Protected Memory Block）</title>
+    <link href="https://mkdbook.com/blog033.html"/>
+    <id>https://mkdbook.com/blog033.html</id>
+    <published>2023-06-24T15:10:24.000Z</published>
+    <updated>2023-06-24T15:20:57.622Z</updated>
+    
+    <content type="html"><![CDATA[<p>[toc]</p><h1 id="一、RPMB认证（Authentication）"><a href="#一、RPMB认证（Authentication）" class="headerlink" title="一、RPMB认证（Authentication）"></a>一、RPMB认证（Authentication）</h1><p>RPMB使用共享密钥（Shared Secret）的方式进行认证，即host和device 使用相同的身份认证密钥（<code>AuthKey</code>&#x2F;<code>RPMB Key</code>），具体工作方式如下：</p><p>1.1、首先<code>RPMB Key</code>由host写到eMMC device中。（必须在安全的环境中写入，通常在生产线上）<br>1.2、然后，在RPMB区数据进行的读、写操作时，host和device需要使用身份验证密钥（<code>RPMB Key</code>）<code>对信息</code>进行签名（sign）和身份验证（authenticate）。<br>1.3、对信息进行签名时，需要<code>消息身份验证代码 （MAC）</code>，该代码是使用 HMAC SHA-256 算法计算而成的。（详细见2.1-2.4）</p><blockquote><p><code>HMAC</code>是指基于散列的消息认证码（Hash-based Message Authentication Code）。<br>哈希算法特点：即使只改变原数据中1bit的数据，两者的哈希值也是完全不同的。<br><code>AuthKey</code>&#x2F;<code>RPMB Key</code>是不能被泄露的，故host需要在<code>TEE环境</code>中对密钥进行操作。</p></blockquote><blockquote><p><code>TEE环境</code>（trusted execution environment）：可信任执行环境指CPU内部的一个安全区域，该区域可以保证数据的安全性和完整性，外部各方不可见或无法访问，无论请求访问的实体有多大权限。（如指纹识别、密码处理、数据加解密、安全认证、系统升级版本号认证等操作都是在此区域执行）<br><code>REE环境</code>（rich  execution environment）：是所有移动设备通用的环境，运行通用的 OS（Operating System），例如 Android，IOS 系统等。</p></blockquote><h1 id="二、RPMB如何防止Replay-Attack？"><a href="#二、RPMB如何防止Replay-Attack？" class="headerlink" title="二、RPMB如何防止Replay Attack？"></a>二、RPMB如何防止Replay Attack？</h1><p>Replay Protection和基本思想是确保每条信息都是独一无二的。<br>RPMB中，有一个<code>只读的Write Counter</code>，在每次写入信息后，该计数器就会增加，且新值会包含在下一次认证代码的计算中。<br>该计算会把下列内容作为计算的输入（图33.1<code>bit[283:0]</code>相应需要的部分按顺序连接）：</p><ul><li>2.1、The <code>shared/secret key</code>，共享密钥。</li><li>2.2、The <code>message</code>，包括了write command或read result。</li><li>2.3、The <code>write counter</code>，记录了Write RPMB的总次数，此计数器只增不减，32bit，当达到0xFFFF_FFF时，<strong>RPMB就变为只读了</strong>。（<em><strong>用于写操作</strong></em>）</li><li>2.4、A <code>nonce</code>，为每一个read command生成一个随机数。（<em><strong>用于读操作</strong></em>）</li></ul><center><img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/33.1.png" width="85%" height="85%" alt="33.1"/></center><p>最后，生成的<strong>MAC</strong>是一个256 bit（32 byte）的密码，嵌入在RPMB数据帧中，并与消息数据本身一起发送。</p><h1 id="三、从RPMB读数据"><a href="#三、从RPMB读数据" class="headerlink" title="三、从RPMB读数据"></a>三、从RPMB读数据</h1><p>1、host向eMMC发起读RPMB请求，同时生成一个16 byte的随机数（<code>Nonce</code>）。<br>2、eMMC将请求的数据从RPMB读出，并利用<code>shared/secret key</code>和<code>data</code>、<code>Nonce</code>一起计算得到MAC；<br>3、eMMC再将<code>data</code>、<code>Nonce</code>、和生成的<code>MAC</code>一起发送给host。<br>4、host接收到后，先比较<code>Nonce</code>是否和自己发送的一致，如果一致再利用<code>shared/secret key</code>和<code>data</code>、<code>Nonce</code>一起进行计算，也会得到一个<strong>MAC2</strong>。<br>5、最后，host将生成的<strong>MAC2</strong>和来自eMMC的MAC进行比较，如果一致，就可以确认data不是攻击者伪造的。</p><h1 id="四、向RPMB写数据"><a href="#四、向RPMB写数据" class="headerlink" title="四、向RPMB写数据"></a>四、向RPMB写数据</h1><center><img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/33.2.png" width="75%" height="75%" alt="33.2"/></center><p>1、host先通过读数据流程，读RPMB中的<code>Writer Counter</code>。<br>2、host再将写入相关的<code>Message</code>和<code>Write Counter</code>，利用<code>shared/secret key</code>一起计算生成MAC；<br>3、host再将写入相关的<code>Message</code>、<code>Write Counter</code>、<code>MAC</code>一起发送给eMMC。<br>4、eMMC接收到数据后，先比较<code>Writer Counter</code>是否与当前值一致，如果一致再将接收到的写入相关的<code>Message</code>和<code>Write Counter，</code>利用<code>shared/secret key</code>和一起进行计算，也会得到一个<strong>MAC2</strong>。<br>5、最后，eMMC将生成的<strong>MAC2</strong>和来自host的MAC进行比较，如果相同才会将data写入eMMC的RPMB中。</p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;[toc]&lt;/p&gt;
+&lt;h1 id=&quot;一、RPMB认证（Authentication）&quot;&gt;&lt;a href=&quot;#一、RPMB认证（Authentication）&quot; class=&quot;headerlink&quot; title=&quot;一、RPMB认证（Authentication）&quot;&gt;&lt;/a&gt;一</summary>
+      
+    
+    
+    
+    <category term="领域" scheme="https://mkdbook.com/categories/%E9%A2%86%E5%9F%9F/"/>
+    
+    <category term="eMMC" scheme="https://mkdbook.com/categories/%E9%A2%86%E5%9F%9F/eMMC/"/>
+    
+    
+    <category term="eMMC" scheme="https://mkdbook.com/tags/eMMC/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>32--eMMC password lockunlock</title>
+    <link href="https://mkdbook.com/blog032.html"/>
+    <id>https://mkdbook.com/blog032.html</id>
+    <published>2023-06-24T15:03:24.000Z</published>
+    <updated>2023-06-24T15:03:43.514Z</updated>
+    
+    <content type="html"><![CDATA[<p>[toc]</p><h1 id="一、简介"><a href="#一、简介" class="headerlink" title="一、简介"></a>一、简介</h1><h2 id="1、password存在哪个位置？"><a href="#1、password存在哪个位置？" class="headerlink" title="1、password存在哪个位置？"></a>1、password存在哪个位置？</h2><blockquote><p>128bit的<code>PWD</code>和8bit的<code>PWD_LEN</code>，这两个寄存器是单独的且非易失的（power cycle不会导致被擦除）。</p></blockquote><center><img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/32.1.png" width="75%" height="75%" alt="32.1"/></center><ul><li><code>ERASE</code>：若为“1”则定义forcing erase，所有其他的bit都为0，且只有cmd byte会被发送；</li><li><code>LOCK_UNLOCK</code>：“1”&#x3D; Lock device、“0” &#x3D; Unlock device；<br><strong>注：LOCK_UNLOCK和SET_PWD一起设置是有效的，但是和CLR_PWD一起设置是不允许的！</strong></li><li><code>CLR_PWD</code>：“1” &#x3D; Clear PWD；</li><li><code>SET_PWD</code>：“1” &#x3D; Set new password to PWD；</li><li><code>PWD_LEN</code>：定义后面PWD的长度，有效的password长度为1-16个byte；同时标志，是否设置了password；<br><strong>注：16 * 8 &#x3D; 128bit，说明PWD长度最长为128bit和第一点符合 ；若为0，则说明没有设置password。</strong></li></ul><h2 id="2、在哪里决定是否开启此功能？"><a href="#2、在哪里决定是否开启此功能？" class="headerlink" title="2、在哪里决定是否开启此功能？"></a>2、在哪里决定是否开启此功能？</h2><ul><li>EXT_CSD[171]——<code>USER_WP</code>的<code>bit7（PERM_PSWD_DIS）</code><br>0x0：允许password protect功能；<br>0x1：永久禁止password protect功能——ERASE（Forcing erase）、LOCK、UBLOCK、CLR_PWD、SET_PWD；</li></ul><h1 id="二、Setting-the-password"><a href="#二、Setting-the-password" class="headerlink" title="二、Setting the password"></a>二、Setting the password</h1><ul><li>1、CMD7（SELECT&#x2F;DESELECT_CARD）选定设备，进入Transfer State；</li><li>2、CMD16（SET_BLOCKLEN）定义block长度，长度由图1决定；</li><li>3、CMD42（LOCK_UNLOCK）发送图1中的内容，其中<code>SET_PWD</code>被置位，<code>PWD_LEN</code>应匹配新密码+旧密码的长度，<code>PWD</code>中会包含<code>新/旧密码</code>。</li></ul><blockquote><p><strong>LOCK_UNLOCK_FAILED error</strong>出现的几种情况：<br>1、<code>新/旧密码</code>长度超过16byte；<br>2、设置新密码时，PWD_LEN只设置为旧密码的长度；这时旧密码不会被更改；<br>3、旧密码不正确（seize和content不相等），这时旧密码不改变；<br>如果相符合，则给定的新密码和它的大小将分别保存在PWD和PWD_LEN字段给中。</p></blockquote><h1 id="三、Reset-the-password"><a href="#三、Reset-the-password" class="headerlink" title="三、Reset the password"></a>三、Reset the password</h1><ul><li>1、CMD7（SELECT&#x2F;DESELECT_CARD）选定设备，进入Transfer State；</li><li>2、CMD16（SET_BLOCKLEN）定义block长度，长度由图1决定；</li><li>3、CMD42（LOCK_UNLOCK）发送图1中的内容，其中<code>CLR_PWD</code>被置位，<code>PWD_LEN</code>和<code>PWD</code>应和当前密码长度和密码匹配。<br>3.1、若匹配<code>PWD_LEN ——&gt;0</code>，<code>PWD被清零</code>。<br>3.2、若不匹配，<strong>LOCK_UNLOCK_FAILED error</strong>被报告。</li></ul><h1 id="四、Locking-the-device"><a href="#四、Locking-the-device" class="headerlink" title="四、Locking the device"></a>四、Locking the device</h1><ul><li>1、CMD7（SELECT&#x2F;DESELECT_CARD）选定设备，进入Transfer State；</li><li>2、CMD16（SET_BLOCKLEN）定义block长度，长度由图1决定；</li><li>3、CMD42（LOCK_UNLOCK）发送图1中的内容，<code>LOCK_UNLOCK</code>设置为LOCK（&#x3D;1），PWD_LEN和PWD匹配。<br>3.1、若<code>匹配</code>，LOCK设备成功，<strong>Device-locked status bit</strong>会在状态寄存器中<strong>被标志</strong>；<br>3.2、若<code>不匹配</code>，LOCK_UNLOCK_FAILED error会在状态寄存器中被标志；</li></ul><blockquote><p>1、如果device设置了password，则上电复位后，device会被自动LOCK；<br>2、如果试图LOCK一个没有password的device，或device已经处于LOCK状态，则LOCK_UNLOCK_FAILED error会在状态寄存器中标志；</p></blockquote><h1 id="五、Unlocking-the-device"><a href="#五、Unlocking-the-device" class="headerlink" title="五、Unlocking the device"></a>五、Unlocking the device</h1><ul><li>1、CMD7（SELECT&#x2F;DESELECT_CARD）选定设备，进入Transfer State；</li><li>2、CMD16（SET_BLOCKLEN）定义block长度，长度由图1决定；</li><li>3、CMD42（LOCK_UNLOCK）发送图1中的内容，<code>LOCK_UNLOCK</code>设置为UNLOCK（&#x3D;0），PWD_LEN和PWD匹配。<br>若<code>匹配</code>，UNLOCK设备成功，<strong>Device-locked status bit</strong>会在状态寄存器中<strong>被清除</strong>；<br>若<code>不匹配</code>，LOCK_UNLOCK_FAILED error会在状态寄存器中标志；</li></ul><blockquote><p>1、Unlocking只在当前power下执行，因为上电后会自动LOCK（如果设置了LOCK）；<br>2、如果试图UNLOCK的device已经处于UNLOCK状态，则LOCK_UNLOCK_FAILED error会在状态寄存器中标志；</p></blockquote><h1 id="六、Forcing-ERASE"><a href="#六、Forcing-ERASE" class="headerlink" title="六、Forcing ERASE"></a>六、Forcing ERASE</h1><p>作用：当用户忘记password时，可将PWD和device data一起擦除，故称为<code>强制擦除</code>。</p><ul><li>1、CMD7（SELECT&#x2F;DESELECT_CARD）选定设备，进入Transfer State；</li><li>2、CMD16（SET_BLOCKLEN）定义block长度，<strong>长度为1byte（8bit）</strong>；</li><li>3、CMD42（LOCK_UNLOCK）发送图1中<strong>第一行</strong>的内容，设置ERASE操作；</li></ul><p>Forcing ERASE命令成功后，device所有内容（eMMC4.3之后，Boot、RPMB、GPP不会被擦除了）以及PWD、PWD_LEN都会被擦除，LOCK的device会被UNLOCK，<strong>即使CSD中设置了temporary-write-protect bit也会被擦除</strong>。</p><blockquote><p><strong>LOCK_UNLOCK_FAILED error</strong>出现的几种情况：<br>1、如果图1中，bit[3] ERASE不是唯一为1的bit；<br>2、如果发送Forcing ERASE命令时，decive 存在<code>power-on protected</code> or a <code>permanently-write-protected write protect groups</code>，则Forcing ERASE将会失败；<br>3、在一个Unlocked的device上发送Forcing ERASE命令；</p></blockquote>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;[toc]&lt;/p&gt;
+&lt;h1 id=&quot;一、简介&quot;&gt;&lt;a href=&quot;#一、简介&quot; class=&quot;headerlink&quot; title=&quot;一、简介&quot;&gt;&lt;/a&gt;一、简介&lt;/h1&gt;&lt;h2 id=&quot;1、password存在哪个位置？&quot;&gt;&lt;a href=&quot;#1、password存在哪个位</summary>
+      
+    
+    
+    
+    <category term="领域" scheme="https://mkdbook.com/categories/%E9%A2%86%E5%9F%9F/"/>
+    
+    <category term="eMMC" scheme="https://mkdbook.com/categories/%E9%A2%86%E5%9F%9F/eMMC/"/>
+    
+    
+    <category term="eMMC" scheme="https://mkdbook.com/tags/eMMC/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>31--eMMC中三种Information Security机制</title>
+    <link href="https://mkdbook.com/blog031.html"/>
+    <id>https://mkdbook.com/blog031.html</id>
+    <published>2023-06-24T14:35:24.000Z</published>
+    <updated>2023-06-24T14:59:54.226Z</updated>
+    
+    <content type="html"><![CDATA[<p>[toc]</p><h1 id="一、简介"><a href="#一、简介" class="headerlink" title="一、简介"></a>一、简介</h1><p>“信息安全”有三个最基本的目标：</p><ul><li><code>Confidentiality</code>：<strong>机密性</strong>是指，信息只能被授权的用户阅读和理解。</li><li><code>Integrity</code>：<strong>完整性</strong>是指，能够确定信息受到保护，不被篡改、修改或删除的能力。<br>  Integrity of information covers its <code>origin</code>, <code>completeness</code>, and <code>correctness</code> using methods such as identification and authentication.</li><li><code>Availability</code>：<strong>可用性</strong>是指，信息总是可供已经授权的用户使用。</li></ul><p>例如：eMMC的write protect是为了确保data availability，replay protected memory block（RPMB）是为了确保data integrity和data confidentiality。</p><h1 id="二、eMMC-Information-Security的类型"><a href="#二、eMMC-Information-Security的类型" class="headerlink" title="二、eMMC Information Security的类型"></a>二、eMMC Information Security的类型</h1><h2 id="1、Password-Lock-x2F-Unlock"><a href="#1、Password-Lock-x2F-Unlock" class="headerlink" title="1、Password Lock&#x2F;Unlock"></a>1、Password Lock&#x2F;Unlock</h2><ul><li>Password lock&#x2F;Unlock是集成到eMMC协议中的第一个Security feature，该功能来源于传统的SD卡，<strong>可以保护user area的内容不被访问（read、write、erase）</strong>。</li><li>由CMD42（LOCK_UNLOCK）设置。</li><li>当启用password lock之后，host可以执行某些操作（如reset、initialize、select、query for status），但不能访问user area的任何数据。而且host依然可以访问boot分区、RPMB和GPP分区。</li><li>缺点：这种保护可用于防止数据被盗，但它也限制了任何人（包括数据所有者）可以对设备执行的操作，因为不允许访问（任何类型的）受保护的数据。</li></ul><h2 id="2、Write-Protect"><a href="#2、Write-Protect" class="headerlink" title="2、Write Protect"></a>2、Write Protect</h2><ul><li>作用：防止数据损坏或被擦除。</li><li>eMMC4.3之前，write protect只支持user area且整个设备要么是可写的要么是不可写的；<br>eMMC4.4之后，write protect可控制特定的分区被写入或只读；<br>eMMV5.1之后，write protect支持认证，即只有被授权的用户才能改变write protect设置；<br>（演变过程使得write更加灵活和安全。）</li></ul><center><img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/31.1.png" width="80%" height="80%" alt="31.1"/></center>    <ul><li>Write Protect与Password Lock&#x2F;Unlock区别：前者依然能够从device中读取数据。</li></ul><h2 id="2-1-eMMC-5-1中有4种类型的写保护："><a href="#2-1-eMMC-5-1中有4种类型的写保护：" class="headerlink" title="2.1  eMMC 5.1中有4种类型的写保护："></a>2.1  eMMC 5.1中有4种类型的写保护：</h2><ul><li><code>Permanent</code>：当启用了写保护，就不能改变了。</li><li><code>Power-on</code>：当启用了写保护，只能通过power cycle或通过device RESET pin来改变（会造成设备reboot）。</li><li><code>Temporary</code>：写保护可以启用，也可以取消。</li><li><code>Secured</code>：只有被授权使用RPMB的用户，才可以启用和禁用写保护。</li></ul><h2 id="2-2-eMMC-5-1整个设备都支持写保护"><a href="#2-2-eMMC-5-1整个设备都支持写保护" class="headerlink" title="2.2  eMMC 5.1整个设备都支持写保护"></a>2.2  eMMC 5.1整个设备都支持写保护</h2><ul><li><strong>The entire device</strong>：（包括了Boot Area Partitions, General Purpose Area Partition, RPMB， User&#x2F;Enhanced User Data Area Partition）可以通过CSD中相关bit设置<code>permanent</code>或<code>temporary</code>写保护。</li><li><strong>Boot partitions</strong>：可以设置<code>permanent</code>、<code>secured</code>、<code>power-on</code>写保护。</li><li><strong>UDA和GPP</strong>：可以设置<code>permanent</code>、<code>secured</code>、<code>power-on</code>、<code>temporary</code>写保护，为specific segment（即协议中说的“write protect group”）</li></ul><h2 id="2-3-Write-Protect两种分类"><a href="#2-3-Write-Protect两种分类" class="headerlink" title="2.3  Write Protect两种分类"></a>2.3  Write Protect两种分类</h2><h3 id="2-3-1-Entire-device写保护"><a href="#2-3-1-Entire-device写保护" class="headerlink" title="2.3.1  Entire device写保护"></a>2.3.1  Entire device写保护</h3><ul><li>包括Boot Area Partitions、General Purpose Area Partition、RPMB、User&#x2F;Enhanced User Data Area Partition；</li><li>相比其他保护机制，<code>优先级最高</code>；</li></ul><h3 id="2-3-2-Specific-segments写保护"><a href="#2-3-2-Specific-segments写保护" class="headerlink" title="2.3.2  Specific segments写保护"></a>2.3.2  Specific segments写保护</h3><ul><li>可以将特定的区段设置为<code>permanent</code>、<code>power-on</code>或<code>temporarily</code>写保护。</li><li>segment的长度由EXT_CSD[175]——<code>ERASE_GROUP_DEF</code>决定由哪一个参数决定：<br><code>0x0</code>：CSD[36:32]——<code>WP_GRP_SIZE</code>；（默认）<br><code>0x1</code>：EXT_CSD[221]——<code>HC_WP_GRP_SIZE</code>；使用High-capacity的写保护组大小。</li></ul><h3 id="2-3-3-WP-GRP-SIZE（旧的模式）"><a href="#2-3-3-WP-GRP-SIZE（旧的模式）" class="headerlink" title="2.3.3  WP_GRP_SIZE（旧的模式）"></a>2.3.3  WP_GRP_SIZE（旧的模式）</h3><ul><li>在CSD中，一共有<code>5bit</code>大小。</li><li>故一共可以表示<code>32</code>个erase group。</li></ul><h3 id="2-3-4-HC-WP-GRP-SIZE（高容量模式）"><a href="#2-3-4-HC-WP-GRP-SIZE（高容量模式）" class="headerlink" title="2.3.4  HC_WP_GRP_SIZE（高容量模式）"></a>2.3.4  HC_WP_GRP_SIZE（高容量模式）</h3><ul><li><strong>Write protect group size</strong> &#x3D; <code>512KB</code> * <code>HC_ERASE_GRP_SIZE</code> * <code>HC_WP_GRP_SIZE</code></li><li>注意<code>512KB</code> * <code>HC_ERASE_GRP_SIZE</code>代表的是<strong>Erase-unit size</strong>，最大为<code>512Kbyte * 255</code>。</li><li><code>HC_WP_GRP_SIZE</code>最多表示可以255个<strong>Erase-unit size</strong>，如果为0则表示不支持high-capacity write protect group seize。（详见协议p193）</li></ul><h2 id="3、RPMB（Replay-Protect-Memory-Block）"><a href="#3、RPMB（Replay-Protect-Memory-Block）" class="headerlink" title="3、RPMB（Replay Protect Memory Block）"></a>3、RPMB（Replay Protect Memory Block）</h2><ul><li>此功能首次出现在eMMC4.4，使设备能够在一个小的、特定的区域内存储数据，该区域经过验证并受到保护，以防止重放攻击（replay attack）。</li><li>一些使用RPMB的例子如下：<br>1、software version authentication；<br>2、fingerprint verification；<br>3、secure key storage；<br>4、network vendor information；<br>5、digital rights management（DRM）；<br>6、secure payments；</li></ul><h3 id="3-1-什么是Replay-Attack？"><a href="#3-1-什么是Replay-Attack？" class="headerlink" title="3.1  什么是Replay Attack？"></a>3.1  什么是Replay Attack？</h3><p>重放攻击是一种攻击类型，在这种攻击中，攻击者捕获在两方之间发送的数据，然后在稍后的时间重新发送该数据。</p><p> 这种攻击的目的是：获得对系统的未授权访问或修改先前发送的数据。<br>例如，攻击者可以捕获在用户和服务器之间发送的登录请求。 然后攻击者可以在稍后重播该请求，这将允许他们以用户身份登录到服务器。</p><center><img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/31.2.png" width="70%" height="70%" alt="31.2"/></center>如图31.2所示，关于重放攻击的例子，设想一个数字钱包服务提供商发送一个经过验证的信息，将用户账户余额设置为2000美元。当用户用数字钱包支付1600美元的账单时，可用余额下降到400美元。如果一个运行重放攻击的恶意软件拦截了最初的信息（将账户余额设置为2000美元的信息），在购买1600美元后重新发送相同的信息，就可以将账户余额重置为2000美元。<h3 id="3-2-Replay-Protect的常见机制？"><a href="#3-2-Replay-Protect的常见机制？" class="headerlink" title="3.2  Replay Protect的常见机制？"></a>3.2  Replay Protect的常见机制？</h3><ul><li><code>One-time passwords</code>（OTP）：一次性口令，唯一性。</li><li><code>Timestamps</code>：使得信息传输命令只在一个很短的时间内有效。</li><li><code>Nonce</code>（number used once）：使用一次的随机数字。</li><li><code>Sequence numbers</code>：每个数据传输或请求都被分配一个唯一的序列号。</li></ul>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;[toc]&lt;/p&gt;
+&lt;h1 id=&quot;一、简介&quot;&gt;&lt;a href=&quot;#一、简介&quot; class=&quot;headerlink&quot; title=&quot;一、简介&quot;&gt;&lt;/a&gt;一、简介&lt;/h1&gt;&lt;p&gt;“信息安全”有三个最基本的目标：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;Confidentiali</summary>
+      
+    
+    
+    
+    <category term="领域" scheme="https://mkdbook.com/categories/%E9%A2%86%E5%9F%9F/"/>
+    
+    <category term="eMMC" scheme="https://mkdbook.com/categories/%E9%A2%86%E5%9F%9F/eMMC/"/>
+    
+    
+    <category term="eMMC" scheme="https://mkdbook.com/tags/eMMC/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>30--eMMC的Data Read</title>
+    <link href="https://mkdbook.com/blog030.html"/>
+    <id>https://mkdbook.com/blog030.html</id>
+    <published>2023-06-24T14:25:24.000Z</published>
+    <updated>2023-06-24T14:32:20.437Z</updated>
+    
+    <content type="html"><![CDATA[<p>[toc]</p><h1 id="一、概述"><a href="#一、概述" class="headerlink" title="一、概述"></a>一、概述</h1><p>传输模式模式有两种：</p><ul><li><code>SDR</code>：每条数据线上有1个CRC，在时钟的上升沿采样</li><li><code>DDR</code>：双沿采样，数据以4-bit或8-bit位宽模式传输。block数据块<code>固定为512 byte</code>，每条数据线上有2个CRC，第一个CRC校验第奇数个byte（共256），第二个CRC校验第奇数个byte（共256）</li></ul><h2 id="1-1-SDR模式下，block大小定义"><a href="#1-1-SDR模式下，block大小定义" class="headerlink" title="1.1  SDR模式下，block大小定义"></a>1.1  SDR模式下，block大小定义</h2><p>在单块传输过程中，数据传输的基本单位是block，它的<strong>最大长度</strong>在<code>CSD[83:80]READ_BL_LEN</code>中定义，它表示数据块大小的方法为<code>2 的 READ_BL_LEN 次方</code> 。完成传输后返回<em><strong>Trasnfer</strong></em>状态。</p><center><img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/30.1.png" width="75%" height="75%" alt="30.1"/></center><p><strong>如果<code>CSD[79]READ_BL_PARTIAL</code>为1，也可以读取比定义的block更小的block（partial block read）。</strong></p><h3 id="1-1-1-READ-BL-PARTIAL-描述"><a href="#1-1-1-READ-BL-PARTIAL-描述" class="headerlink" title="1.1.1 READ_BL_PARTIAL 描述"></a>1.1.1 READ_BL_PARTIAL 描述</h3><p>READ_BL_PARTIAL 定义了partial block size是否可以用于块读命令</p><ol><li>最大2GB容量时（byte访问模式）<ul><li>0：只允许512B和READ_BL_LEN定义的block长度，用于block read</li><li>1：可以使用更小的块，最小为<code>最小可寻址的单位</code>（1byte）</li></ul></li><li>大于2GB容量时（sector 访问模式）<ul><li>0：只允许512B和READ_BL_LEN</li><li>1：可以更小，最小512B</li></ul></li></ol><h2 id="1-2-DDR，固定512B，不支持部分块读"><a href="#1-2-DDR，固定512B，不支持部分块读" class="headerlink" title="1.2 DDR，固定512B，不支持部分块读"></a>1.2 DDR，固定512B，不支持部分块读</h2><h1 id="二、Single-block-read"><a href="#二、Single-block-read" class="headerlink" title="二、Single block read"></a>二、Single block read</h1><p><code>CMD7（SELECT/DESELECT_CARD）</code>选定一个设备用于数据读操作，再用<code>CMD16（SET_BLOCKLEN）</code>设定有效快长度，发送<code>CMD17（READ_SINGLE_ BLOCK）</code>开始读数据。（CMD17的参数位为地址）</p><ul><li>单块读时序图</li></ul><center><img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/30.2.png" width="75%" height="75%" alt="30.2"/></center>    <h1 id="三、Multiple-block-read"><a href="#三、Multiple-block-read" class="headerlink" title="三、Multiple block read"></a>三、Multiple block read</h1><p>有两种多块读的类型。</p><h2 id="3-1-Open-ended-Multiple-block-read"><a href="#3-1-Open-ended-Multiple-block-read" class="headerlink" title="3.1  Open-ended Multiple block read"></a>3.1  Open-ended Multiple block read</h2><p>读取的块数不指定，直到收到停止传输命令<code>CMD12（STOP_TRANSMISION）</code>。</p><h2 id="3-2-Multiple-block-read-with-pre-defined-count"><a href="#3-2-Multiple-block-read-with-pre-defined-count" class="headerlink" title="3.2  Multiple block read with pre-defined count"></a>3.2  Multiple block read with pre-defined count</h2><p>定义块数，完成传输后返回<em><strong>Transfer</strong></em>状态。</p><p>启动方法为，host使用<code>CMD23（SET_BLOCK_COUNT）</code>后紧跟<code>CMD18（READ_MULTIPLE_BLOCK）</code>，否则设备默认开始Open-ended 多块读。</p><ul><li>Figure 43为多块读时序，Figure 44为收到CMD12的应答</li></ul><center><img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/30.3.png" width="75%" height="75%" alt="30.3"/></center>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;[toc]&lt;/p&gt;
+&lt;h1 id=&quot;一、概述&quot;&gt;&lt;a href=&quot;#一、概述&quot; class=&quot;headerlink&quot; title=&quot;一、概述&quot;&gt;&lt;/a&gt;一、概述&lt;/h1&gt;&lt;p&gt;传输模式模式有两种：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;SDR&lt;/code&gt;：每条数据线上有1</summary>
+      
+    
+    
+    
+    <category term="领域" scheme="https://mkdbook.com/categories/%E9%A2%86%E5%9F%9F/"/>
+    
+    <category term="eMMC" scheme="https://mkdbook.com/categories/%E9%A2%86%E5%9F%9F/eMMC/"/>
+    
+    
+    <category term="eMMC" scheme="https://mkdbook.com/tags/eMMC/"/>
+    
+  </entry>
   
   <entry>
     <title>29--eMMC的Data Write</title>
@@ -449,121 +561,6 @@
     <category term="项目" scheme="https://mkdbook.com/categories/%E9%A1%B9%E7%9B%AE/"/>
     
     <category term="项目1-Nand_behavior_model" scheme="https://mkdbook.com/categories/%E9%A1%B9%E7%9B%AE/%E9%A1%B9%E7%9B%AE1-Nand-behavior-model/"/>
-    
-    
-    <category term="NAND" scheme="https://mkdbook.com/tags/NAND/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>13--perl练习-生成五组不同随机数-双色球</title>
-    <link href="https://mkdbook.com/blog013.html"/>
-    <id>https://mkdbook.com/blog013.html</id>
-    <published>2023-03-20T14:07:47.000Z</published>
-    <updated>2023-03-24T08:09:20.619Z</updated>
-    
-    <content type="html"><![CDATA[<p>[toc]</p><h1 id="perl练习，源码"><a href="#perl练习，源码" class="headerlink" title="perl练习，源码"></a>perl练习，源码</h1><pre><code class="perl">#!/usr/bin/perl -w$zhu = 1;do&#123;    my %red;                         #hash    for (0..5) &#123;        my $no;        do &#123;            $no = int rand(33) +1;  # int [1:33]                 &#125; while (exists $red&#123;$no&#125;); # $no is hash&#39;s key           $red&#123;$no&#125; = 1;    &#125;    my $blue=int rand(16) +1;       #int [1:16]              print join(&quot;\t&quot;, keys %red, &quot;$blue&quot;), &quot;\n\n&quot;;    $zhu = $zhu +1;   #initial 5 zhu&#125;while($zhu &lt;= 5);</code></pre><h1 id="知识点"><a href="#知识点" class="headerlink" title="知识点"></a>知识点</h1><ol><li><code>rand(16)</code>表示生成<code>0-15</code>的随机数，要生成<code>1-16</code>直接增加偏移量<code>+1</code>即可。</li><li>hash的用法：这里用到了hash的<code>exists</code>函数检测<code>key</code>，让随机产生的数不同。<br>这里是指，如果<strong>hash</strong><code>%red</code>中存在<strong>key</strong><code>$no</code>，则返回再生成一次随机数；</li></ol><pre><code class="perl">             #keys values my %hash = (&quot;a&quot; =&gt; 9, &quot;b&quot; =&gt; 1, &quot;c&quot; =&gt; 8);my @k = keys %hash;                #取出hash中的 key 或 value，列表上下文my @v = values %hash;my $x = keys %hash;               # 标量上下文，得到的是对数#exists 检测hash中是否存在某一个hashif (exists $hash&#123;&quot;b&quot;&#125;)&#123;    #用 $ 符号，别搞错了print &quot;hash里面有b&quot;&#125;</code></pre><ol start="3"><li><code>jonit</code> 函数是指用分隔符 <code>\t</code> 分割每一个<code>key</code>的值。</li><li><code>do&#123;&#125;…while()</code> 表达式产生5组数据。</li></ol>]]></content>
-    
-    
-      
-      
-    <summary type="html">&lt;p&gt;[toc]&lt;/p&gt;
-&lt;h1 id=&quot;perl练习，源码&quot;&gt;&lt;a href=&quot;#perl练习，源码&quot; class=&quot;headerlink&quot; title=&quot;perl练习，源码&quot;&gt;&lt;/a&gt;perl练习，源码&lt;/h1&gt;&lt;pre&gt;&lt;code class=&quot;perl&quot;&gt;#!/usr/b</summary>
-      
-    
-    
-    
-    <category term="语言" scheme="https://mkdbook.com/categories/%E8%AF%AD%E8%A8%80/"/>
-    
-    <category term="Perl" scheme="https://mkdbook.com/categories/%E8%AF%AD%E8%A8%80/Perl/"/>
-    
-    
-    <category term="perl" scheme="https://mkdbook.com/tags/perl/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>12--Perl模块-读取文件并修改然后保存</title>
-    <link href="https://mkdbook.com/blog012.html"/>
-    <id>https://mkdbook.com/blog012.html</id>
-    <published>2023-03-20T14:07:20.000Z</published>
-    <updated>2023-03-24T08:09:15.206Z</updated>
-    
-    <content type="html"><![CDATA[<p>[toc]</p><h1 id="一、Perl模块，源码"><a href="#一、Perl模块，源码" class="headerlink" title="一、Perl模块，源码"></a>一、Perl模块，源码</h1><pre><code class="perl">#! /usr/bin/perl -wuse strict;open RH, &quot;test28.v&quot; or die $!;chomp(my @lines = &lt;RH&gt;);close (RH);open WH, &quot;&gt;test28.v&quot; or die $!;foreach my $line (@lines) &#123;  $line =~ s/a/b/gi;  print WH &quot;$line\n&quot;;&#125;close (WH);</code></pre><p>第一步，打开文件句柄（RH）读取文件，并将其一行一行地全部存入到数组<code>@lines</code>。</p><p>第二步，打开文件句柄（WH）写入文件通道，用foreach将数组<code>@lines</code>中的一个元素（一行内容）存入到变量<code>$lines</code>。</p><p>第三步，通过变量<code>$lines</code>，对这一行内容进行匹配替换，再重新保存到<code>$line</code>变量。</p><p>最后，将这一行修改后的内容打印出来通过句柄（WH）<code>写入</code>到源文件中。</p><h2 id="Perl文件句柄中的写入操作符"><a href="#Perl文件句柄中的写入操作符" class="headerlink" title="Perl文件句柄中的写入操作符"></a>Perl文件句柄中的写入操作符</h2><pre><code class="perl">&gt;    #覆盖写入， 如果不存在则会创建，然后清空，print重新写入&gt;&gt;   #追加写，文件指针指向末尾，再开始写+&gt;   #Reads, Writes, Creates, and Truncates+&gt;&gt;  #Reads, Writes, Appends, and Creates</code></pre><h2 id="Perl文件句柄中的读取操作符"><a href="#Perl文件句柄中的读取操作符" class="headerlink" title="Perl文件句柄中的读取操作符"></a>Perl文件句柄中的读取操作符</h2><pre><code class="perl">&lt;    #只读模式+&lt;   #Reads and Writes</code></pre><h2 id="为什么要chmop？"><a href="#为什么要chmop？" class="headerlink" title="为什么要chmop？"></a>为什么要chmop？</h2><p>如果文件元素为：</p><pre><code> aaaaaaaa    bbbbbbbbbbCccccccccccc</code></pre><pre><code class="perl">chomp(my @lines = &lt;RH&gt;);print &quot;@lines&quot;;#加上chmop，会删除换行，但是源文件每一行的空格还是会保留下来aaaaaaaa     bbbbbbbbbb Cccccccccccc#不加，原样保留，每一行的换行符被保留了下来aaaaaaaa     bbbbbbbbbb Cccccccccccc</code></pre><p>为了方便数据处理，所以一般加上<code>chomp</code>，比如再对一行元素进行拆分时，拆分后的最后一个元素就会带有换行符，与其他元素不同。如果最后需要加上换行符，可以这样操作：<code>print &quot;$_\n&quot;;</code></p><h1 id="二、通过命令行批量替换文件内容"><a href="#二、通过命令行批量替换文件内容" class="headerlink" title="二、通过命令行批量替换文件内容"></a>二、通过命令行批量替换文件内容</h1><p><code>find ./ -name &quot;*.v&quot; | xargs perl -pi.bak -e &quot;s/Lock &lt;= 1&#39;b0;/&quot;&quot;/gi&quot;</code></p><p><code>xargs</code>：是一个linux命令，作用是捕获一个命令的输出，然后传递给另一个命令（一般和管道一起使用）</p><p><code>perl -e</code>：在命令行中执行代码，即上面执行了通过这个option执行了<code>&quot;s/Lock &lt;= 1&#39;b0;/&quot;&quot;/gi&quot;</code>匹配替换</p><p><code>perl -p</code>：自动循环+自动输出，相当于<code>while(&lt;&gt;)&#123;替换语句;print;&#125;</code></p><p><code>perl -i&lt;扩展名&gt;</code>：原地替换文件，并将旧文件用指定的扩展名备份。不指定扩展名则不备份。</p><p><code>g</code>：修饰符，全局匹配（能匹配到所有的abc，不会因为匹配到一个就停止后面内容的匹配了）</p><p><code>i</code>：修饰符，匹配时忽略大小写</p>]]></content>
-    
-    
-      
-      
-    <summary type="html">&lt;p&gt;[toc]&lt;/p&gt;
-&lt;h1 id=&quot;一、Perl模块，源码&quot;&gt;&lt;a href=&quot;#一、Perl模块，源码&quot; class=&quot;headerlink&quot; title=&quot;一、Perl模块，源码&quot;&gt;&lt;/a&gt;一、Perl模块，源码&lt;/h1&gt;&lt;pre&gt;&lt;code class=&quot;perl&quot;&gt;</summary>
-      
-    
-    
-    
-    <category term="语言" scheme="https://mkdbook.com/categories/%E8%AF%AD%E8%A8%80/"/>
-    
-    <category term="Perl" scheme="https://mkdbook.com/categories/%E8%AF%AD%E8%A8%80/Perl/"/>
-    
-    
-    <category term="perl" scheme="https://mkdbook.com/tags/perl/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>11--折腾Blog学到的一些东西</title>
-    <link href="https://mkdbook.com/blog011.html"/>
-    <id>https://mkdbook.com/blog011.html</id>
-    <published>2023-03-20T12:32:51.000Z</published>
-    <updated>2023-03-24T08:09:25.560Z</updated>
-    
-    <content type="html"><![CDATA[<p>[toc]</p><h1 id="一、加深了对网络、网站搭建的理解"><a href="#一、加深了对网络、网站搭建的理解" class="headerlink" title="一、加深了对网络、网站搭建的理解"></a>一、加深了对网络、网站搭建的理解</h1><ol><li><p>互联网其实就是一个大型的局域网罢了，所有的网页、网上的资源都处于某一台（多台）实体电脑（服务器）中，然后接入这个大型的Internet，实现我们普通网民的冲浪。</p></li><li><p>关于域名，其实就是一种映射关系，将一些好记的字符映射到你这台服务器的IP地址，实现访问，因为IP地址人类不好记忆。</p></li><li><p>关于<code>https</code>和<code>http</code>：简而言之前者需要SSL&#x2F;TLS加密，而后者是明文更容易遭受中间人攻击。这也是我强迫症使用cloudflare中转的原因之一，如果访问一个网站是http时，浏览器网址栏会提示不安全；而使用https加密后，网址栏会显示一把小锁。</p></li></ol><h1 id="二、动态Blog和静态Blog"><a href="#二、动态Blog和静态Blog" class="headerlink" title="二、动态Blog和静态Blog"></a>二、动态Blog和静态Blog</h1><p>我试着折腾过两种，<code>动态：wordpress</code>。<code>静态：hexo</code>。我理解两者最直观的区别就是，动态的搭建在VPS上，可以访问后台实时修改和书写文章；静态是需要在本地搭建环境，生成好html文件，然后将这些页面上传到服务器。<br>比较而言，前者功能更加复杂，需要数据库等，可以用于网站的搭建，搭建博客只是其中一个功能。<br>而后者则相对纯粹，静态页面适合专注于文字的书写。</p><h1 id="三、Hexo-GitHub-自定义域名-Cloudflare做CDN中转"><a href="#三、Hexo-GitHub-自定义域名-Cloudflare做CDN中转" class="headerlink" title="三、Hexo+GitHub+自定义域名+Cloudflare做CDN中转"></a>三、Hexo+GitHub+自定义域名+Cloudflare做CDN中转</h1><p>这里不做详细教程，只记录大体步骤；</p><ol><li>Github创建个人仓库（“服务器端”）；</li><li>搭建本地环境（安装Git、Node.js、Hexo）；</li><li>生成本地页面（localhost:4000），则表明搭建成功；</li><li>将Hexo网站推送到Github中，实现互联网访问；</li><li>购买域名，并让其指向你的<code>http://xxxx.github.io/</code>地址，实现自定义域名访问；<ul><li>注：第五步有两种方法，一种是直接在域名购买商那里将DNS指向你的Github，一种是通过Cloudflare做中转解析；后者可以免费申请SSL证书，实现强制<code>https</code>代理，而非<code>http</code>。</li></ul></li><li>SEO配置，让搜索引擎收录你的网站，并允许爬虫你的内容。</li></ol><h1 id="四、踩坑记录"><a href="#四、踩坑记录" class="headerlink" title="四、踩坑记录"></a>四、踩坑记录</h1><ol><li>在添加百度SEO设置主动推送（API，要用到token那种方式），在根目录_config.yaml，修改deploy配置，添加<code>type: baidu_url_submitter</code>报错如下：<code>YAMLException: duplicated mapping key (126:3)</code>。</li></ol><blockquote><p>解决办法是：<code>type</code>变为 ”<code>- type</code>“，且要顶格，即“-”前面不能有空格，后面有空格，且冒号后有空格，如图11.1：</p></blockquote><center><img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/11.1%E5%9D%91%E4%B8%80.png" width="70%" height="70%" alt="11.1 坑一"/></center><p>因为yml的特点是：</p><ul><li>大小写敏感</li><li>使用缩进表示层级关系</li><li>缩进不允许使用tab，只允许空格</li><li>缩进的空格数不重要，只要相同层级的元素<strong>左对齐</strong>即可</li><li>‘#’表示注释</li></ul><hr><br><ol start="2"><li>百度SEO通过文件验证网站后，<code>baidu_verify_codeva-u08yTssVjX.html</code>文件每次都会被Hexo编译，导致认证不成功。</li></ol><blockquote><p>解决办法是：将<code>baidu_verify_codeva-u08yTssVjX.html</code>文件放到<code>\themes\你的主题\source</code>中，而不是在blog根目录下的source文件夹中。</p></blockquote>]]></content>
-    
-    
-      
-      
-    <summary type="html">&lt;p&gt;[toc]&lt;/p&gt;
-&lt;h1 id=&quot;一、加深了对网络、网站搭建的理解&quot;&gt;&lt;a href=&quot;#一、加深了对网络、网站搭建的理解&quot; class=&quot;headerlink&quot; title=&quot;一、加深了对网络、网站搭建的理解&quot;&gt;&lt;/a&gt;一、加深了对网络、网站搭建的理解&lt;/h1&gt;&lt;ol&gt;</summary>
-      
-    
-    
-    
-    <category term="杂记" scheme="https://mkdbook.com/categories/%E6%9D%82%E8%AE%B0/"/>
-    
-    
-  </entry>
-  
-  <entry>
-    <title>10--[TEST]Erase of NAND behavior model  验证计划-项目2-4</title>
-    <link href="https://mkdbook.com/blog010.html"/>
-    <id>https://mkdbook.com/blog010.html</id>
-    <published>2023-03-20T11:59:40.000Z</published>
-    <updated>2023-03-24T08:08:30.928Z</updated>
-    
-    <content type="html"><![CDATA[<p>[toc]</p><table><thead><tr><th>用例名称</th><th>用例描述</th><th>期望结果</th><th>验证结果</th><th>备注</th><th>验证人</th></tr></thead><tbody><tr><td>after_EraSus_PagePgm1</td><td>擦暂停后执行写操作（同一块）</td><td>数据不可以写入</td><td>OK</td><td></td><td>Mark</td></tr><tr><td>after_EraSus_PagePgm2</td><td>擦暂停后执行写操作（同plane不同块）</td><td>数据可以写入</td><td>OK</td><td></td><td>Mark</td></tr><tr><td>after_EraSus_PagePgm3</td><td>擦暂停后执行写操作（不同plane）</td><td>数据可以写入</td><td>OK</td><td></td><td>Mark</td></tr><tr><td>after_EraSus_CachePgm1</td><td>擦暂停后执行写缓存操作（同一块）</td><td>数据不可以写入</td><td>OK</td><td></td><td>Mark</td></tr><tr><td>after_EraSus_CachePgm2</td><td>擦暂停后执行写缓存操作（同plane不同块）</td><td>数据可以写入</td><td>OK</td><td></td><td>Mark</td></tr><tr><td>after_EraSus_CachePgm3</td><td>擦暂停后执行写缓存操作（不同plane）</td><td>数据可以写入</td><td>OK</td><td></td><td>Mark</td></tr><tr><td>multi_erase_D1</td><td>60–地址–61–delay–60–地址–D0</td><td>擦除成功</td><td>OK</td><td></td><td>Mark</td></tr><tr><td>multi_erase_onfi</td><td>60–地址–60—地址—D0</td><td>擦除成功</td><td>OK</td><td></td><td>Mark</td></tr><tr><td>multi_erase_D1_4P</td><td>D1模式下对4个plane进行擦除</td><td>擦除成功</td><td>OK</td><td></td><td>Mark</td></tr><tr><td>multi_erase_onfi_4P</td><td>onfi模式下对4个plane进行擦除</td><td>擦除成功</td><td>OK</td><td></td><td>Mark</td></tr><tr><td>multi_erase_D1_1P</td><td>D1模式下，发送同一plane的三个block的地址</td><td>只擦除最后一个地址（60–addr–D0）的block</td><td>OK</td><td>增加地址个数，结果一样</td><td>Mark</td></tr><tr><td>multi_erase_onfi_1P</td><td>onfi模式下，发送同一plane的三个block的地址</td><td>只擦除最后一个地址（60–addr–D0）的block</td><td>OK</td><td></td><td>Mark</td></tr><tr><td>multi_erase_D1_4+1</td><td>D1模式下，输入5个block地址，其中四个为不同plande中的block，有两个block是属于同一个block的</td><td>重复的block擦除失败（只擦除同plane中最后出现的那一个block）</td><td>OK</td><td>增加重复地址个数，结果一样</td><td>Mark</td></tr><tr><td>multi_erase_onfi_4+1</td><td>onfi模式下，输入5个block地址，其中四个为不同plande中的block，有两个block是属于同一个block的</td><td>重复的block擦除失败（只擦除同plane中最后出现的那一个block）</td><td>OK</td><td></td><td>Mark</td></tr><tr><td>normal_sus_erase</td><td>先对block 2，page 0，column 8’h0，写入15个数据。再对该位置发送Erase sequence，在wait_ready之前对同一位置发送Erase Suspend sequence，然后读取该位置的值。</td><td>如果Erase Suspend成功，该位置读出的值是不确定的，为x态。</td><td>Erase Suspend逻辑未触发</td><td>已解决。 1、”if (Io_mirror [7 : 0] &#x3D; &#x3D; &#x3D; 8’h60)”,改为else if； 2、 “if (lastCmd &#x3D;&#x3D;&#x3D; 8’h67 &amp;&amp; !cmnd_78h &amp;&amp; !cmnd_71h)”，改为”if (lastCmd &#x3D;&#x3D;&#x3D; 8’h67)”;</td><td>Mark</td></tr><tr><td>twice_sus_erase</td><td>在设备处于erase suspend状态下，再发一次erase suspend sequence。</td><td>第二次发送的suspend命令会被忽略，同时可以看到提示信息。</td><td>OK</td><td></td><td>Mark</td></tr><tr><td>noerase_sus_erase</td><td>在设备未处于erase的状态下发送erase suspend sequence。</td><td>erase suspend命令会被忽略，同时可以看到提示信息。</td><td>OK</td><td></td><td>Mark</td></tr><tr><td>program_sus_erase</td><td>设备处于erase suspend状态下，对同一个block进行program</td><td>program失败，该位置的数据读出来仍为 x。</td><td>OK</td><td></td><td>Mark</td></tr><tr><td>multi_erase_sus</td><td>在进行multi_plane erase时，发送erase suspend命令</td><td>会同时暂停所有这些plane中的erase操作</td><td>OK</td><td></td><td>Mark</td></tr><tr><td>A_era_sus_E_A</td><td>A处于erase suspend时，对A进行ERASE</td><td>Resume ERASE operation to block A</td><td>OK</td><td></td><td>Mark</td></tr><tr><td>A_era_sus_E_B</td><td>A处于erase suspend时，对非suspend的B进行ERASE</td><td>开始B的normal erase，A的suspend状态被取消</td><td>OK</td><td>如何判断A是否处于SUSPEND状态：通过在对B ERASE的前后，各发一次ERASE Resume命令，A处于SUSPEND状态则 RESUME命令生效，否则SUSPEND状态被取消。</td><td>Mark</td></tr><tr><td>A_era_sus_mtE_AB</td><td>A处于erase suspend时，对A和非suspend的B进行multi_plane ERASE</td><td>开始A、B的normal multi_plane erase</td><td>OK</td><td></td><td>Mark</td></tr><tr><td>mtE_ABsus_E_A</td><td>multi_plane erase A、B被suspend后，对A进行ERASE操作</td><td>Resume ERASE operation to block A and B</td><td>OK</td><td></td><td>Mark</td></tr><tr><td>mtE_ABsus_E_B</td><td>multi_plane erase A、B被suspend后，对B进行ERASE操作</td><td></td><td>OK</td><td></td><td>Mark</td></tr><tr><td>mtE_ABsus_mtE_AB</td><td>multi_plane erase A、B被suspend后，对A、B进行mult_plane ERASE操作</td><td></td><td>OK</td><td></td><td>Mark</td></tr><tr><td>mtE_ABsus_mtE_AD</td><td>multi_plane erase A、B被suspend后，对A、D（未suspend）进行mult_plane ERASE操作</td><td>Start normal erase to block A and D. Suspend to block B is canceled</td><td>OK</td><td></td><td>Mark</td></tr><tr><td>mtE_ABsus_mtE_CB</td><td>multi_plane erase A、B被suspend后，对C（未suspend）、B进行mult_plane ERASE操作</td><td>Start normal erase to block C and B. Suspend to block A is canceled</td><td>OK</td><td></td><td>Mark</td></tr><tr><td>erase_resume</td><td>在normal_sus_erase的基础上，发送D7h，然后等待wait_ready后，再对该位置读取一次</td><td>该位置从X态变为FF，说明Erase Resume成功。</td><td>OK</td><td></td><td>Mark</td></tr><tr><td>nosus_erase_resume</td><td>在设备未处于erase suspend的状态下发送erase resume sequence。</td><td>erase resume命令会被忽略。</td><td>OK</td><td></td><td>Mark</td></tr></tbody></table>]]></content>
-    
-    
-      
-      
-    <summary type="html">&lt;p&gt;[toc]&lt;/p&gt;
-&lt;table&gt;
-&lt;thead&gt;
-&lt;tr&gt;
-&lt;th&gt;用例名称&lt;/th&gt;
-&lt;th&gt;用例描述&lt;/th&gt;
-&lt;th&gt;期望结果&lt;/th&gt;
-&lt;th&gt;验证结果&lt;/th&gt;
-&lt;th&gt;备注&lt;/th&gt;
-&lt;th&gt;验证人&lt;/th&gt;
-&lt;/tr&gt;
-&lt;/thead&gt;
-&lt;tbody&gt;&lt;tr</summary>
-      
-    
-    
-    
-    <category term="项目" scheme="https://mkdbook.com/categories/%E9%A1%B9%E7%9B%AE/"/>
-    
-    <category term="项目2-Erase_of_NAND_behavior_model" scheme="https://mkdbook.com/categories/%E9%A1%B9%E7%9B%AE/%E9%A1%B9%E7%9B%AE2-Erase-of-NAND-behavior-model/"/>
     
     
     <category term="NAND" scheme="https://mkdbook.com/tags/NAND/"/>
