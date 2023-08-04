@@ -4,6 +4,114 @@
   
     
     <entry>
+      <title>37--SystemC基本语法：数据类型、进程、仿真波形</title>
+      <link href="/blog037.html"/>
+      <url>/blog037.html</url>
+      
+        <content type="html"><![CDATA[<p>[toc]</p><h1 id="一、SystemC专有数据类型"><a href="#一、SystemC专有数据类型" class="headerlink" title="一、SystemC专有数据类型"></a>一、SystemC专有数据类型</h1><ul><li><code>sc_bit</code>：2值单比特（1、0）</li><li><code>sc_logic</code>：4值单比特（1、0、X、Z）</li><li><code>sc_int</code>：1到64比特有符号整型（即类似于C++中int通常对8&#x2F;16&#x2F;32位的数据操作）</li><li><code>sc_uint</code>：1到64比特无符号整型</li><li><code>sc_bigint</code>：任意宽度的有符号整型（不限制位数）</li><li><code>sc_biuint</code>：任意宽度的无符号整型</li></ul><pre><code class="cpp">//例1sc_int&lt;4&gt; x, y;sc_int&lt;8&gt; z;z = (x,y);       //将x和y转脸后赋值给zx=z.range(7,4);  //取z的高4位赋值给x</code></pre><ul><li><code>sc_bv</code>：任意宽度的2值比特向量（适用于只需要二值逻辑向量而不需要算数运算的场合）</li><li><code>sc_lv</code>：任意宽度的4值比特向量</li></ul><pre><code class="cpp">//例2sc_bv&lt;6&gt; val;val=&quot;110011&quot;;bool temp=val.xor_reduce();  //将val的各个位异或后赋值给temp</code></pre><ul><li><code>sc_fixed</code>：模板类有符定点</li><li><code>sc_ufixed</code>：模板类无符号定点</li><li><code>sc_fix</code>：非模板类有符定点</li><li><code>sx_ufix</code>：非模板类无符号定点</li></ul><h1 id="二、进程（process）"><a href="#二、进程（process）" class="headerlink" title="二、进程（process）"></a>二、进程（process）</h1><p><code>进程</code>是程序在并发环境中的<code>执行过程</code>，具有动态性、并发性、独立性、异步性、结构性。</p><p>在SystemC中，进程不是层次化的，即一个进程中不能包含或直接调用其它进程，但进程可以调用非进程的函数和方法。</p><ul><li><code>进程</code>：<br>1、动态概念；<br>2、强调执行，是程序在数据集上的一次执行，有创建、有撤销，存在是暂时的；<br>3、有并发性；<br>4、竞争计算机资源的<strong>基本单位</strong>；<br>5、进程是程序在数据集上的一次执行；<br><code>程序</code>：<br>1、静态概念；<br>2、指令的有序集合，永远存在；<br>3、无并发性；<br>4、不是；<br>5、一个程序可对应多个进程，一个进程可包括多个程序；</li></ul><h2 id="2-1-方法进程：SC-METHOD"><a href="#2-1-方法进程：SC-METHOD" class="headerlink" title="2.1  方法进程：SC_METHOD"></a>2.1  方法进程：SC_METHOD</h2><p>特点：唯一的可以综合的REL级别进程，当敏感列表中的事件发生时，它会被调用，调用后会立刻返回。该进程中<code>不能</code>使用 wait() 类语句。</p><pre><code class="cpp">//用DC_METHOD进程构建异步D触发器SC_MODULE(dff)&#123;&#125;        sc_in_clk clk;        sc_in&lt;bool&gt; rst;        sc_in&lt;bool&gt; din;        sc_in&lt;bool&gt; dout;        void do_it()&#123;                    if (rst)                            dout = false;                    else                            dout = din;        &#125;;        SC_CTOR(dff)&#123;                SC_METHOD(do_it);  //do_it时SC_METHOD进程，当clk或rst有上升沿发生时，do_it就会被触发执行                sensitive_pos(rst);                sensitive_pos(clk);    &#125;&#125;;</code></pre><h2 id="2-2-线程进程：SC-THREAD"><a href="#2-2-线程进程：SC-THREAD" class="headerlink" title="2.2  线程进程：SC_THREAD"></a>2.2  线程进程：SC_THREAD</h2><p>特点：能够<code>被挂起</code>和<code>重新激活</code>。</p><p>SC_THREAD 使用 wait() 挂起，当敏感列表中有事件发生，线程进程被重新激活运行，当遇到新的 wait() 语句再重新挂起。</p><p>多用于 Testbench 中输入激励和输出获取。</p><pre><code class="cpp">//用DC_THREAD进程构建一个监视全加器输入输出变化值的变化情况//File1：monitor.h#include&quot;systemc.h&quot;SC_MODULE(Monitor)&#123;        sc_in&lt;sc_bit&gt; m_a, m_b, m_cin, m_sum, m_cout;        void prc_monitor();        SC_CTOR(Monitor)&#123;                SC_THREAD(prc_monitor); //进程对以下数据敏感，初始化时被执行，并挂起在wait()语句                sensitive&lt;&lt;m_a, m_b, m_cin, m_sum, m_cout;        &#125;&#125;;//File2:monitor.cpp#include&quot;monitor.h&quot;void Monitor::prc_monitor()&#123;            while(1)&#123;                cout&lt;&lt;&quot;At time&quot;&lt;&lt;sc_time_stamp()&lt;&lt;&quot;::&quot;;                cout&lt;&lt;&quot;(a, b, carry_in):&quot;;                cout&lt;&lt;m_a.read()&lt;&lt;m_b.read()&lt;&lt;m_cin.read()&lt;&lt;&quot;,&quot;;                cout&lt;&lt;&quot;(sum, carry_out):&quot;;                cout&lt;&lt;m_sum.read()&lt;&lt;m_cout.read()&lt;&lt;endl;                wait();            &#125;&#125;</code></pre><h2 id="2-3-钟控线程进程：SC-CTHREAD"><a href="#2-3-钟控线程进程：SC-CTHREAD" class="headerlink" title="2.3  钟控线程进程：SC_CTHREAD"></a>2.3  钟控线程进程：SC_CTHREAD</h2><p>clock thread process 特点：只能在时钟沿降时被触发或激活，这种行为更接近硬件。</p><p>引入的目的：产生更好的行为综合（行为综合时从高层次描述综合为 RTL 级描述的过程）。</p><pre><code class="cpp">//例子SC_MODULE(Driver)&#123;            void prc_diver();            SC_CTOR(DRIVER)&#123;                SC_CTHREAD(prc_driver, clk.ps()); //只有在时钟上升沿时prc_driver才被激活。                //必须在指定线程名字的同时，指定时钟和它的边沿。                //下降沿表示方法为 clk.neg()            &#125;&#125;</code></pre><h2 id="2-4-wait-until-、wait-和-next-trigger"><a href="#2-4-wait-until-、wait-和-next-trigger" class="headerlink" title="2.4  wait_until()、wait()和 next_trigger()"></a>2.4  wait_until()、wait()和 next_trigger()</h2><p><code>wait_until</code>：将进程挂起直达指定的表达式的值为真，只能用于线程进程和钟控线程进程。</p><pre><code class="cpp">//wait_until举例wait_until(clock.delayed()==true &amp;&amp; reset.de;ayed()==false);</code></pre><p><code>wait()</code>：等待函数，只能用于线程进程和钟控线程进程。</p><pre><code class="cpp">//1、等;待敏感列表中有事件发生；wait()//2、等待事件发生；sc_event e1;......wait(e1);//3、等待事件之一发生；sc_event e1, e2, e3;......wait(e1|e1|e2);//4、等待事件全部发生；sc_event e1, e2, e3;......wait(e1 &amp; e1 &amp; e2);//5、等待100ns后，后面的语句会被执行；wait(100, SC_NS);//6、如果100ns内事件e1发生，或时间超过了100ns，进程将被激活；sc_event e1;......wait(100, SC_NS, e1); //e1、e2、e3也可以换成第3、4条所述//7、sc_time定义等效替代sc_time t(100, SC_NS);wait(t, e1); //等效于wait(100, SC_NS, e1);</code></pre><p><code>next_trigger()</code>：和 wait() 参数一样，只能用于SC_METHOD进程。</p><p>特点：调用后立刻返回，在一个 SC_METHOD 进程中可以多次调用 next_trigger()，但由最后一个 next_trigger() 决定进程的下一次激活时间。</p><h1 id="三、波形追踪"><a href="#三、波形追踪" class="headerlink" title="三、波形追踪"></a>三、波形追踪</h1><h2 id="3-1-顶层函数sc-main"><a href="#3-1-顶层函数sc-main" class="headerlink" title="3.1  顶层函数sc_main()"></a>3.1  顶层函数sc_main()</h2><p>所有 SystemC 的最顶层函数都是 sc_main()，没有该函数的代码无法编译成功。</p><p>作用：将设计中的所有模块连接在一起，并引入时钟和波形跟踪（wave trace）</p><p>格式：<code>int sc_main(int argc, char* argv[]) &#123;…/Body&#125;</code>，前一个表示参数的数目，后一个是用字符串表示的参数的值。</p><h2 id="3-2-波形追踪"><a href="#3-2-波形追踪" class="headerlink" title="3.2  波形追踪"></a>3.2  波形追踪</h2><pre><code class="cpp">#include &lt;systemc.h&gt;int sc_main(int argc, char* argv[]) &#123;    // 创建VCD波形跟踪文件    sc_trace_file *wf = sc_create_vcd_trace_file(&quot;counter&quot;);    // 定义信号或模块    sc_signal&lt;bool&gt; clk;    sc_signal&lt;int&gt; counter;    // 将信号与波形跟踪文件相关联，所有于wf关联的信号值都会被记录在counter.vcd文件中    sc_trace(wf, clk, &quot;clk&quot;);    sc_trace(wf, counter, &quot;counter&quot;);    // 创建模块等其他初始化操作    // ...        // 开始仿真运行，持续1000个时间单位    sc_start(1000, SC_NS);    // 仿真结束后关闭波形跟踪文件    sc_close_vcd_trace_file(wf);    return 0; //返回之前必须关闭波形文件&#125;</code></pre>]]></content>
+      
+      
+      <categories>
+          
+          <category> 语言 </category>
+          
+          <category> SystemC </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> SystemC </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>36--SystemC基本语法：模块、端口、信号、时钟</title>
+      <link href="/blog036.html"/>
+      <url>/blog036.html</url>
+      
+        <content type="html"><![CDATA[<p>[toc]</p><h1 id="一、模块的定义：SC-MODULE"><a href="#一、模块的定义：SC-MODULE" class="headerlink" title="一、模块的定义：SC_MODULE"></a>一、模块的定义：SC_MODULE</h1><p>关键字：<code>SC_MODULE</code></p><p>解释：SC_MODULE 是 SystemC 库中定义的一个宏，使用它定义一个模块实际上是定义了一个新的 C++ 类。</p><h1 id="二、模块的端口：sc-in、sc-out、sc-inout"><a href="#二、模块的端口：sc-in、sc-out、sc-inout" class="headerlink" title="二、模块的端口：sc_in、sc_out、sc_inout"></a>二、模块的端口：sc_in、sc_out、sc_inout</h1><p><code>端口</code>使数据能够在模块间通过。</p><p>端口分为三种类型：<code>sc_in</code>、<code>sc_out</code>、<code>sc_inout</code>。</p><p>在端口定义时可指定数据类型：如 bool、int、short、char 等。</p><p>举例，如下：</p><center><img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/36.1.png" width="75%" height="75%" alt="36.1"/></center><pre><code class="cpp">SC_MODULE(fifo)&#123;            sc_in_clk              clk;                 //clock            sc_in&lt;bool&gt;            rst;                 //reset            sc_in&lt;bool&gt;            wr_en;               //FIFO write enable            sc_in&lt;bool&gt;            rd_en;               //FIFO read enable            sc_in&lt;int&gt;             din;                 //data input, 32 bit bus            sc_out&lt;bool&gt;           full, almost_full;            sc_out&lt;bool&gt;           enpty, almost_empty;            sc_out&lt;unsigned short&gt; data_count;          //FIFO data count      sc_out&lt;int&gt;            dout;                //FIFO data out&#125;</code></pre><h1 id="三、模块的信号：sc-signal"><a href="#三、模块的信号：sc-signal" class="headerlink" title="三、模块的信号：sc_signal"></a>三、模块的信号：sc_signal</h1><p>模块之间通过<code>信号</code>将端口连接起来，信号是数据的载体，可以认为信号就是<code>连线</code>（类比于 Verilog 中的 wire）。</p><p>关键字：<code>sc_signal&lt;T&gt;</code></p><p>举例，如下：</p><center><img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/36.2.png" width="75%" height="75%" alt="36.2"/></center><p>如图36.2所示：<code>operator_ctrl</code>、 <code>operand_ctrla</code>、<code>operand_ctrlb</code>、<code>a</code>、<code>b</code>、<code>c</code>、<code>result</code>，为 7 个信号。</p><p>注：信号和子模块的端口处于不同的设计层次，所以允许信号和端口同名，如：ALU 的 <code>result 端口</code>和<code>信号 result</code>。</p><h2 id="3-1-端口和信号的关系"><a href="#3-1-端口和信号的关系" class="headerlink" title="3.1  端口和信号的关系"></a>3.1  端口和信号的关系</h2><center><img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/36.3.png" width="75%" height="75%" alt="36.3"/></center><p>如图36.3所示，模块1和模块2分别有一个进程，假设这两个模块之间的信号为D；</p><p>在T1时刻，<code>Clk</code>从<code>0 ——&gt; 1</code>，恰好模块1中的进程也将<code>信号 D</code> 从<code>0 ——&gt; 1</code>，但是模块1和模块2中的进程都在同一个上升沿被同时触发，它们工作在同一个时间步内，<br><strong>所以在T1时刻，模块2中的进程看到的 D 值是 0（旧值）。</strong></p><h2 id="3-2-多端口和信号的快速声明"><a href="#3-2-多端口和信号的快速声明" class="headerlink" title="3.2  多端口和信号的快速声明"></a>3.2  多端口和信号的快速声明</h2><pre><code class="cpp">sc_in&lt;sc_logic&gt; a[32];  //a[0]到a[31]，32个端口，方向为输入，数据类型为sc_logicsc_signal&lt;sc_logic&gt; abus[16];  //abus[0]到abus[15]，16个信号</code></pre><h2 id="3-3-隐式类型转换，助手函数read-和write"><a href="#3-3-隐式类型转换，助手函数read-和write" class="headerlink" title="3.3  隐式类型转换，助手函数read()和write()"></a>3.3  隐式类型转换，助手函数read()和write()</h2><pre><code class="cpp">//如果定义了如下端口sc_in&lt;bool&gt;  data_in;sc_out&lt;int&gt;  data_out;//data_out=data_in;//在进程中直接赋值是非法的，因为两者类型不同data_out.write(data_in.read());</code></pre><h1 id="四、名字关联"><a href="#四、名字关联" class="headerlink" title="四、名字关联"></a>四、名字关联</h1><p>如图36.2所示，顶层模块 Top 的作用是：将各个子模块连接起来，子模块的端口是通过 Top 中定义的信号来关联的。</p><p>如何将 Top 的信号和子模块的信号关联，<code>名字关联</code>和<code>位置关联</code>。</p><p>例子：Top.h 文件如下</p><pre><code class="cpp">#include &quot;systemc.h&quot;#include &quot;DataGenerator.h&quot;  //For Gen_a and Gen_b#include &quot;Control.h&quot;#include &quot;ALU.h&quot;#include &quot;OperatorGenerator.h&quot;#include &quot;DisplayResult.h&quot;SC_MODULE(Top) &#123;//指针定义Control             *Ctrll;DataGenerator       *Gen_a, *Gen_b;OperatorGenerator   *OpGenl;ALU                 *ALU1;DisplayResult       *DispResultl;//端口定义，Top层可以没有端口， 这里只有一个Clock端口sc_in_clk   clk；//信号定义sc_signal&lt;int&gt;   a, b, result;sc_sign&lt;sc_unit&lt;&gt; &gt;   c;//知识点：sc_unit&lt;&gt;是SystemC中专有的数据类型，4表示数据只有4位，故可表示16中=种操作；//在声明中，sc_sign&lt;sc_unit&lt;&gt; &gt;，中间有个额外的空格不能省略。sc_sign&lt;bool&gt;   operator_ctrl, operand_ctrla, opcrand_ctrlb;//Constructor1 位置关联（不推荐）SC_CTOR(Top) &#123;    Ctrl1 = new Control(&quot;Ctrl1&quot;);  //创建一个新的对象指向它的指针    (*Ctrl1) (clk, operand_ctrla, operand_ctrlb, operator_ctrl);//用对象的指针把信号关联到对象端口//其它模块省略…………&#125;//Constructor2 名字关联（推荐）SC_CTOR(Top)&#123;    Ctrl1 = new Control(&quot;Ctrl1&quot;);    Ctrl1 -&gt; clk (clk);    Ctrl1 -&gt; op  (operator_ctrl)    Ctrl1 -&gt; or_b(operand_ctrlb);    Ctrl1 -&gt; or_a(operand_ctrla);//其它模块省略…………&#125;&#125;</code></pre><h1 id="五、模块的构造函数：SC-CTOR"><a href="#五、模块的构造函数：SC-CTOR" class="headerlink" title="五、模块的构造函数：SC_CTOR"></a>五、模块的构造函数：SC_CTOR</h1><p>关键字：<code>SC_CTOR</code></p><p>作用：1、创建模块内部数据结构，并把这些数据结构初始化为已知值。<br>　　　2、初始化进程的类型，并创建进程的敏感列表。</p><p>举例：</p><pre><code class="cpp">//ConstructorSC_CTOR(asyn_fifo)&#123;     SC_METHOD(write);  //进程write()对写时钟和复位信号敏感，工作在写时钟，异步复位。        sensitive&lt;&lt;wr_clk&lt;&lt;rst;         SC_METHOD(read);  //进程read()工作在读时钟，异步复位。                sensitive&lt;&lt;rd_clk&lt;&lt;rst;         SC_METHOD(synchronize_pointer);  //进程synchronize_pointer完成指针交换工作。                sensitive&lt;&lt;wr_clk&lt;&lt;rd_clk&lt;&lt;rst&lt;&lt;ptr_wr&lt;&lt;ptr_rd;  //后两个是写指针和读指针//定义为：sc_signal&lt;int&gt;  ptr_wr, ptr_rd; //write pointer and read pointer;…………for(i=0;i++;i&lt;DEPTH) &#123;mem[i]=0;&#125;  //for循环把FIFO的存储空间初始化为0.&#125;</code></pre><p>注意：构造函数的名字必须与模块的名字相同</p><h1 id="六、SystemC时钟和时间模型"><a href="#六、SystemC时钟和时间模型" class="headerlink" title="六、SystemC时钟和时间模型"></a>六、SystemC时钟和时间模型</h1><pre><code class="cpp">//名称为clk1，表示20个时间单位，单位是ns，占空比是0.5(高电平持续0.5个周期)，//在5ns时第一次变化（相位偏移5个单位）。//ture：信号将从高电平开始，false：则信号从低电平开始。sc_clock clk1(&quot;clk1&quot;, 20, SC_NS, 0.5, 5, true);//名称为clk2，…………，在0ns时第一次变化sc_clock clk2(&quot;clk2&quot;, 20, SC_NS, 0.5, 0, true);//或者引入一个sc_time类型常量time1，通过time1初始化clk3；sc_time time1(20， SC_NS);sc_clock clk3(&quot;clk3&quot;, time1);</code></pre><center><img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/36.4.png" width="75%" height="75%" alt="36.4"/></center><pre><code class="cpp">//设置时间分辨率sc_set_time_resolution(10, SC_PS);//分辨率为10ps//1、时间分辨率必须是10的幂；//2、……只能在仿真开始之前设置；//3、……只能设置1次；//4、必须在任何的非零的sc_time声明之前设置</code></pre>]]></content>
+      
+      
+      <categories>
+          
+          <category> 语言 </category>
+          
+          <category> SystemC </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> SystemC </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>35--SystemC简介及环境配置</title>
+      <link href="/blog035.html"/>
+      <url>/blog035.html</url>
+      
+        <content type="html"><![CDATA[<p>[toc]</p><h1 id="1、SystemC简介及环境配置"><a href="#1、SystemC简介及环境配置" class="headerlink" title="1、SystemC简介及环境配置"></a>1、SystemC简介及环境配置</h1><h1 id="一、SystemC简介"><a href="#一、SystemC简介" class="headerlink" title="一、SystemC简介"></a>一、SystemC简介</h1><ul><li>SystemC 是一种基于 C++ 的用于系统级建模和仿真的语言，本质上是在 C++ 的基础上添加的硬件扩展库和仿真核，这使得SystemC 可以建模不同抽象级别的包括软件和硬件的复杂电子系统。<br>它由<code>Open SystemC Initiative（OSCI）</code>开发（1999年），与 Accellera Systems Initiative 联合将其标准化为 IEEE Std. 1666-2011™。</li><li>SystemC目的：<strong>实现用单一语言完成设计规范、系统体系结构分析、验证平台和行为模型。</strong><br>但是RTL级和门级建模并非其擅长领域。</li></ul><center><img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/35.1.png" width="75%" height="75%" alt="35.1  systemc-architecture"/></center><h2 id="1-1-开发顺序"><a href="#1-1-开发顺序" class="headerlink" title="1.1  开发顺序"></a>1.1  开发顺序</h2><p>系统级建模  ——&gt;  RTL级设计  ——&gt;  验证               <br>system C                  Verilog            SystemVerilog</p><h2 id="1-2-为什么使用-SystemC？"><a href="#1-2-为什么使用-SystemC？" class="headerlink" title="1.2  为什么使用 SystemC？"></a>1.2  为什么使用 SystemC？</h2><p>传统的硬件描述语言和 SystemVerilog 的 C 接口不支持硬件设计中的<code>并发性</code>、<code>层次性</code>和<code>互联</code>，所以不适合描述复杂多样的系统行为。</p><ul><li>SystemC 支持在系统级进行设计和验证，独立于任何详细的硬件和软件实现，通过 SystemC 建模可以用于验证和固件开发 ，使得硬件设计和软件设计可以同步进行，缩短整个芯片上市时间。</li><li>SystemC 可以与 RTL 设计进行联合验证，这使得可以更早地发现错误。</li><li>SystemC 的抽象级别更高，这使得可以更快、更有效率地进行架构权衡分析、设计和重新设计。</li><li>SystemC 是一个开源标准，这使得可以由任何公司使用。</li></ul><center><img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/35.2.png" width="75%" height="75%" alt="35.2  SystemC作用"/></center>    <h2 id="1-3-SystemC-和-SystemVerilog"><a href="#1-3-SystemC-和-SystemVerilog" class="headerlink" title="1.3  SystemC 和 SystemVerilog"></a>1.3  SystemC 和 SystemVerilog</h2><p>当时的系统语言发展方向有两个：</p><p><code>SystemVerilog</code>：扩充传统的硬件描述语言VHDL和Verilog HDL，使它们支持抽象数据类型，从而具有系统描述能力。<br><code>SystemC</code>：扩展传统的软件语言C&#x2F;C++，使他们支持硬件描述。</p><center><img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/35.3.png" width="75%" height="75%" alt="35.3  硬件描述语言工作的层级"/></center><h1 id="二、SystemC-环境搭建"><a href="#二、SystemC-环境搭建" class="headerlink" title="二、SystemC 环境搭建"></a>二、SystemC 环境搭建</h1><ul><li>1、下载OSCI库并解压<br>下载地址：<a href="https://www.accellera.org/downloads/standards/systemc">https://www.accellera.org/downloads/standards/systemc</a></li></ul><pre><code class="bash">tar xvf systemc-2.3.3.tar.gz</code></pre><ul><li>2、构建和编译</li></ul><pre><code class="bash">cd systemc-2.3.3mkdir buildcd buildcmake ../ -DCMAKE_CXX_STANDARD=17 -DCMAKE_BUILD_TYPE=Debug -DCMAKE_INSTALL_PREFIX=/usr/local/systemcmake -j8</code></pre><p><code>--prefix</code>：设置安装的位置。这里将安装位置设置为<code>/usr/local/systemc</code>，安装的内容包含：</p><pre><code class="bash">Installation prefix (aka SYSTEMC_HOME):      /usr/local   Header files  : &lt;SYSTEMC_HOME&gt;/include   Libraries     : &lt;SYSTEMC_HOME&gt;/lib-linux64   Documentation : &lt;SYSTEMC_HOME&gt;/docs   Examples      : &lt;SYSTEMC_HOME&gt;/examples</code></pre><ul><li>3、安装</li></ul><pre><code class="bash">make install</code></pre><h1 id="三、环境测试"><a href="#三、环境测试" class="headerlink" title="三、环境测试"></a>三、环境测试</h1><h2 id="3-1-counter-cpp"><a href="#3-1-counter-cpp" class="headerlink" title="3.1  counter.cpp"></a>3.1  counter.cpp</h2><pre><code class="cpp">#include &lt;systemc.h&gt;SC_MODULE (counter) &#123;  sc_in_clk     clock ;      // Clock input of the design  sc_in&lt;bool&gt;   reset ;      // active high, synchronous Reset input  sc_in&lt;bool&gt;   enable;      // Active high enable signal for counter  sc_out&lt;sc_uint&lt;4&gt; &gt; counter_out; // 4 bit vector output of the counter  //Local Variables  sc_uint&lt;4&gt;count;  // Counter logic  void incr_count () &#123;    // At every rising edge of clock we check if reset is active    // If active, we load the counter output with 4&#39;b0000    if (reset.read() == 1) &#123;      count =  0;      counter_out.write(count);    // If enable is active, then we increment the counter    &#125; else if (enable.read() == 1) &#123;      count = count + 1;      counter_out.write(count);      cout&lt;&lt;&quot;@&quot; &lt;&lt; sc_time_stamp() &lt;&lt;&quot; :: Incremented Counter &quot;        &lt;&lt;counter_out.read()&lt;&lt;endl;    &#125;  &#125; // End of function incr_count  // Constructor for the counter  // Since this counter is a positive edge trigged one,  // We trigger the below block with respect to positive  // edge of the clock and also when ever reset changes state  SC_CTOR(counter) &#123;    cout&lt;&lt;&quot;Executing new&quot;&lt;&lt;endl;    SC_METHOD(incr_count);    sensitive &lt;&lt; reset;    sensitive &lt;&lt; clock.pos();  &#125; // End of Constructor&#125;; // End of Module counter</code></pre><h2 id="3-2-counter-tb-cpp"><a href="#3-2-counter-tb-cpp" class="headerlink" title="3.2  counter_tb.cpp"></a>3.2  counter_tb.cpp</h2><pre><code class="cpp">#include &lt;systemc.h&gt;#include &quot;counter.cpp&quot;int sc_main (int argc, char* argv[]) &#123;  sc_signal&lt;bool&gt;   clock;  sc_signal&lt;bool&gt;   reset;  sc_signal&lt;bool&gt;   enable;  sc_signal&lt;sc_uint&lt;4&gt; &gt; counter_out;  int i = 0;  // Connect the DUT  counter counter(&quot;COUNTER&quot;);  counter.clock(clock);  counter.reset(reset);  counter.enable(enable);  counter.counter_out(counter_out);  sc_start(1, SC_NS);  // Open VCD file  sc_trace_file *wf = sc_create_vcd_trace_file(&quot;counter&quot;);  // Dump the desired signals  sc_trace(wf, clock, &quot;clock&quot;);  sc_trace(wf, reset, &quot;reset&quot;);  sc_trace(wf, enable, &quot;enable&quot;);  sc_trace(wf, counter_out, &quot;count&quot;);  // Initialize all variables  reset = 0;       // initial value of reset  enable = 0;      // initial value of enable  for (i=0;i&lt;5;i++) &#123;    clock = 0;     sc_start(1, SC_NS);    clock = 1;     sc_start(1, SC_NS);  &#125;  reset = 1;    // Assert the reset  cout &lt;&lt; &quot;@&quot; &lt;&lt; sc_time_stamp() &lt;&lt;&quot; Asserting reset\n&quot; &lt;&lt; endl;  for (i=0;i&lt;10;i++) &#123;    clock = 0;     sc_start(1, SC_NS);    clock = 1;     sc_start(1, SC_NS);  &#125;  reset = 0;    // De-assert the reset  cout &lt;&lt; &quot;@&quot; &lt;&lt; sc_time_stamp() &lt;&lt;&quot; De-Asserting reset\n&quot; &lt;&lt; endl;  for (i=0;i&lt;5;i++) &#123;    clock = 0;     sc_start(1, SC_NS);    clock = 1;     sc_start(1, SC_NS);  &#125;  cout &lt;&lt; &quot;@&quot; &lt;&lt; sc_time_stamp() &lt;&lt;&quot; Asserting Enable\n&quot; &lt;&lt; endl;  enable = 1;  // Assert enable  for (i=0;i&lt;20;i++) &#123;    clock = 0;     sc_start(1, SC_NS);    clock = 1;     sc_start(1, SC_NS);  &#125;  cout &lt;&lt; &quot;@&quot; &lt;&lt; sc_time_stamp() &lt;&lt;&quot; De-Asserting Enable\n&quot; &lt;&lt; endl;  enable = 0; // De-assert enable  cout &lt;&lt; &quot;@&quot; &lt;&lt; sc_time_stamp() &lt;&lt;&quot; Terminating simulation\n&quot; &lt;&lt; endl;  sc_close_vcd_trace_file(wf);  return 0;// Terminate simulation&#125;</code></pre><h2 id="3-3-Makefile"><a href="#3-3-Makefile" class="headerlink" title="3.3 Makefile"></a>3.3 Makefile</h2><pre><code class="makefile">all:    g++ -I. -I /usr/local/systemc/include -L. -L/usr/local/systemc/lib64 \        -Wl,-rpath=/usr/local/systemc/lib64 -lsystemc -lm -o counter \        counter.cpp counter_tb.cpp    ./counterclean:     rm -rf counter counter.vcd</code></pre><h2 id="3-4-结果"><a href="#3-4-结果" class="headerlink" title="3.4  结果"></a>3.4  结果</h2><center><img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/35.4.png" width="75%" height="75%" alt="35.4  仿真结果"/></center><h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><p><a href="https://www.jianshu.com/p/75dbe7f64019">centos7 搭建systemc开发环境 - 简书 (jianshu.com)</a></p><p><a href="https://blog.51cto.com/34144451/3773530">记一次 Centos7 cmake 版本升级（由 v2.8.12.2 升级至 v3.14.5）_51CTO博客_linux cmake升级</a></p><p><a href="https://cloud.tencent.com/developer/article/1538041">Linux目录详解，软件应该安装到哪个目录-腾讯云开发者社区-腾讯云 (tencent.com)</a></p>]]></content>
+      
+      
+      <categories>
+          
+          <category> 语言 </category>
+          
+          <category> SystemC </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> SystemC </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>34--NAND Flash协议：ONFI和Toggle</title>
+      <link href="/blog034.html"/>
+      <url>/blog034.html</url>
+      
+        <content type="html"><![CDATA[<p>[toc]</p><h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>NAND Flash的协议目前主要分为两个阵营：<code>ONFI</code>和<code>Toggle</code>。</p><ul><li><strong>ONFI：Open NAND Flash Interface</strong><br>1、Intel、美光、海力士、SMI、群联、索尼、飞索半导体；<br>2、支持Clock；<br>3、同步&#x2F;异步；<br>4、先出现；</li><li><strong>Toggle：Toggle DDR、Toggle Mode NAND Flash</strong><br>1、东芝、三星、Toshiba；<br>2、没有Clock，写数据用DQS差分信号跳变沿触发；<br>读数据由host发的REN差分信号跳变沿发读request，而后在DQS跳变沿输出数据；<br>3、异步；<br>4、后出现；</li></ul><h1 id="一、Legacy-Interface"><a href="#一、Legacy-Interface" class="headerlink" title="一、Legacy Interface"></a>一、Legacy Interface</h1><ul><li>第一个NAND Flash Device Interface协议为<code>Legacy</code>，ONFI 1.0基于Legacy统一了Flash的规范；</li><li>15个引脚（8个data+7个controller信号）；</li><li>SDR、异步；</li><li>速度只有40MT&#x2F;s；</li></ul><center><img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/34.1.png" width="75%" height="75%" alt="34.1"/></center><h1 id="二、ONFI-Specification-History"><a href="#二、ONFI-Specification-History" class="headerlink" title="二、ONFI Specification History"></a>二、ONFI Specification History</h1><center><img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/34.2.png" width="75%" height="75%" alt="34.2  ONFI迭代历程"/></center><ul><li><p><strong>ONFI 1.0 ——2006&#x2F;10&#x2F;28</strong><br>（物理接口、封装、工作机制、控制指令、寄存器规范、ECC、带宽<code>50MT/s</code>，统一了Flash接口规范）</p></li><li><p><strong>ONFI 2.0 ——2008&#x2F;2&#x2F;27</strong><br>（带宽133MT&#x2F;s，使用了<code>NV-DDR</code>技术，<code>synchronous</code>传输，引入Clock信号）<br><strong>注</strong>：<code>WE#————&gt;CLK信号</code>、<code>RE#——&gt;W/R#读写方向信号</code>、<code>I/O</code>——&gt;<code>DQ</code>、新增DQS</p></li><li><p><strong>ONFI 2.1 ——2009&#x2F;1&#x2F;14</strong><br>（带宽166MT&#x2F;s和200MT&#x2F;s，新增“Small Data Move”与“Change Row Address”指令）</p></li><li><p><strong>ONFI 2.2  ——2009&#x2F;10&#x2F;7</strong><br>（LUN reset、增强页编程寄存器的清除和ICC测量和规范）</p></li><li><p><strong>ONFI 3.0   ——2011&#x2F;3&#x2F;15</strong><br>（<code>改回asynchronous</code>接口，采用和Togele 2.0一样的<code>NV-DDR2（异步）</code>、带宽400MT&#x2F;s、ODT）<br><strong>注</strong>：NV-DDR：Non-Volatile DDR</p></li><li><p>ONFI 2.3a ——2011&#x2F;10&#x2F;19<br>（EZ-NAND）</p></li><li><p><strong>ONFI 3.1 ——2012&#x2F;9&#x2F;21</strong><br>（LUN SET&#x2F;GET Features、并为NV-DDR2接口实现了额外的<code>data setup and hold</code> values。）</p></li><li><p><strong>ONFI 3.2 ——2013&#x2F;6&#x2F;13</strong><br>（533MT&#x2F;s）</p></li><li><p><strong>ONFI 4.0 ——2014&#x2F;4&#x2F;2</strong><br>（667MT&#x2F;s——NV-DDR2、800MT&#x2F;s——<code>NV-DDR3</code>、ZQ calibration）<br><strong>注</strong>：NV-DDR3是低电压标准，为了支持1.2v的controller</p></li><li><p><strong>ONFI 4.1 ——2017&#x2F;10&#x2F;12</strong><br>（1200MT&#x2F;s、DCC——Duty Cycle Correction、VCC 2.35-3.6可配置，原来为3.3&#x2F;1.8&#x2F;1.2三种）</p></li><li><p><strong>ONFI 4.2 ——2020&#x2F;2&#x2F;12</strong><br>（1600MT&#x2F;s）</p></li><li><p><strong>ONFI 5.0 ——2021&#x2F;3&#x2F;25</strong><br>（<code>NV-LPDDR4</code> 、2400MT&#x2F;s）</p></li><li><p><strong>ONFI 5.1 ——2022&#x2F;8&#x2F;11</strong><br>（3600MT&#x2F;s）</p></li></ul><center><img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/34.3.png" width="75%" height="75%" alt="34.3"/></center><h1 id="三、Toggle"><a href="#三、Toggle" class="headerlink" title="三、Toggle"></a>三、Toggle</h1><h2 id="1、Toggle-NAND-1-0-Asynchronous-DDR-NAND-Interface"><a href="#1、Toggle-NAND-1-0-Asynchronous-DDR-NAND-Interface" class="headerlink" title="1、Toggle NAND 1.0 (Asynchronous DDR NAND Interface)"></a>1、<strong>Toggle NAND 1.0 (Asynchronous DDR NAND Interface)</strong></h2><h3 id="双向DQS作用"><a href="#双向DQS作用" class="headerlink" title="双向DQS作用"></a>双向DQS作用</h3><ul><li>数据在DQS的上升沿和下降沿传输；</li></ul><p>DQS在写操作时，由host驱动；读操作时，由NAND操作；</p><ul><li>异步传输，没有时钟信号，toggle DDR interface和同步传输相比，具有更低的功耗；</li><li>133MT&#x2F;s，对应ONFI 2.0；</li></ul><h2 id="2、Toggle-NAND-2-0-Asynchronous-High-Speed-DDR-NAND-Interface"><a href="#2、Toggle-NAND-2-0-Asynchronous-High-Speed-DDR-NAND-Interface" class="headerlink" title="2、Toggle NAND 2.0 (Asynchronous High-Speed DDR NAND Interface)"></a>2、<strong>Toggle NAND 2.0 (Asynchronous High-Speed DDR NAND Interface)</strong></h2><ul><li>400MT&#x2F;s的吞吐量；</li><li>differential signal support is provided for the DQS and RE# signals，on-die termination (ODT) and VREF voltage support was added；</li></ul><center><img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/34.4.png" width="75%" height="75%" alt="34.4"/></center><h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p><strong>Toggle同步模式下不用clock</strong>，写数据通过DQS差分信号边沿触发，读数据Host在REN差分信号跳变沿发送request，DQS跳变沿输出数据。</p><p><strong>ONFI同步模式下有clock</strong>，数据、命令、地址都要与clock同步，但是DQS、clock都不是差分信号，所以边沿容易受干扰。但ONFI 3.0之后引入NV-DDR2模式，就和Toggle一样了，不再用clock，用DQS和REN差分信号实现数据传输。</p><h2 id="1、EZ-NAND协议"><a href="#1、EZ-NAND协议" class="headerlink" title="1、EZ-NAND协议"></a>1、EZ-NAND协议</h2><p><strong>EZ-NAND</strong>协议是ECC Zero NAND，这一协议将NAND闪存的纠错码管理由主控芯片中转移到了闪存自身，减轻了主控芯片负担。</p><p><strong>EZ-NAND</strong>首次出现在2.3的版本中，但是3.0并未全面支持，原因是当时容量、速度、成本是第一要务，集成ECC会增加闪存的成本。</p><h2 id="2、MT-x2F-s传输单位——可以更准确地描述速率"><a href="#2、MT-x2F-s传输单位——可以更准确地描述速率" class="headerlink" title="2、MT&#x2F;s传输单位——可以更准确地描述速率"></a>2、MT&#x2F;s传输单位——可以更准确地描述速率</h2><p>MT&#x2F;s表示每秒传输100万次（Million Transfers per Second）；</p><ul><li><code>1T/s</code>：每秒做了一次传输；<br><code>1Hz</code>：每秒一个时钟周期；<br>区别：例如<code>DDR</code>模式中，可在时钟上升沿和下降沿进行两次数据传输，故实际传输速率为：<br><code>1Hz=2T/s，1MHz=2MT/s</code>；</li></ul><h2 id="3、同步和异步"><a href="#3、同步和异步" class="headerlink" title="3、同步和异步"></a>3、同步和异步</h2><ul><li><code>synchronous</code>：ONFI 2.0中增加了NV-DDR功能，可以在CLK信号同步传输，数据在DQS的上升沿和下降沿传输，W&#x2F;R#信号控制数据方向。<br>特点：使用同一个信号源进行同步，提高了<code>信号采集</code>的<code>准确性</code>，可靠性和传输速率更高。</li><li><code>asynchronous</code>：ONFI 3.0中采用了和Toggle 2.0一样的NV-DDR2技术，采用的是异步的方式。<br>特点：功耗低，设计更简单。</li></ul><h2 id="4、NV-DDR不同版本的特点"><a href="#4、NV-DDR不同版本的特点" class="headerlink" title="4、NV-DDR不同版本的特点"></a>4、NV-DDR不同版本的特点</h2><ul><li><code>NV-DDR</code>：双边沿采样，并采用源同步时钟来精确所存数据、命令、地址信号。</li><li><code>NV-DDR2</code>：引入了差分信号和On-Die Termination (ODT)技术来提升信号质量。</li><li><code>NV-DDR3</code>：NV-DDR3引入了多项校准技术，包括ZQ Calibration、Duty Cycle Correction (DCC)和读&#x2F;写DQ校准。</li><li><code>NV-LPDDR4</code>：和NV-DDR3速率相同，优势在于采用LTT技术后可大幅度降低读操作功耗。</li></ul><center><img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/34.5.png" width="75%" height="75%" alt="34.5"/></center>]]></content>
+      
+      
+      <categories>
+          
+          <category> 领域 </category>
+          
+          <category> 存储 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Flash </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>33--eMMC的RPMB分区（Replay Protected Memory Block）</title>
       <link href="/blog033.html"/>
       <url>/blog033.html</url>
@@ -863,8 +971,8 @@
     
     <entry>
       <title>Verilog分类保留</title>
-      <link href="/clja5fyqu002mmkubahk9ghf6.html"/>
-      <url>/clja5fyqu002mmkubahk9ghf6.html</url>
+      <link href="/clkwpd3bz00348wubehvlcouo.html"/>
+      <url>/clkwpd3bz00348wubehvlcouo.html</url>
       
         <content type="html"><![CDATA[]]></content>
       
@@ -904,27 +1012,6 @@
             <tag> perl </tag>
             
         </tags>
-      
-    </entry>
-    
-    
-    
-    <entry>
-      <title>存储分类保留</title>
-      <link href="/clja5fyqs002emkub2bou0div.html"/>
-      <url>/clja5fyqs002emkub2bou0div.html</url>
-      
-        <content type="html"><![CDATA[]]></content>
-      
-      
-      <categories>
-          
-          <category> 领域 </category>
-          
-          <category> 存储 </category>
-          
-      </categories>
-      
       
     </entry>
     

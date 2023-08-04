@@ -2,9 +2,9 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>25--eMMC的Device identification mode | 马克得烂笔头</title>
-  <meta name="keywords" content=" eMMC ">
-  <meta name="description" content="25--eMMC的Device identification mode | 马克得烂笔头">
+  <title>Verilog分类保留 | 马克得烂笔头</title>
+  <meta name="keywords" content="">
+  <meta name="description" content="Verilog分类保留 | 马克得烂笔头">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <meta name="description" content="人的精力是有限的，本站作为第二大脑用于存储本人学过的知识">
 <meta property="og:type" content="website">
@@ -857,9 +857,9 @@
 </aside>
 <div id="post">
     <div class="pjax">
-        <article id="post-2 领域/eMMC/25--eMMC的Device identification mode" class="article article-type-post" itemscope itemprop="blogPost">
+        <article id="post-3 语言/Verilog/Verilog" class="article article-type-post" itemscope itemprop="blogPost">
     
-        <h1 class="article-title">25--eMMC的Device identification mode</h1>
+        <h1 class="article-title">Verilog分类保留</h1>
     
     <div class="article-meta">
         
@@ -869,29 +869,22 @@
             <i class="iconfont icon-category"></i>
             
             
-            <a  data-rel="领域">领域</a> > 
+            <a  data-rel="语言">语言</a> > 
             
-            <a  data-rel="领域&lt;---&gt;eMMC">eMMC</a>
+            <a  data-rel="语言&lt;---&gt;Verilog">Verilog</a>
             
         </span>
         
-        
-        <span class="tag">
-            <i class="iconfont icon-tag"></i>
-            
-            <a class="color5">eMMC</a>
-            
-        </span>
         
     </div>
     <div class="article-meta">
         
-            发布时间 : <time class="date" title='最后更新: 2023-06-24 13:16:11'>2023-06-24 12:56</time>
+            发布时间 : <time class="date" title='最后更新: 2023-03-19 21:25:33'>2023-03-10 14:12</time>
         
     </div>
     <div class="article-meta">
         
-        <span>字数:331</span>
+        <span>字数:0</span>
         
         
         
@@ -910,7 +903,7 @@
     
     <div class="toc-ref">
     
-        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E8%BF%9B%E5%85%A5Device-identification-mode%E6%B5%81%E7%A8%8B"><span class="toc-text">一、进入Device identification mode流程</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%8C%E3%80%81OCR%E5%AF%84%E5%AD%98%E5%99%A8%E7%9A%84%E5%86%85%E5%AE%B9"><span class="toc-text">二、OCR寄存器的内容</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%89%E3%80%81CID%E5%AF%84%E5%AD%98%E5%99%A8"><span class="toc-text">三、CID寄存器</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%9B%9B%E3%80%81RCA%E5%AF%84%E5%AD%98%E5%99%A8"><span class="toc-text">四、RCA寄存器</span></a></li></ol>
+        
     
 <style>
     .left-col .switch-btn,
@@ -926,35 +919,7 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p><div class='inner-toc'><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E8%BF%9B%E5%85%A5Device-identification-mode%E6%B5%81%E7%A8%8B"><span class="toc-text">一、进入Device identification mode流程</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%8C%E3%80%81OCR%E5%AF%84%E5%AD%98%E5%99%A8%E7%9A%84%E5%86%85%E5%AE%B9"><span class="toc-text">二、OCR寄存器的内容</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%89%E3%80%81CID%E5%AF%84%E5%AD%98%E5%99%A8"><span class="toc-text">三、CID寄存器</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%9B%9B%E3%80%81RCA%E5%AF%84%E5%AD%98%E5%99%A8"><span class="toc-text">四、RCA寄存器</span></a></li></ol></div></p>
-<h1 id="一、进入Device-identification-mode流程"><a href="#一、进入Device-identification-mode流程" class="headerlink" title="一、进入Device identification mode流程"></a>一、进入Device identification mode流程</h1><center>
-<img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/25.1.png" width="80%" height="75%" alt="25.1"/>
-</center>
-
-
-<ul>
-<li>1、power-on后进入Idle State，或通过发送<strong>CMD0</strong>（0x00000000）；</li>
-<li>2、请求处于Idle State中device的<code>OCR</code>内容：host通过发送<strong>CMD1</strong>，接收来自device的反馈；<br>若CMD1应答中<strong>没有“busy bit”（<em>OCR[31]为高时</em>）</strong>，该device则进入<code>Ready State</code>；</li>
-<li>3、请求处于Ready State中device的<code>CID</code>内容：通过<strong>CMD2</strong>；</li>
-<li>5、进入<code>Identification State</code>：当<strong>CMD2应答的device CID编号和host请求的device CID编号一致</strong>时；</li>
-<li>6、给选中的device赋予一个<code>RCA</code>地址：通过<strong>CMD3</strong>；</li>
-<li>7、最后完成identification进程，device进入Stand-by State，之后在数据传输模式中就会通过RCA地址寻址相应设备。</li>
-</ul>
-<h1 id="二、OCR寄存器的内容"><a href="#二、OCR寄存器的内容" class="headerlink" title="二、OCR寄存器的内容"></a>二、OCR寄存器的内容</h1><p>Operation condition register，表明了device的<code>Vdd电压</code>配置和<code>访问模式</code>。</p>
-<p>还有一个<code>状态bit[31]</code>，当上电完成后此位为1。</p>
-<center>
-<img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/25.2.png" width="75%" height="75%" alt="25.2"/>
-</center>
-
-<p>此寄存器作为CMD1的应答发送给host，host如果支持sector access mode，CMD1的arg应该在<code>bit[30:29]</code>表明。</p>
-<h1 id="三、CID寄存器"><a href="#三、CID寄存器" class="headerlink" title="三、CID寄存器"></a>三、CID寄存器</h1><p>Device IDentification register，保证了在<code>设备识别阶段</code>每一个设备都有独一无二的设备识别号。</p>
-<center>
-<img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/25.3.png" width="80%" height="75%" alt="25.3"/>
-</center>
-
-<h1 id="四、RCA寄存器"><a href="#四、RCA寄存器" class="headerlink" title="四、RCA寄存器"></a>四、RCA寄存器</h1><p>Relative device address register，携带着<code>设备识别阶段</code>host分配给识别到的device的相对地址，此地址用于device identification mode之后<code>host&lt;——&gt;device通讯</code>。</p>
-<p>默认值为0x0001，值 0x0000 是为将所有设备以 CMD7 置于 Stand-by 状态而保留的。</p>
-
+        
       
        <hr><span style="font-style: italic;color: gray;"> 转载请注明来源，欢迎对文章中的引用来源进行考证，欢迎指出任何有错误或不够清晰的表达。可以在下面评论区评论，也可以邮件至 icmarktian@163.com </span>
     </div>

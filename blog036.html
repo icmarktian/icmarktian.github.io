@@ -2,9 +2,9 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>25--eMMC的Device identification mode | 马克得烂笔头</title>
-  <meta name="keywords" content=" eMMC ">
-  <meta name="description" content="25--eMMC的Device identification mode | 马克得烂笔头">
+  <title>36--SystemC基本语法：模块、端口、信号、时钟 | 马克得烂笔头</title>
+  <meta name="keywords" content=" SystemC ">
+  <meta name="description" content="36--SystemC基本语法：模块、端口、信号、时钟 | 马克得烂笔头">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <meta name="description" content="人的精力是有限的，本站作为第二大脑用于存储本人学过的知识">
 <meta property="og:type" content="website">
@@ -857,9 +857,9 @@
 </aside>
 <div id="post">
     <div class="pjax">
-        <article id="post-2 领域/eMMC/25--eMMC的Device identification mode" class="article article-type-post" itemscope itemprop="blogPost">
+        <article id="post-3 语言/SystemC/36--SystemC基本语法：模块、端口、信号、时钟" class="article article-type-post" itemscope itemprop="blogPost">
     
-        <h1 class="article-title">25--eMMC的Device identification mode</h1>
+        <h1 class="article-title">36--SystemC基本语法：模块、端口、信号、时钟</h1>
     
     <div class="article-meta">
         
@@ -869,9 +869,9 @@
             <i class="iconfont icon-category"></i>
             
             
-            <a  data-rel="领域">领域</a> > 
+            <a  data-rel="语言">语言</a> > 
             
-            <a  data-rel="领域&lt;---&gt;eMMC">eMMC</a>
+            <a  data-rel="语言&lt;---&gt;SystemC">SystemC</a>
             
         </span>
         
@@ -879,19 +879,19 @@
         <span class="tag">
             <i class="iconfont icon-tag"></i>
             
-            <a class="color5">eMMC</a>
+            <a class="color3">SystemC</a>
             
         </span>
         
     </div>
     <div class="article-meta">
         
-            发布时间 : <time class="date" title='最后更新: 2023-06-24 13:16:11'>2023-06-24 12:56</time>
+            发布时间 : <time class="date" title='最后更新: 2023-08-04 17:46:42'>2023-08-04 17:23</time>
         
     </div>
     <div class="article-meta">
         
-        <span>字数:331</span>
+        <span>字数:1.3k</span>
         
         
         
@@ -910,7 +910,7 @@
     
     <div class="toc-ref">
     
-        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E8%BF%9B%E5%85%A5Device-identification-mode%E6%B5%81%E7%A8%8B"><span class="toc-text">一、进入Device identification mode流程</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%8C%E3%80%81OCR%E5%AF%84%E5%AD%98%E5%99%A8%E7%9A%84%E5%86%85%E5%AE%B9"><span class="toc-text">二、OCR寄存器的内容</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%89%E3%80%81CID%E5%AF%84%E5%AD%98%E5%99%A8"><span class="toc-text">三、CID寄存器</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%9B%9B%E3%80%81RCA%E5%AF%84%E5%AD%98%E5%99%A8"><span class="toc-text">四、RCA寄存器</span></a></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E6%A8%A1%E5%9D%97%E7%9A%84%E5%AE%9A%E4%B9%89%EF%BC%9ASC-MODULE"><span class="toc-text">一、模块的定义：SC_MODULE</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E6%A8%A1%E5%9D%97%E7%9A%84%E7%AB%AF%E5%8F%A3%EF%BC%9Asc-in%E3%80%81sc-out%E3%80%81sc-inout"><span class="toc-text">二、模块的端口：sc_in、sc_out、sc_inout</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E6%A8%A1%E5%9D%97%E7%9A%84%E4%BF%A1%E5%8F%B7%EF%BC%9Asc-signal"><span class="toc-text">三、模块的信号：sc_signal</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#3-1-%E7%AB%AF%E5%8F%A3%E5%92%8C%E4%BF%A1%E5%8F%B7%E7%9A%84%E5%85%B3%E7%B3%BB"><span class="toc-text">3.1  端口和信号的关系</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-2-%E5%A4%9A%E7%AB%AF%E5%8F%A3%E5%92%8C%E4%BF%A1%E5%8F%B7%E7%9A%84%E5%BF%AB%E9%80%9F%E5%A3%B0%E6%98%8E"><span class="toc-text">3.2  多端口和信号的快速声明</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-3-%E9%9A%90%E5%BC%8F%E7%B1%BB%E5%9E%8B%E8%BD%AC%E6%8D%A2%EF%BC%8C%E5%8A%A9%E6%89%8B%E5%87%BD%E6%95%B0read-%E5%92%8Cwrite"><span class="toc-text">3.3  隐式类型转换，助手函数read()和write()</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%9B%9B%E3%80%81%E5%90%8D%E5%AD%97%E5%85%B3%E8%81%94"><span class="toc-text">四、名字关联</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%94%E3%80%81%E6%A8%A1%E5%9D%97%E7%9A%84%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0%EF%BC%9ASC-CTOR"><span class="toc-text">五、模块的构造函数：SC_CTOR</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%85%AD%E3%80%81SystemC%E6%97%B6%E9%92%9F%E5%92%8C%E6%97%B6%E9%97%B4%E6%A8%A1%E5%9E%8B"><span class="toc-text">六、SystemC时钟和时间模型</span></a></li></ol>
     
 <style>
     .left-col .switch-btn,
@@ -926,34 +926,142 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p><div class='inner-toc'><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E8%BF%9B%E5%85%A5Device-identification-mode%E6%B5%81%E7%A8%8B"><span class="toc-text">一、进入Device identification mode流程</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%8C%E3%80%81OCR%E5%AF%84%E5%AD%98%E5%99%A8%E7%9A%84%E5%86%85%E5%AE%B9"><span class="toc-text">二、OCR寄存器的内容</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%89%E3%80%81CID%E5%AF%84%E5%AD%98%E5%99%A8"><span class="toc-text">三、CID寄存器</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%9B%9B%E3%80%81RCA%E5%AF%84%E5%AD%98%E5%99%A8"><span class="toc-text">四、RCA寄存器</span></a></li></ol></div></p>
-<h1 id="一、进入Device-identification-mode流程"><a href="#一、进入Device-identification-mode流程" class="headerlink" title="一、进入Device identification mode流程"></a>一、进入Device identification mode流程</h1><center>
-<img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/25.1.png" width="80%" height="75%" alt="25.1"/>
-</center>
-
-
-<ul>
-<li>1、power-on后进入Idle State，或通过发送<strong>CMD0</strong>（0x00000000）；</li>
-<li>2、请求处于Idle State中device的<code>OCR</code>内容：host通过发送<strong>CMD1</strong>，接收来自device的反馈；<br>若CMD1应答中<strong>没有“busy bit”（<em>OCR[31]为高时</em>）</strong>，该device则进入<code>Ready State</code>；</li>
-<li>3、请求处于Ready State中device的<code>CID</code>内容：通过<strong>CMD2</strong>；</li>
-<li>5、进入<code>Identification State</code>：当<strong>CMD2应答的device CID编号和host请求的device CID编号一致</strong>时；</li>
-<li>6、给选中的device赋予一个<code>RCA</code>地址：通过<strong>CMD3</strong>；</li>
-<li>7、最后完成identification进程，device进入Stand-by State，之后在数据传输模式中就会通过RCA地址寻址相应设备。</li>
-</ul>
-<h1 id="二、OCR寄存器的内容"><a href="#二、OCR寄存器的内容" class="headerlink" title="二、OCR寄存器的内容"></a>二、OCR寄存器的内容</h1><p>Operation condition register，表明了device的<code>Vdd电压</code>配置和<code>访问模式</code>。</p>
-<p>还有一个<code>状态bit[31]</code>，当上电完成后此位为1。</p>
+        <p><div class='inner-toc'><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E6%A8%A1%E5%9D%97%E7%9A%84%E5%AE%9A%E4%B9%89%EF%BC%9ASC-MODULE"><span class="toc-text">一、模块的定义：SC_MODULE</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E6%A8%A1%E5%9D%97%E7%9A%84%E7%AB%AF%E5%8F%A3%EF%BC%9Asc-in%E3%80%81sc-out%E3%80%81sc-inout"><span class="toc-text">二、模块的端口：sc_in、sc_out、sc_inout</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E6%A8%A1%E5%9D%97%E7%9A%84%E4%BF%A1%E5%8F%B7%EF%BC%9Asc-signal"><span class="toc-text">三、模块的信号：sc_signal</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#3-1-%E7%AB%AF%E5%8F%A3%E5%92%8C%E4%BF%A1%E5%8F%B7%E7%9A%84%E5%85%B3%E7%B3%BB"><span class="toc-text">3.1  端口和信号的关系</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-2-%E5%A4%9A%E7%AB%AF%E5%8F%A3%E5%92%8C%E4%BF%A1%E5%8F%B7%E7%9A%84%E5%BF%AB%E9%80%9F%E5%A3%B0%E6%98%8E"><span class="toc-text">3.2  多端口和信号的快速声明</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-3-%E9%9A%90%E5%BC%8F%E7%B1%BB%E5%9E%8B%E8%BD%AC%E6%8D%A2%EF%BC%8C%E5%8A%A9%E6%89%8B%E5%87%BD%E6%95%B0read-%E5%92%8Cwrite"><span class="toc-text">3.3  隐式类型转换，助手函数read()和write()</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%9B%9B%E3%80%81%E5%90%8D%E5%AD%97%E5%85%B3%E8%81%94"><span class="toc-text">四、名字关联</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%94%E3%80%81%E6%A8%A1%E5%9D%97%E7%9A%84%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0%EF%BC%9ASC-CTOR"><span class="toc-text">五、模块的构造函数：SC_CTOR</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%85%AD%E3%80%81SystemC%E6%97%B6%E9%92%9F%E5%92%8C%E6%97%B6%E9%97%B4%E6%A8%A1%E5%9E%8B"><span class="toc-text">六、SystemC时钟和时间模型</span></a></li></ol></div></p>
+<h1 id="一、模块的定义：SC-MODULE"><a href="#一、模块的定义：SC-MODULE" class="headerlink" title="一、模块的定义：SC_MODULE"></a>一、模块的定义：SC_MODULE</h1><p>关键字：<code>SC_MODULE</code></p>
+<p>解释：SC_MODULE 是 SystemC 库中定义的一个宏，使用它定义一个模块实际上是定义了一个新的 C++ 类。</p>
+<h1 id="二、模块的端口：sc-in、sc-out、sc-inout"><a href="#二、模块的端口：sc-in、sc-out、sc-inout" class="headerlink" title="二、模块的端口：sc_in、sc_out、sc_inout"></a>二、模块的端口：sc_in、sc_out、sc_inout</h1><p><code>端口</code>使数据能够在模块间通过。</p>
+<p>端口分为三种类型：<code>sc_in</code>、<code>sc_out</code>、<code>sc_inout</code>。</p>
+<p>在端口定义时可指定数据类型：如 bool、int、short、char 等。</p>
+<p>举例，如下：</p>
 <center>
-<img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/25.2.png" width="75%" height="75%" alt="25.2"/>
+<img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/36.1.png" width="75%" height="75%" alt="36.1"/>
 </center>
 
-<p>此寄存器作为CMD1的应答发送给host，host如果支持sector access mode，CMD1的arg应该在<code>bit[30:29]</code>表明。</p>
-<h1 id="三、CID寄存器"><a href="#三、CID寄存器" class="headerlink" title="三、CID寄存器"></a>三、CID寄存器</h1><p>Device IDentification register，保证了在<code>设备识别阶段</code>每一个设备都有独一无二的设备识别号。</p>
+<pre><code class="cpp">SC_MODULE(fifo)&#123;
+            sc_in_clk              clk;                 //clock
+            sc_in&lt;bool&gt;            rst;                 //reset
+            sc_in&lt;bool&gt;            wr_en;               //FIFO write enable
+            sc_in&lt;bool&gt;            rd_en;               //FIFO read enable
+            sc_in&lt;int&gt;             din;                 //data input, 32 bit bus
+            sc_out&lt;bool&gt;           full, almost_full;
+            sc_out&lt;bool&gt;           enpty, almost_empty;
+            sc_out&lt;unsigned short&gt; data_count;          //FIFO data count
+      sc_out&lt;int&gt;            dout;                //FIFO data out
+&#125;
+</code></pre>
+<h1 id="三、模块的信号：sc-signal"><a href="#三、模块的信号：sc-signal" class="headerlink" title="三、模块的信号：sc_signal"></a>三、模块的信号：sc_signal</h1><p>模块之间通过<code>信号</code>将端口连接起来，信号是数据的载体，可以认为信号就是<code>连线</code>（类比于 Verilog 中的 wire）。</p>
+<p>关键字：<code>sc_signal&lt;T&gt;</code></p>
+<p>举例，如下：</p>
 <center>
-<img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/25.3.png" width="80%" height="75%" alt="25.3"/>
+<img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/36.2.png" width="75%" height="75%" alt="36.2"/>
 </center>
 
-<h1 id="四、RCA寄存器"><a href="#四、RCA寄存器" class="headerlink" title="四、RCA寄存器"></a>四、RCA寄存器</h1><p>Relative device address register，携带着<code>设备识别阶段</code>host分配给识别到的device的相对地址，此地址用于device identification mode之后<code>host&lt;——&gt;device通讯</code>。</p>
-<p>默认值为0x0001，值 0x0000 是为将所有设备以 CMD7 置于 Stand-by 状态而保留的。</p>
+<p>如图36.2所示：<code>operator_ctrl</code>、 <code>operand_ctrla</code>、<code>operand_ctrlb</code>、<code>a</code>、<code>b</code>、<code>c</code>、<code>result</code>，为 7 个信号。</p>
+<p>注：信号和子模块的端口处于不同的设计层次，所以允许信号和端口同名，如：ALU 的 <code>result 端口</code>和<code>信号 result</code>。</p>
+<h2 id="3-1-端口和信号的关系"><a href="#3-1-端口和信号的关系" class="headerlink" title="3.1  端口和信号的关系"></a>3.1  端口和信号的关系</h2><center>
+<img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/36.3.png" width="75%" height="75%" alt="36.3"/>
+</center>
+
+<p>如图36.3所示，模块1和模块2分别有一个进程，假设这两个模块之间的信号为D；</p>
+<p>在T1时刻，<code>Clk</code>从<code>0 ——&gt; 1</code>，恰好模块1中的进程也将<code>信号 D</code> 从<code>0 ——&gt; 1</code>，但是模块1和模块2中的进程都在同一个上升沿被同时触发，它们工作在同一个时间步内，<br><strong>所以在T1时刻，模块2中的进程看到的 D 值是 0（旧值）。</strong></p>
+<h2 id="3-2-多端口和信号的快速声明"><a href="#3-2-多端口和信号的快速声明" class="headerlink" title="3.2  多端口和信号的快速声明"></a>3.2  多端口和信号的快速声明</h2><pre><code class="cpp">sc_in&lt;sc_logic&gt; a[32];  //a[0]到a[31]，32个端口，方向为输入，数据类型为sc_logic
+sc_signal&lt;sc_logic&gt; abus[16];  //abus[0]到abus[15]，16个信号
+</code></pre>
+<h2 id="3-3-隐式类型转换，助手函数read-和write"><a href="#3-3-隐式类型转换，助手函数read-和write" class="headerlink" title="3.3  隐式类型转换，助手函数read()和write()"></a>3.3  隐式类型转换，助手函数read()和write()</h2><pre><code class="cpp">//如果定义了如下端口
+sc_in&lt;bool&gt;  data_in;
+sc_out&lt;int&gt;  data_out;
+
+//data_out=data_in;
+//在进程中直接赋值是非法的，因为两者类型不同
+data_out.write(data_in.read());
+</code></pre>
+<h1 id="四、名字关联"><a href="#四、名字关联" class="headerlink" title="四、名字关联"></a>四、名字关联</h1><p>如图36.2所示，顶层模块 Top 的作用是：将各个子模块连接起来，子模块的端口是通过 Top 中定义的信号来关联的。</p>
+<p>如何将 Top 的信号和子模块的信号关联，<code>名字关联</code>和<code>位置关联</code>。</p>
+<p>例子：Top.h 文件如下</p>
+<pre><code class="cpp">#include &quot;systemc.h&quot;
+#include &quot;DataGenerator.h&quot;  //For Gen_a and Gen_b
+#include &quot;Control.h&quot;
+#include &quot;ALU.h&quot;
+#include &quot;OperatorGenerator.h&quot;
+#include &quot;DisplayResult.h&quot;
+
+SC_MODULE(Top) &#123;
+//指针定义
+Control             *Ctrll;
+DataGenerator       *Gen_a, *Gen_b;
+OperatorGenerator   *OpGenl;
+ALU                 *ALU1;
+DisplayResult       *DispResultl;
+
+//端口定义，Top层可以没有端口， 这里只有一个Clock端口
+sc_in_clk   clk；
+
+//信号定义
+sc_signal&lt;int&gt;   a, b, result;
+sc_sign&lt;sc_unit&lt;&gt; &gt;   c;
+//知识点：sc_unit&lt;&gt;是SystemC中专有的数据类型，4表示数据只有4位，故可表示16中=种操作；
+//在声明中，sc_sign&lt;sc_unit&lt;&gt; &gt;，中间有个额外的空格不能省略。
+sc_sign&lt;bool&gt;   operator_ctrl, operand_ctrla, opcrand_ctrlb;
+
+//Constructor1 位置关联（不推荐）
+SC_CTOR(Top) &#123;
+    Ctrl1 = new Control(&quot;Ctrl1&quot;);  //创建一个新的对象指向它的指针
+    (*Ctrl1) (clk, operand_ctrla, operand_ctrlb, operator_ctrl);//用对象的指针把信号关联到对象端口
+//其它模块省略…………
+&#125;
+
+//Constructor2 名字关联（推荐）
+SC_CTOR(Top)&#123;
+    Ctrl1 = new Control(&quot;Ctrl1&quot;);
+    Ctrl1 -&gt; clk (clk);
+    Ctrl1 -&gt; op  (operator_ctrl)
+    Ctrl1 -&gt; or_b(operand_ctrlb);
+    Ctrl1 -&gt; or_a(operand_ctrla);
+//其它模块省略…………
+&#125;
+&#125;
+</code></pre>
+<h1 id="五、模块的构造函数：SC-CTOR"><a href="#五、模块的构造函数：SC-CTOR" class="headerlink" title="五、模块的构造函数：SC_CTOR"></a>五、模块的构造函数：SC_CTOR</h1><p>关键字：<code>SC_CTOR</code></p>
+<p>作用：1、创建模块内部数据结构，并把这些数据结构初始化为已知值。<br>　　　2、初始化进程的类型，并创建进程的敏感列表。</p>
+<p>举例：</p>
+<pre><code class="cpp">//Constructor
+SC_CTOR(asyn_fifo)&#123;
+     SC_METHOD(write);  //进程write()对写时钟和复位信号敏感，工作在写时钟，异步复位。
+        sensitive&lt;&lt;wr_clk&lt;&lt;rst;
+         SC_METHOD(read);  //进程read()工作在读时钟，异步复位。
+                sensitive&lt;&lt;rd_clk&lt;&lt;rst;
+         SC_METHOD(synchronize_pointer);  //进程synchronize_pointer完成指针交换工作。
+                sensitive&lt;&lt;wr_clk&lt;&lt;rd_clk&lt;&lt;rst&lt;&lt;ptr_wr&lt;&lt;ptr_rd;  //后两个是写指针和读指针
+//定义为：sc_signal&lt;int&gt;  ptr_wr, ptr_rd; //write pointer and read pointer;
+
+…………
+for(i=0;i++;i&lt;DEPTH) &#123;mem[i]=0;&#125;  //for循环把FIFO的存储空间初始化为0.
+&#125;
+</code></pre>
+<p>注意：构造函数的名字必须与模块的名字相同</p>
+<h1 id="六、SystemC时钟和时间模型"><a href="#六、SystemC时钟和时间模型" class="headerlink" title="六、SystemC时钟和时间模型"></a>六、SystemC时钟和时间模型</h1><pre><code class="cpp">//名称为clk1，表示20个时间单位，单位是ns，占空比是0.5(高电平持续0.5个周期)，
+//在5ns时第一次变化（相位偏移5个单位）。
+//ture：信号将从高电平开始，false：则信号从低电平开始。
+sc_clock clk1(&quot;clk1&quot;, 20, SC_NS, 0.5, 5, true);
+//名称为clk2，…………，在0ns时第一次变化
+sc_clock clk2(&quot;clk2&quot;, 20, SC_NS, 0.5, 0, true);
+
+//或者引入一个sc_time类型常量time1，通过time1初始化clk3；
+sc_time time1(20， SC_NS);
+sc_clock clk3(&quot;clk3&quot;, time1);
+</code></pre>
+<center>
+<img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/36.4.png" width="75%" height="75%" alt="36.4"/>
+</center>
+
+<pre><code class="cpp">//设置时间分辨率
+sc_set_time_resolution(10, SC_PS);//分辨率为10ps
+
+//1、时间分辨率必须是10的幂；
+//2、……只能在仿真开始之前设置；
+//3、……只能设置1次；
+//4、必须在任何的非零的sc_time声明之前设置
+</code></pre>
 
       
        <hr><span style="font-style: italic;color: gray;"> 转载请注明来源，欢迎对文章中的引用来源进行考证，欢迎指出任何有错误或不够清晰的表达。可以在下面评论区评论，也可以邮件至 icmarktian@163.com </span>

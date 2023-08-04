@@ -2,9 +2,9 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>25--eMMC的Device identification mode | 马克得烂笔头</title>
-  <meta name="keywords" content=" eMMC ">
-  <meta name="description" content="25--eMMC的Device identification mode | 马克得烂笔头">
+  <title>35--SystemC简介及环境配置 | 马克得烂笔头</title>
+  <meta name="keywords" content=" SystemC ">
+  <meta name="description" content="35--SystemC简介及环境配置 | 马克得烂笔头">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <meta name="description" content="人的精力是有限的，本站作为第二大脑用于存储本人学过的知识">
 <meta property="og:type" content="website">
@@ -857,9 +857,9 @@
 </aside>
 <div id="post">
     <div class="pjax">
-        <article id="post-2 领域/eMMC/25--eMMC的Device identification mode" class="article article-type-post" itemscope itemprop="blogPost">
+        <article id="post-3 语言/SystemC/35--SystemC简介及环境配置" class="article article-type-post" itemscope itemprop="blogPost">
     
-        <h1 class="article-title">25--eMMC的Device identification mode</h1>
+        <h1 class="article-title">35--SystemC简介及环境配置</h1>
     
     <div class="article-meta">
         
@@ -869,9 +869,9 @@
             <i class="iconfont icon-category"></i>
             
             
-            <a  data-rel="领域">领域</a> > 
+            <a  data-rel="语言">语言</a> > 
             
-            <a  data-rel="领域&lt;---&gt;eMMC">eMMC</a>
+            <a  data-rel="语言&lt;---&gt;SystemC">SystemC</a>
             
         </span>
         
@@ -879,19 +879,19 @@
         <span class="tag">
             <i class="iconfont icon-tag"></i>
             
-            <a class="color5">eMMC</a>
+            <a class="color3">SystemC</a>
             
         </span>
         
     </div>
     <div class="article-meta">
         
-            发布时间 : <time class="date" title='最后更新: 2023-06-24 13:16:11'>2023-06-24 12:56</time>
+            发布时间 : <time class="date" title='最后更新: 2023-08-04 17:00:42'>2023-08-04 16:17</time>
         
     </div>
     <div class="article-meta">
         
-        <span>字数:331</span>
+        <span>字数:1.2k</span>
         
         
         
@@ -910,7 +910,7 @@
     
     <div class="toc-ref">
     
-        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E8%BF%9B%E5%85%A5Device-identification-mode%E6%B5%81%E7%A8%8B"><span class="toc-text">一、进入Device identification mode流程</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%8C%E3%80%81OCR%E5%AF%84%E5%AD%98%E5%99%A8%E7%9A%84%E5%86%85%E5%AE%B9"><span class="toc-text">二、OCR寄存器的内容</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%89%E3%80%81CID%E5%AF%84%E5%AD%98%E5%99%A8"><span class="toc-text">三、CID寄存器</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%9B%9B%E3%80%81RCA%E5%AF%84%E5%AD%98%E5%99%A8"><span class="toc-text">四、RCA寄存器</span></a></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#1%E3%80%81SystemC%E7%AE%80%E4%BB%8B%E5%8F%8A%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE"><span class="toc-text">1、SystemC简介及环境配置</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%80%E3%80%81SystemC%E7%AE%80%E4%BB%8B"><span class="toc-text">一、SystemC简介</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-1-%E5%BC%80%E5%8F%91%E9%A1%BA%E5%BA%8F"><span class="toc-text">1.1  开发顺序</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-2-%E4%B8%BA%E4%BB%80%E4%B9%88%E4%BD%BF%E7%94%A8-SystemC%EF%BC%9F"><span class="toc-text">1.2  为什么使用 SystemC？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-3-SystemC-%E5%92%8C-SystemVerilog"><span class="toc-text">1.3  SystemC 和 SystemVerilog</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%8C%E3%80%81SystemC-%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA"><span class="toc-text">二、SystemC 环境搭建</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E7%8E%AF%E5%A2%83%E6%B5%8B%E8%AF%95"><span class="toc-text">三、环境测试</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#3-1-counter-cpp"><span class="toc-text">3.1  counter.cpp</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-2-counter-tb-cpp"><span class="toc-text">3.2  counter_tb.cpp</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-3-Makefile"><span class="toc-text">3.3 Makefile</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-4-%E7%BB%93%E6%9E%9C"><span class="toc-text">3.4  结果</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-text">参考</span></a></li></ol>
     
 <style>
     .left-col .switch-btn,
@@ -926,34 +926,185 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p><div class='inner-toc'><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E8%BF%9B%E5%85%A5Device-identification-mode%E6%B5%81%E7%A8%8B"><span class="toc-text">一、进入Device identification mode流程</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%8C%E3%80%81OCR%E5%AF%84%E5%AD%98%E5%99%A8%E7%9A%84%E5%86%85%E5%AE%B9"><span class="toc-text">二、OCR寄存器的内容</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%89%E3%80%81CID%E5%AF%84%E5%AD%98%E5%99%A8"><span class="toc-text">三、CID寄存器</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%9B%9B%E3%80%81RCA%E5%AF%84%E5%AD%98%E5%99%A8"><span class="toc-text">四、RCA寄存器</span></a></li></ol></div></p>
-<h1 id="一、进入Device-identification-mode流程"><a href="#一、进入Device-identification-mode流程" class="headerlink" title="一、进入Device identification mode流程"></a>一、进入Device identification mode流程</h1><center>
-<img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/25.1.png" width="80%" height="75%" alt="25.1"/>
-</center>
-
-
-<ul>
-<li>1、power-on后进入Idle State，或通过发送<strong>CMD0</strong>（0x00000000）；</li>
-<li>2、请求处于Idle State中device的<code>OCR</code>内容：host通过发送<strong>CMD1</strong>，接收来自device的反馈；<br>若CMD1应答中<strong>没有“busy bit”（<em>OCR[31]为高时</em>）</strong>，该device则进入<code>Ready State</code>；</li>
-<li>3、请求处于Ready State中device的<code>CID</code>内容：通过<strong>CMD2</strong>；</li>
-<li>5、进入<code>Identification State</code>：当<strong>CMD2应答的device CID编号和host请求的device CID编号一致</strong>时；</li>
-<li>6、给选中的device赋予一个<code>RCA</code>地址：通过<strong>CMD3</strong>；</li>
-<li>7、最后完成identification进程，device进入Stand-by State，之后在数据传输模式中就会通过RCA地址寻址相应设备。</li>
+        <p><div class='inner-toc'><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#1%E3%80%81SystemC%E7%AE%80%E4%BB%8B%E5%8F%8A%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE"><span class="toc-text">1、SystemC简介及环境配置</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%80%E3%80%81SystemC%E7%AE%80%E4%BB%8B"><span class="toc-text">一、SystemC简介</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-1-%E5%BC%80%E5%8F%91%E9%A1%BA%E5%BA%8F"><span class="toc-text">1.1  开发顺序</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-2-%E4%B8%BA%E4%BB%80%E4%B9%88%E4%BD%BF%E7%94%A8-SystemC%EF%BC%9F"><span class="toc-text">1.2  为什么使用 SystemC？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-3-SystemC-%E5%92%8C-SystemVerilog"><span class="toc-text">1.3  SystemC 和 SystemVerilog</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%8C%E3%80%81SystemC-%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA"><span class="toc-text">二、SystemC 环境搭建</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E7%8E%AF%E5%A2%83%E6%B5%8B%E8%AF%95"><span class="toc-text">三、环境测试</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#3-1-counter-cpp"><span class="toc-text">3.1  counter.cpp</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-2-counter-tb-cpp"><span class="toc-text">3.2  counter_tb.cpp</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-3-Makefile"><span class="toc-text">3.3 Makefile</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-4-%E7%BB%93%E6%9E%9C"><span class="toc-text">3.4  结果</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-text">参考</span></a></li></ol></div></p>
+<h1 id="1、SystemC简介及环境配置"><a href="#1、SystemC简介及环境配置" class="headerlink" title="1、SystemC简介及环境配置"></a>1、SystemC简介及环境配置</h1><h1 id="一、SystemC简介"><a href="#一、SystemC简介" class="headerlink" title="一、SystemC简介"></a>一、SystemC简介</h1><ul>
+<li>SystemC 是一种基于 C++ 的用于系统级建模和仿真的语言，本质上是在 C++ 的基础上添加的硬件扩展库和仿真核，这使得SystemC 可以建模不同抽象级别的包括软件和硬件的复杂电子系统。<br>它由<code>Open SystemC Initiative（OSCI）</code>开发（1999年），与 Accellera Systems Initiative 联合将其标准化为 IEEE Std. 1666-2011™。</li>
+<li>SystemC目的：<strong>实现用单一语言完成设计规范、系统体系结构分析、验证平台和行为模型。</strong><br>但是RTL级和门级建模并非其擅长领域。</li>
 </ul>
-<h1 id="二、OCR寄存器的内容"><a href="#二、OCR寄存器的内容" class="headerlink" title="二、OCR寄存器的内容"></a>二、OCR寄存器的内容</h1><p>Operation condition register，表明了device的<code>Vdd电压</code>配置和<code>访问模式</code>。</p>
-<p>还有一个<code>状态bit[31]</code>，当上电完成后此位为1。</p>
 <center>
-<img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/25.2.png" width="75%" height="75%" alt="25.2"/>
+<img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/35.1.png" width="75%" height="75%" alt="35.1  systemc-architecture"/>
 </center>
 
-<p>此寄存器作为CMD1的应答发送给host，host如果支持sector access mode，CMD1的arg应该在<code>bit[30:29]</code>表明。</p>
-<h1 id="三、CID寄存器"><a href="#三、CID寄存器" class="headerlink" title="三、CID寄存器"></a>三、CID寄存器</h1><p>Device IDentification register，保证了在<code>设备识别阶段</code>每一个设备都有独一无二的设备识别号。</p>
+<h2 id="1-1-开发顺序"><a href="#1-1-开发顺序" class="headerlink" title="1.1  开发顺序"></a>1.1  开发顺序</h2><p>系统级建模  ——&gt;  RTL级设计  ——&gt;  验证               <br>system C                  Verilog            SystemVerilog</p>
+<h2 id="1-2-为什么使用-SystemC？"><a href="#1-2-为什么使用-SystemC？" class="headerlink" title="1.2  为什么使用 SystemC？"></a>1.2  为什么使用 SystemC？</h2><p>传统的硬件描述语言和 SystemVerilog 的 C 接口不支持硬件设计中的<code>并发性</code>、<code>层次性</code>和<code>互联</code>，所以不适合描述复杂多样的系统行为。</p>
+<ul>
+<li>SystemC 支持在系统级进行设计和验证，独立于任何详细的硬件和软件实现，通过 SystemC 建模可以用于验证和固件开发 ，使得硬件设计和软件设计可以同步进行，缩短整个芯片上市时间。</li>
+<li>SystemC 可以与 RTL 设计进行联合验证，这使得可以更早地发现错误。</li>
+<li>SystemC 的抽象级别更高，这使得可以更快、更有效率地进行架构权衡分析、设计和重新设计。</li>
+<li>SystemC 是一个开源标准，这使得可以由任何公司使用。</li>
+</ul>
 <center>
-<img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/25.3.png" width="80%" height="75%" alt="25.3"/>
+<img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/35.2.png" width="75%" height="75%" alt="35.2  SystemC作用"/>
+</center>
+    
+
+<h2 id="1-3-SystemC-和-SystemVerilog"><a href="#1-3-SystemC-和-SystemVerilog" class="headerlink" title="1.3  SystemC 和 SystemVerilog"></a>1.3  SystemC 和 SystemVerilog</h2><p>当时的系统语言发展方向有两个：</p>
+<p><code>SystemVerilog</code>：扩充传统的硬件描述语言VHDL和Verilog HDL，使它们支持抽象数据类型，从而具有系统描述能力。<br><code>SystemC</code>：扩展传统的软件语言C&#x2F;C++，使他们支持硬件描述。</p>
+<center>
+<img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/35.3.png" width="75%" height="75%" alt="35.3  硬件描述语言工作的层级"/>
 </center>
 
-<h1 id="四、RCA寄存器"><a href="#四、RCA寄存器" class="headerlink" title="四、RCA寄存器"></a>四、RCA寄存器</h1><p>Relative device address register，携带着<code>设备识别阶段</code>host分配给识别到的device的相对地址，此地址用于device identification mode之后<code>host&lt;——&gt;device通讯</code>。</p>
-<p>默认值为0x0001，值 0x0000 是为将所有设备以 CMD7 置于 Stand-by 状态而保留的。</p>
+<h1 id="二、SystemC-环境搭建"><a href="#二、SystemC-环境搭建" class="headerlink" title="二、SystemC 环境搭建"></a>二、SystemC 环境搭建</h1><ul>
+<li>1、下载OSCI库并解压<br>下载地址：<a target="_blank" rel="noopener" href="https://www.accellera.org/downloads/standards/systemc">https://www.accellera.org/downloads/standards/systemc</a></li>
+</ul>
+<pre><code class="bash">tar xvf systemc-2.3.3.tar.gz
+</code></pre>
+<ul>
+<li>2、构建和编译</li>
+</ul>
+<pre><code class="bash">cd systemc-2.3.3
+mkdir build
+cd build
+cmake ../ -DCMAKE_CXX_STANDARD=17 -DCMAKE_BUILD_TYPE=Debug -DCMAKE_INSTALL_PREFIX=/usr/local/systemc
+make -j8
+</code></pre>
+<p><code>--prefix</code>：设置安装的位置。这里将安装位置设置为<code>/usr/local/systemc</code>，安装的内容包含：</p>
+<pre><code class="bash">Installation prefix (aka SYSTEMC_HOME):
+      /usr/local
+   Header files  : &lt;SYSTEMC_HOME&gt;/include
+   Libraries     : &lt;SYSTEMC_HOME&gt;/lib-linux64
+   Documentation : &lt;SYSTEMC_HOME&gt;/docs
+   Examples      : &lt;SYSTEMC_HOME&gt;/examples
+</code></pre>
+<ul>
+<li>3、安装</li>
+</ul>
+<pre><code class="bash">make install
+</code></pre>
+<h1 id="三、环境测试"><a href="#三、环境测试" class="headerlink" title="三、环境测试"></a>三、环境测试</h1><h2 id="3-1-counter-cpp"><a href="#3-1-counter-cpp" class="headerlink" title="3.1  counter.cpp"></a>3.1  counter.cpp</h2><pre><code class="cpp">#include &lt;systemc.h&gt;
+
+SC_MODULE (counter) &#123;
+  sc_in_clk     clock ;      // Clock input of the design
+  sc_in&lt;bool&gt;   reset ;      // active high, synchronous Reset input
+  sc_in&lt;bool&gt;   enable;      // Active high enable signal for counter
+  sc_out&lt;sc_uint&lt;4&gt; &gt; counter_out; // 4 bit vector output of the counter
+
+  //Local Variables
+  sc_uint&lt;4&gt;	count;
+
+  // Counter logic
+  void incr_count () &#123;
+    // At every rising edge of clock we check if reset is active
+    // If active, we load the counter output with 4&#39;b0000
+    if (reset.read() == 1) &#123;
+      count =  0;
+      counter_out.write(count);
+    // If enable is active, then we increment the counter
+    &#125; else if (enable.read() == 1) &#123;
+      count = count + 1;
+      counter_out.write(count);
+      cout&lt;&lt;&quot;@&quot; &lt;&lt; sc_time_stamp() &lt;&lt;&quot; :: Incremented Counter &quot;
+        &lt;&lt;counter_out.read()&lt;&lt;endl;
+    &#125;
+  &#125; // End of function incr_count
+
+  // Constructor for the counter
+  // Since this counter is a positive edge trigged one,
+  // We trigger the below block with respect to positive
+  // edge of the clock and also when ever reset changes state
+  SC_CTOR(counter) &#123;
+    cout&lt;&lt;&quot;Executing new&quot;&lt;&lt;endl;
+    SC_METHOD(incr_count);
+    sensitive &lt;&lt; reset;
+    sensitive &lt;&lt; clock.pos();
+  &#125; // End of Constructor
+
+&#125;; // End of Module counter
+</code></pre>
+<h2 id="3-2-counter-tb-cpp"><a href="#3-2-counter-tb-cpp" class="headerlink" title="3.2  counter_tb.cpp"></a>3.2  counter_tb.cpp</h2><pre><code class="cpp">#include &lt;systemc.h&gt;
+#include &quot;counter.cpp&quot;
+
+int sc_main (int argc, char* argv[]) &#123;
+  sc_signal&lt;bool&gt;   clock;
+  sc_signal&lt;bool&gt;   reset;
+  sc_signal&lt;bool&gt;   enable;
+  sc_signal&lt;sc_uint&lt;4&gt; &gt; counter_out;
+  int i = 0;
+  // Connect the DUT
+  counter counter(&quot;COUNTER&quot;);
+  counter.clock(clock);
+  counter.reset(reset);
+  counter.enable(enable);
+  counter.counter_out(counter_out);
+
+  sc_start(1, SC_NS);
+
+  // Open VCD file
+  sc_trace_file *wf = sc_create_vcd_trace_file(&quot;counter&quot;);
+  // Dump the desired signals
+  sc_trace(wf, clock, &quot;clock&quot;);
+  sc_trace(wf, reset, &quot;reset&quot;);
+  sc_trace(wf, enable, &quot;enable&quot;);
+  sc_trace(wf, counter_out, &quot;count&quot;);
+
+  // Initialize all variables
+  reset = 0;       // initial value of reset
+  enable = 0;      // initial value of enable
+  for (i=0;i&lt;5;i++) &#123;
+    clock = 0; 
+    sc_start(1, SC_NS);
+    clock = 1; 
+    sc_start(1, SC_NS);
+  &#125;
+  reset = 1;    // Assert the reset
+  cout &lt;&lt; &quot;@&quot; &lt;&lt; sc_time_stamp() &lt;&lt;&quot; Asserting reset\n&quot; &lt;&lt; endl;
+  for (i=0;i&lt;10;i++) &#123;
+    clock = 0; 
+    sc_start(1, SC_NS);
+    clock = 1; 
+    sc_start(1, SC_NS);
+  &#125;
+  reset = 0;    // De-assert the reset
+  cout &lt;&lt; &quot;@&quot; &lt;&lt; sc_time_stamp() &lt;&lt;&quot; De-Asserting reset\n&quot; &lt;&lt; endl;
+  for (i=0;i&lt;5;i++) &#123;
+    clock = 0; 
+    sc_start(1, SC_NS);
+    clock = 1; 
+    sc_start(1, SC_NS);
+  &#125;
+  cout &lt;&lt; &quot;@&quot; &lt;&lt; sc_time_stamp() &lt;&lt;&quot; Asserting Enable\n&quot; &lt;&lt; endl;
+  enable = 1;  // Assert enable
+  for (i=0;i&lt;20;i++) &#123;
+    clock = 0; 
+    sc_start(1, SC_NS);
+    clock = 1; 
+    sc_start(1, SC_NS);
+  &#125;
+  cout &lt;&lt; &quot;@&quot; &lt;&lt; sc_time_stamp() &lt;&lt;&quot; De-Asserting Enable\n&quot; &lt;&lt; endl;
+  enable = 0; // De-assert enable
+
+  cout &lt;&lt; &quot;@&quot; &lt;&lt; sc_time_stamp() &lt;&lt;&quot; Terminating simulation\n&quot; &lt;&lt; endl;
+  sc_close_vcd_trace_file(wf);
+  return 0;// Terminate simulation
+
+&#125;
+</code></pre>
+<h2 id="3-3-Makefile"><a href="#3-3-Makefile" class="headerlink" title="3.3 Makefile"></a>3.3 Makefile</h2><pre><code class="makefile">all:
+    g++ -I. -I /usr/local/systemc/include -L. -L/usr/local/systemc/lib64 \
+        -Wl,-rpath=/usr/local/systemc/lib64 -lsystemc -lm -o counter \
+        counter.cpp counter_tb.cpp
+    ./counter
+
+clean: 
+    rm -rf counter counter.vcd
+</code></pre>
+<h2 id="3-4-结果"><a href="#3-4-结果" class="headerlink" title="3.4  结果"></a>3.4  结果</h2><center>
+<img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/35.4.png" width="75%" height="75%" alt="35.4  仿真结果"/>
+</center>
+
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><p><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/75dbe7f64019">centos7 搭建systemc开发环境 - 简书 (jianshu.com)</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.51cto.com/34144451/3773530">记一次 Centos7 cmake 版本升级（由 v2.8.12.2 升级至 v3.14.5）_51CTO博客_linux cmake升级</a></p>
+<p><a target="_blank" rel="noopener" href="https://cloud.tencent.com/developer/article/1538041">Linux目录详解，软件应该安装到哪个目录-腾讯云开发者社区-腾讯云 (tencent.com)</a></p>
 
       
        <hr><span style="font-style: italic;color: gray;"> 转载请注明来源，欢迎对文章中的引用来源进行考证，欢迎指出任何有错误或不够清晰的表达。可以在下面评论区评论，也可以邮件至 icmarktian@163.com </span>

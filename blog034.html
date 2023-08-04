@@ -2,9 +2,9 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>25--eMMC的Device identification mode | 马克得烂笔头</title>
-  <meta name="keywords" content=" eMMC ">
-  <meta name="description" content="25--eMMC的Device identification mode | 马克得烂笔头">
+  <title>34--NAND Flash协议：ONFI和Toggle | 马克得烂笔头</title>
+  <meta name="keywords" content=" Flash ">
+  <meta name="description" content="34--NAND Flash协议：ONFI和Toggle | 马克得烂笔头">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <meta name="description" content="人的精力是有限的，本站作为第二大脑用于存储本人学过的知识">
 <meta property="og:type" content="website">
@@ -857,9 +857,9 @@
 </aside>
 <div id="post">
     <div class="pjax">
-        <article id="post-2 领域/eMMC/25--eMMC的Device identification mode" class="article article-type-post" itemscope itemprop="blogPost">
+        <article id="post-2 领域/存储/34--NAND Flash协议：ONFI和Toggle" class="article article-type-post" itemscope itemprop="blogPost">
     
-        <h1 class="article-title">25--eMMC的Device identification mode</h1>
+        <h1 class="article-title">34--NAND Flash协议：ONFI和Toggle</h1>
     
     <div class="article-meta">
         
@@ -871,7 +871,7 @@
             
             <a  data-rel="领域">领域</a> > 
             
-            <a  data-rel="领域&lt;---&gt;eMMC">eMMC</a>
+            <a  data-rel="领域&lt;---&gt;存储">存储</a>
             
         </span>
         
@@ -879,19 +879,19 @@
         <span class="tag">
             <i class="iconfont icon-tag"></i>
             
-            <a class="color5">eMMC</a>
+            <a class="color1">Flash</a>
             
         </span>
         
     </div>
     <div class="article-meta">
         
-            发布时间 : <time class="date" title='最后更新: 2023-06-24 13:16:11'>2023-06-24 12:56</time>
+            发布时间 : <time class="date" title='最后更新: 2023-08-04 16:15:43'>2023-08-04 15:34</time>
         
     </div>
     <div class="article-meta">
         
-        <span>字数:331</span>
+        <span>字数:1.2k</span>
         
         
         
@@ -910,7 +910,7 @@
     
     <div class="toc-ref">
     
-        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E8%BF%9B%E5%85%A5Device-identification-mode%E6%B5%81%E7%A8%8B"><span class="toc-text">一、进入Device identification mode流程</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%8C%E3%80%81OCR%E5%AF%84%E5%AD%98%E5%99%A8%E7%9A%84%E5%86%85%E5%AE%B9"><span class="toc-text">二、OCR寄存器的内容</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%89%E3%80%81CID%E5%AF%84%E5%AD%98%E5%99%A8"><span class="toc-text">三、CID寄存器</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%9B%9B%E3%80%81RCA%E5%AF%84%E5%AD%98%E5%99%A8"><span class="toc-text">四、RCA寄存器</span></a></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-text">前言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%80%E3%80%81Legacy-Interface"><span class="toc-text">一、Legacy Interface</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%8C%E3%80%81ONFI-Specification-History"><span class="toc-text">二、ONFI Specification History</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%89%E3%80%81Toggle"><span class="toc-text">三、Toggle</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1%E3%80%81Toggle-NAND-1-0-Asynchronous-DDR-NAND-Interface"><span class="toc-text">1、Toggle NAND 1.0 (Asynchronous DDR NAND Interface)</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%8C%E5%90%91DQS%E4%BD%9C%E7%94%A8"><span class="toc-text">双向DQS作用</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2%E3%80%81Toggle-NAND-2-0-Asynchronous-High-Speed-DDR-NAND-Interface"><span class="toc-text">2、Toggle NAND 2.0 (Asynchronous High-Speed DDR NAND Interface)</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-text">总结</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1%E3%80%81EZ-NAND%E5%8D%8F%E8%AE%AE"><span class="toc-text">1、EZ-NAND协议</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2%E3%80%81MT-x2F-s%E4%BC%A0%E8%BE%93%E5%8D%95%E4%BD%8D%E2%80%94%E2%80%94%E5%8F%AF%E4%BB%A5%E6%9B%B4%E5%87%86%E7%A1%AE%E5%9C%B0%E6%8F%8F%E8%BF%B0%E9%80%9F%E7%8E%87"><span class="toc-text">2、MT&#x2F;s传输单位——可以更准确地描述速率</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3%E3%80%81%E5%90%8C%E6%AD%A5%E5%92%8C%E5%BC%82%E6%AD%A5"><span class="toc-text">3、同步和异步</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4%E3%80%81NV-DDR%E4%B8%8D%E5%90%8C%E7%89%88%E6%9C%AC%E7%9A%84%E7%89%B9%E7%82%B9"><span class="toc-text">4、NV-DDR不同版本的特点</span></a></li></ol></li></ol>
     
 <style>
     .left-col .switch-btn,
@@ -926,35 +926,95 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p><div class='inner-toc'><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E8%BF%9B%E5%85%A5Device-identification-mode%E6%B5%81%E7%A8%8B"><span class="toc-text">一、进入Device identification mode流程</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%8C%E3%80%81OCR%E5%AF%84%E5%AD%98%E5%99%A8%E7%9A%84%E5%86%85%E5%AE%B9"><span class="toc-text">二、OCR寄存器的内容</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%89%E3%80%81CID%E5%AF%84%E5%AD%98%E5%99%A8"><span class="toc-text">三、CID寄存器</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%9B%9B%E3%80%81RCA%E5%AF%84%E5%AD%98%E5%99%A8"><span class="toc-text">四、RCA寄存器</span></a></li></ol></div></p>
-<h1 id="一、进入Device-identification-mode流程"><a href="#一、进入Device-identification-mode流程" class="headerlink" title="一、进入Device identification mode流程"></a>一、进入Device identification mode流程</h1><center>
-<img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/25.1.png" width="80%" height="75%" alt="25.1"/>
+        <p><div class='inner-toc'><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-text">前言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%80%E3%80%81Legacy-Interface"><span class="toc-text">一、Legacy Interface</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%8C%E3%80%81ONFI-Specification-History"><span class="toc-text">二、ONFI Specification History</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%89%E3%80%81Toggle"><span class="toc-text">三、Toggle</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1%E3%80%81Toggle-NAND-1-0-Asynchronous-DDR-NAND-Interface"><span class="toc-text">1、Toggle NAND 1.0 (Asynchronous DDR NAND Interface)</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%8C%E5%90%91DQS%E4%BD%9C%E7%94%A8"><span class="toc-text">双向DQS作用</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2%E3%80%81Toggle-NAND-2-0-Asynchronous-High-Speed-DDR-NAND-Interface"><span class="toc-text">2、Toggle NAND 2.0 (Asynchronous High-Speed DDR NAND Interface)</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-text">总结</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1%E3%80%81EZ-NAND%E5%8D%8F%E8%AE%AE"><span class="toc-text">1、EZ-NAND协议</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2%E3%80%81MT-x2F-s%E4%BC%A0%E8%BE%93%E5%8D%95%E4%BD%8D%E2%80%94%E2%80%94%E5%8F%AF%E4%BB%A5%E6%9B%B4%E5%87%86%E7%A1%AE%E5%9C%B0%E6%8F%8F%E8%BF%B0%E9%80%9F%E7%8E%87"><span class="toc-text">2、MT&#x2F;s传输单位——可以更准确地描述速率</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3%E3%80%81%E5%90%8C%E6%AD%A5%E5%92%8C%E5%BC%82%E6%AD%A5"><span class="toc-text">3、同步和异步</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4%E3%80%81NV-DDR%E4%B8%8D%E5%90%8C%E7%89%88%E6%9C%AC%E7%9A%84%E7%89%B9%E7%82%B9"><span class="toc-text">4、NV-DDR不同版本的特点</span></a></li></ol></li></ol></div></p>
+<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>NAND Flash的协议目前主要分为两个阵营：<code>ONFI</code>和<code>Toggle</code>。</p>
+<ul>
+<li><strong>ONFI：Open NAND Flash Interface</strong><br>1、Intel、美光、海力士、SMI、群联、索尼、飞索半导体；<br>2、支持Clock；<br>3、同步&#x2F;异步；<br>4、先出现；</li>
+<li><strong>Toggle：Toggle DDR、Toggle Mode NAND Flash</strong><br>1、东芝、三星、Toshiba；<br>2、没有Clock，写数据用DQS差分信号跳变沿触发；<br>读数据由host发的REN差分信号跳变沿发读request，而后在DQS跳变沿输出数据；<br>3、异步；<br>4、后出现；</li>
+</ul>
+<h1 id="一、Legacy-Interface"><a href="#一、Legacy-Interface" class="headerlink" title="一、Legacy Interface"></a>一、Legacy Interface</h1><ul>
+<li>第一个NAND Flash Device Interface协议为<code>Legacy</code>，ONFI 1.0基于Legacy统一了Flash的规范；</li>
+<li>15个引脚（8个data+7个controller信号）；</li>
+<li>SDR、异步；</li>
+<li>速度只有40MT&#x2F;s；</li>
+</ul>
+<center>
+<img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/34.1.png" width="75%" height="75%" alt="34.1"/>
 </center>
 
+<h1 id="二、ONFI-Specification-History"><a href="#二、ONFI-Specification-History" class="headerlink" title="二、ONFI Specification History"></a>二、ONFI Specification History</h1><center>
+<img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/34.2.png" width="75%" height="75%" alt="34.2  ONFI迭代历程"/>
+</center>
 
 <ul>
-<li>1、power-on后进入Idle State，或通过发送<strong>CMD0</strong>（0x00000000）；</li>
-<li>2、请求处于Idle State中device的<code>OCR</code>内容：host通过发送<strong>CMD1</strong>，接收来自device的反馈；<br>若CMD1应答中<strong>没有“busy bit”（<em>OCR[31]为高时</em>）</strong>，该device则进入<code>Ready State</code>；</li>
-<li>3、请求处于Ready State中device的<code>CID</code>内容：通过<strong>CMD2</strong>；</li>
-<li>5、进入<code>Identification State</code>：当<strong>CMD2应答的device CID编号和host请求的device CID编号一致</strong>时；</li>
-<li>6、给选中的device赋予一个<code>RCA</code>地址：通过<strong>CMD3</strong>；</li>
-<li>7、最后完成identification进程，device进入Stand-by State，之后在数据传输模式中就会通过RCA地址寻址相应设备。</li>
+<li><p><strong>ONFI 1.0 ——2006&#x2F;10&#x2F;28</strong><br>（物理接口、封装、工作机制、控制指令、寄存器规范、ECC、带宽<code>50MT/s</code>，统一了Flash接口规范）</p>
+</li>
+<li><p><strong>ONFI 2.0 ——2008&#x2F;2&#x2F;27</strong><br>（带宽133MT&#x2F;s，使用了<code>NV-DDR</code>技术，<code>synchronous</code>传输，引入Clock信号）<br><strong>注</strong>：<code>WE#————&gt;CLK信号</code>、<code>RE#——&gt;W/R#读写方向信号</code>、<code>I/O</code>——&gt;<code>DQ</code>、新增DQS</p>
+</li>
+<li><p><strong>ONFI 2.1 ——2009&#x2F;1&#x2F;14</strong><br>（带宽166MT&#x2F;s和200MT&#x2F;s，新增“Small Data Move”与“Change Row Address”指令）</p>
+</li>
+<li><p><strong>ONFI 2.2  ——2009&#x2F;10&#x2F;7</strong><br>（LUN reset、增强页编程寄存器的清除和ICC测量和规范）</p>
+</li>
+<li><p><strong>ONFI 3.0   ——2011&#x2F;3&#x2F;15</strong><br>（<code>改回asynchronous</code>接口，采用和Togele 2.0一样的<code>NV-DDR2（异步）</code>、带宽400MT&#x2F;s、ODT）<br><strong>注</strong>：NV-DDR：Non-Volatile DDR</p>
+</li>
+<li><p>ONFI 2.3a ——2011&#x2F;10&#x2F;19<br>（EZ-NAND）</p>
+</li>
+<li><p><strong>ONFI 3.1 ——2012&#x2F;9&#x2F;21</strong><br>（LUN SET&#x2F;GET Features、并为NV-DDR2接口实现了额外的<code>data setup and hold</code> values。）</p>
+</li>
+<li><p><strong>ONFI 3.2 ——2013&#x2F;6&#x2F;13</strong><br>（533MT&#x2F;s）</p>
+</li>
+<li><p><strong>ONFI 4.0 ——2014&#x2F;4&#x2F;2</strong><br>（667MT&#x2F;s——NV-DDR2、800MT&#x2F;s——<code>NV-DDR3</code>、ZQ calibration）<br><strong>注</strong>：NV-DDR3是低电压标准，为了支持1.2v的controller</p>
+</li>
+<li><p><strong>ONFI 4.1 ——2017&#x2F;10&#x2F;12</strong><br>（1200MT&#x2F;s、DCC——Duty Cycle Correction、VCC 2.35-3.6可配置，原来为3.3&#x2F;1.8&#x2F;1.2三种）</p>
+</li>
+<li><p><strong>ONFI 4.2 ——2020&#x2F;2&#x2F;12</strong><br>（1600MT&#x2F;s）</p>
+</li>
+<li><p><strong>ONFI 5.0 ——2021&#x2F;3&#x2F;25</strong><br>（<code>NV-LPDDR4</code> 、2400MT&#x2F;s）</p>
+</li>
+<li><p><strong>ONFI 5.1 ——2022&#x2F;8&#x2F;11</strong><br>（3600MT&#x2F;s）</p>
+</li>
 </ul>
-<h1 id="二、OCR寄存器的内容"><a href="#二、OCR寄存器的内容" class="headerlink" title="二、OCR寄存器的内容"></a>二、OCR寄存器的内容</h1><p>Operation condition register，表明了device的<code>Vdd电压</code>配置和<code>访问模式</code>。</p>
-<p>还有一个<code>状态bit[31]</code>，当上电完成后此位为1。</p>
 <center>
-<img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/25.2.png" width="75%" height="75%" alt="25.2"/>
+<img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/34.3.png" width="75%" height="75%" alt="34.3"/>
 </center>
 
-<p>此寄存器作为CMD1的应答发送给host，host如果支持sector access mode，CMD1的arg应该在<code>bit[30:29]</code>表明。</p>
-<h1 id="三、CID寄存器"><a href="#三、CID寄存器" class="headerlink" title="三、CID寄存器"></a>三、CID寄存器</h1><p>Device IDentification register，保证了在<code>设备识别阶段</code>每一个设备都有独一无二的设备识别号。</p>
+<h1 id="三、Toggle"><a href="#三、Toggle" class="headerlink" title="三、Toggle"></a>三、Toggle</h1><h2 id="1、Toggle-NAND-1-0-Asynchronous-DDR-NAND-Interface"><a href="#1、Toggle-NAND-1-0-Asynchronous-DDR-NAND-Interface" class="headerlink" title="1、Toggle NAND 1.0 (Asynchronous DDR NAND Interface)"></a>1、<strong>Toggle NAND 1.0 (Asynchronous DDR NAND Interface)</strong></h2><h3 id="双向DQS作用"><a href="#双向DQS作用" class="headerlink" title="双向DQS作用"></a>双向DQS作用</h3><ul>
+<li>数据在DQS的上升沿和下降沿传输；</li>
+</ul>
+<p>DQS在写操作时，由host驱动；读操作时，由NAND操作；</p>
+<ul>
+<li>异步传输，没有时钟信号，toggle DDR interface和同步传输相比，具有更低的功耗；</li>
+<li>133MT&#x2F;s，对应ONFI 2.0；</li>
+</ul>
+<h2 id="2、Toggle-NAND-2-0-Asynchronous-High-Speed-DDR-NAND-Interface"><a href="#2、Toggle-NAND-2-0-Asynchronous-High-Speed-DDR-NAND-Interface" class="headerlink" title="2、Toggle NAND 2.0 (Asynchronous High-Speed DDR NAND Interface)"></a>2、<strong>Toggle NAND 2.0 (Asynchronous High-Speed DDR NAND Interface)</strong></h2><ul>
+<li>400MT&#x2F;s的吞吐量；</li>
+<li>differential signal support is provided for the DQS and RE# signals，on-die termination (ODT) and VREF voltage support was added；</li>
+</ul>
 <center>
-<img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/25.3.png" width="80%" height="75%" alt="25.3"/>
+<img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/34.4.png" width="75%" height="75%" alt="34.4"/>
 </center>
 
-<h1 id="四、RCA寄存器"><a href="#四、RCA寄存器" class="headerlink" title="四、RCA寄存器"></a>四、RCA寄存器</h1><p>Relative device address register，携带着<code>设备识别阶段</code>host分配给识别到的device的相对地址，此地址用于device identification mode之后<code>host&lt;——&gt;device通讯</code>。</p>
-<p>默认值为0x0001，值 0x0000 是为将所有设备以 CMD7 置于 Stand-by 状态而保留的。</p>
-
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p><strong>Toggle同步模式下不用clock</strong>，写数据通过DQS差分信号边沿触发，读数据Host在REN差分信号跳变沿发送request，DQS跳变沿输出数据。</p>
+<p><strong>ONFI同步模式下有clock</strong>，数据、命令、地址都要与clock同步，但是DQS、clock都不是差分信号，所以边沿容易受干扰。但ONFI 3.0之后引入NV-DDR2模式，就和Toggle一样了，不再用clock，用DQS和REN差分信号实现数据传输。</p>
+<h2 id="1、EZ-NAND协议"><a href="#1、EZ-NAND协议" class="headerlink" title="1、EZ-NAND协议"></a>1、EZ-NAND协议</h2><p><strong>EZ-NAND</strong>协议是ECC Zero NAND，这一协议将NAND闪存的纠错码管理由主控芯片中转移到了闪存自身，减轻了主控芯片负担。</p>
+<p><strong>EZ-NAND</strong>首次出现在2.3的版本中，但是3.0并未全面支持，原因是当时容量、速度、成本是第一要务，集成ECC会增加闪存的成本。</p>
+<h2 id="2、MT-x2F-s传输单位——可以更准确地描述速率"><a href="#2、MT-x2F-s传输单位——可以更准确地描述速率" class="headerlink" title="2、MT&#x2F;s传输单位——可以更准确地描述速率"></a>2、MT&#x2F;s传输单位——可以更准确地描述速率</h2><p>MT&#x2F;s表示每秒传输100万次（Million Transfers per Second）；</p>
+<ul>
+<li><code>1T/s</code>：每秒做了一次传输；<br><code>1Hz</code>：每秒一个时钟周期；<br>区别：例如<code>DDR</code>模式中，可在时钟上升沿和下降沿进行两次数据传输，故实际传输速率为：<br><code>1Hz=2T/s，1MHz=2MT/s</code>；</li>
+</ul>
+<h2 id="3、同步和异步"><a href="#3、同步和异步" class="headerlink" title="3、同步和异步"></a>3、同步和异步</h2><ul>
+<li><code>synchronous</code>：ONFI 2.0中增加了NV-DDR功能，可以在CLK信号同步传输，数据在DQS的上升沿和下降沿传输，W&#x2F;R#信号控制数据方向。<br>特点：使用同一个信号源进行同步，提高了<code>信号采集</code>的<code>准确性</code>，可靠性和传输速率更高。</li>
+<li><code>asynchronous</code>：ONFI 3.0中采用了和Toggle 2.0一样的NV-DDR2技术，采用的是异步的方式。<br>特点：功耗低，设计更简单。</li>
+</ul>
+<h2 id="4、NV-DDR不同版本的特点"><a href="#4、NV-DDR不同版本的特点" class="headerlink" title="4、NV-DDR不同版本的特点"></a>4、NV-DDR不同版本的特点</h2><ul>
+<li><code>NV-DDR</code>：双边沿采样，并采用源同步时钟来精确所存数据、命令、地址信号。</li>
+<li><code>NV-DDR2</code>：引入了差分信号和On-Die Termination (ODT)技术来提升信号质量。</li>
+<li><code>NV-DDR3</code>：NV-DDR3引入了多项校准技术，包括ZQ Calibration、Duty Cycle Correction (DCC)和读&#x2F;写DQ校准。</li>
+<li><code>NV-LPDDR4</code>：和NV-DDR3速率相同，优势在于采用LTT技术后可大幅度降低读操作功耗。</li>
+</ul>
+<center>
+<img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/34.5.png" width="75%" height="75%" alt="34.5"/>
+</center>
       
        <hr><span style="font-style: italic;color: gray;"> 转载请注明来源，欢迎对文章中的引用来源进行考证，欢迎指出任何有错误或不够清晰的表达。可以在下面评论区评论，也可以邮件至 icmarktian@163.com </span>
     </div>

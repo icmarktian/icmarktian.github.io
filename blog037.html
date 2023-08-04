@@ -2,9 +2,9 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>25--eMMC的Device identification mode | 马克得烂笔头</title>
-  <meta name="keywords" content=" eMMC ">
-  <meta name="description" content="25--eMMC的Device identification mode | 马克得烂笔头">
+  <title>37--SystemC基本语法：数据类型、进程、仿真波形 | 马克得烂笔头</title>
+  <meta name="keywords" content=" SystemC ">
+  <meta name="description" content="37--SystemC基本语法：数据类型、进程、仿真波形 | 马克得烂笔头">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <meta name="description" content="人的精力是有限的，本站作为第二大脑用于存储本人学过的知识">
 <meta property="og:type" content="website">
@@ -857,9 +857,9 @@
 </aside>
 <div id="post">
     <div class="pjax">
-        <article id="post-2 领域/eMMC/25--eMMC的Device identification mode" class="article article-type-post" itemscope itemprop="blogPost">
+        <article id="post-3 语言/SystemC/37--SystemC基本语法：数据类型、进程、仿真波形" class="article article-type-post" itemscope itemprop="blogPost">
     
-        <h1 class="article-title">25--eMMC的Device identification mode</h1>
+        <h1 class="article-title">37--SystemC基本语法：数据类型、进程、仿真波形</h1>
     
     <div class="article-meta">
         
@@ -869,9 +869,9 @@
             <i class="iconfont icon-category"></i>
             
             
-            <a  data-rel="领域">领域</a> > 
+            <a  data-rel="语言">语言</a> > 
             
-            <a  data-rel="领域&lt;---&gt;eMMC">eMMC</a>
+            <a  data-rel="语言&lt;---&gt;SystemC">SystemC</a>
             
         </span>
         
@@ -879,19 +879,19 @@
         <span class="tag">
             <i class="iconfont icon-tag"></i>
             
-            <a class="color5">eMMC</a>
+            <a class="color3">SystemC</a>
             
         </span>
         
     </div>
     <div class="article-meta">
         
-            发布时间 : <time class="date" title='最后更新: 2023-06-24 13:16:11'>2023-06-24 12:56</time>
+            发布时间 : <time class="date" title='最后更新: 2023-08-04 22:49:01'>2023-08-04 17:49</time>
         
     </div>
     <div class="article-meta">
         
-        <span>字数:331</span>
+        <span>字数:1.5k</span>
         
         
         
@@ -910,7 +910,7 @@
     
     <div class="toc-ref">
     
-        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E8%BF%9B%E5%85%A5Device-identification-mode%E6%B5%81%E7%A8%8B"><span class="toc-text">一、进入Device identification mode流程</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%8C%E3%80%81OCR%E5%AF%84%E5%AD%98%E5%99%A8%E7%9A%84%E5%86%85%E5%AE%B9"><span class="toc-text">二、OCR寄存器的内容</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%89%E3%80%81CID%E5%AF%84%E5%AD%98%E5%99%A8"><span class="toc-text">三、CID寄存器</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%9B%9B%E3%80%81RCA%E5%AF%84%E5%AD%98%E5%99%A8"><span class="toc-text">四、RCA寄存器</span></a></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%80%E3%80%81SystemC%E4%B8%93%E6%9C%89%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B"><span class="toc-text">一、SystemC专有数据类型</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E8%BF%9B%E7%A8%8B%EF%BC%88process%EF%BC%89"><span class="toc-text">二、进程（process）</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#2-1-%E6%96%B9%E6%B3%95%E8%BF%9B%E7%A8%8B%EF%BC%9ASC-METHOD"><span class="toc-text">2.1  方法进程：SC_METHOD</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-2-%E7%BA%BF%E7%A8%8B%E8%BF%9B%E7%A8%8B%EF%BC%9ASC-THREAD"><span class="toc-text">2.2  线程进程：SC_THREAD</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-3-%E9%92%9F%E6%8E%A7%E7%BA%BF%E7%A8%8B%E8%BF%9B%E7%A8%8B%EF%BC%9ASC-CTHREAD"><span class="toc-text">2.3  钟控线程进程：SC_CTHREAD</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-4-wait-until-%E3%80%81wait-%E5%92%8C-next-trigger"><span class="toc-text">2.4  wait_until()、wait()和 next_trigger()</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E6%B3%A2%E5%BD%A2%E8%BF%BD%E8%B8%AA"><span class="toc-text">三、波形追踪</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#3-1-%E9%A1%B6%E5%B1%82%E5%87%BD%E6%95%B0sc-main"><span class="toc-text">3.1  顶层函数sc_main()</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-2-%E6%B3%A2%E5%BD%A2%E8%BF%BD%E8%B8%AA"><span class="toc-text">3.2  波形追踪</span></a></li></ol></li></ol>
     
 <style>
     .left-col .switch-btn,
@@ -926,34 +926,172 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p><div class='inner-toc'><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E8%BF%9B%E5%85%A5Device-identification-mode%E6%B5%81%E7%A8%8B"><span class="toc-text">一、进入Device identification mode流程</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%8C%E3%80%81OCR%E5%AF%84%E5%AD%98%E5%99%A8%E7%9A%84%E5%86%85%E5%AE%B9"><span class="toc-text">二、OCR寄存器的内容</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%89%E3%80%81CID%E5%AF%84%E5%AD%98%E5%99%A8"><span class="toc-text">三、CID寄存器</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%9B%9B%E3%80%81RCA%E5%AF%84%E5%AD%98%E5%99%A8"><span class="toc-text">四、RCA寄存器</span></a></li></ol></div></p>
-<h1 id="一、进入Device-identification-mode流程"><a href="#一、进入Device-identification-mode流程" class="headerlink" title="一、进入Device identification mode流程"></a>一、进入Device identification mode流程</h1><center>
-<img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/25.1.png" width="80%" height="75%" alt="25.1"/>
-</center>
-
-
-<ul>
-<li>1、power-on后进入Idle State，或通过发送<strong>CMD0</strong>（0x00000000）；</li>
-<li>2、请求处于Idle State中device的<code>OCR</code>内容：host通过发送<strong>CMD1</strong>，接收来自device的反馈；<br>若CMD1应答中<strong>没有“busy bit”（<em>OCR[31]为高时</em>）</strong>，该device则进入<code>Ready State</code>；</li>
-<li>3、请求处于Ready State中device的<code>CID</code>内容：通过<strong>CMD2</strong>；</li>
-<li>5、进入<code>Identification State</code>：当<strong>CMD2应答的device CID编号和host请求的device CID编号一致</strong>时；</li>
-<li>6、给选中的device赋予一个<code>RCA</code>地址：通过<strong>CMD3</strong>；</li>
-<li>7、最后完成identification进程，device进入Stand-by State，之后在数据传输模式中就会通过RCA地址寻址相应设备。</li>
+        <p><div class='inner-toc'><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%80%E3%80%81SystemC%E4%B8%93%E6%9C%89%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B"><span class="toc-text">一、SystemC专有数据类型</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E8%BF%9B%E7%A8%8B%EF%BC%88process%EF%BC%89"><span class="toc-text">二、进程（process）</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#2-1-%E6%96%B9%E6%B3%95%E8%BF%9B%E7%A8%8B%EF%BC%9ASC-METHOD"><span class="toc-text">2.1  方法进程：SC_METHOD</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-2-%E7%BA%BF%E7%A8%8B%E8%BF%9B%E7%A8%8B%EF%BC%9ASC-THREAD"><span class="toc-text">2.2  线程进程：SC_THREAD</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-3-%E9%92%9F%E6%8E%A7%E7%BA%BF%E7%A8%8B%E8%BF%9B%E7%A8%8B%EF%BC%9ASC-CTHREAD"><span class="toc-text">2.3  钟控线程进程：SC_CTHREAD</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-4-wait-until-%E3%80%81wait-%E5%92%8C-next-trigger"><span class="toc-text">2.4  wait_until()、wait()和 next_trigger()</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E6%B3%A2%E5%BD%A2%E8%BF%BD%E8%B8%AA"><span class="toc-text">三、波形追踪</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#3-1-%E9%A1%B6%E5%B1%82%E5%87%BD%E6%95%B0sc-main"><span class="toc-text">3.1  顶层函数sc_main()</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-2-%E6%B3%A2%E5%BD%A2%E8%BF%BD%E8%B8%AA"><span class="toc-text">3.2  波形追踪</span></a></li></ol></li></ol></div></p>
+<h1 id="一、SystemC专有数据类型"><a href="#一、SystemC专有数据类型" class="headerlink" title="一、SystemC专有数据类型"></a>一、SystemC专有数据类型</h1><ul>
+<li><code>sc_bit</code>：2值单比特（1、0）</li>
+<li><code>sc_logic</code>：4值单比特（1、0、X、Z）</li>
+<li><code>sc_int</code>：1到64比特有符号整型（即类似于C++中int通常对8&#x2F;16&#x2F;32位的数据操作）</li>
+<li><code>sc_uint</code>：1到64比特无符号整型</li>
+<li><code>sc_bigint</code>：任意宽度的有符号整型（不限制位数）</li>
+<li><code>sc_biuint</code>：任意宽度的无符号整型</li>
 </ul>
-<h1 id="二、OCR寄存器的内容"><a href="#二、OCR寄存器的内容" class="headerlink" title="二、OCR寄存器的内容"></a>二、OCR寄存器的内容</h1><p>Operation condition register，表明了device的<code>Vdd电压</code>配置和<code>访问模式</code>。</p>
-<p>还有一个<code>状态bit[31]</code>，当上电完成后此位为1。</p>
-<center>
-<img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/25.2.png" width="75%" height="75%" alt="25.2"/>
-</center>
+<pre><code class="cpp">//例1
+sc_int&lt;4&gt; x, y;
+sc_int&lt;8&gt; z;
+z = (x,y);       //将x和y转脸后赋值给z
+x=z.range(7,4);  //取z的高4位赋值给x
+</code></pre>
+<ul>
+<li><code>sc_bv</code>：任意宽度的2值比特向量（适用于只需要二值逻辑向量而不需要算数运算的场合）</li>
+<li><code>sc_lv</code>：任意宽度的4值比特向量</li>
+</ul>
+<pre><code class="cpp">//例2
+sc_bv&lt;6&gt; val;
+val=&quot;110011&quot;;
+bool temp=val.xor_reduce();  //将val的各个位异或后赋值给temp
+</code></pre>
+<ul>
+<li><code>sc_fixed</code>：模板类有符定点</li>
+<li><code>sc_ufixed</code>：模板类无符号定点</li>
+<li><code>sc_fix</code>：非模板类有符定点</li>
+<li><code>sx_ufix</code>：非模板类无符号定点</li>
+</ul>
+<h1 id="二、进程（process）"><a href="#二、进程（process）" class="headerlink" title="二、进程（process）"></a>二、进程（process）</h1><p><code>进程</code>是程序在并发环境中的<code>执行过程</code>，具有动态性、并发性、独立性、异步性、结构性。</p>
+<p>在SystemC中，进程不是层次化的，即一个进程中不能包含或直接调用其它进程，但进程可以调用非进程的函数和方法。</p>
+<ul>
+<li><code>进程</code>：<br>1、动态概念；<br>2、强调执行，是程序在数据集上的一次执行，有创建、有撤销，存在是暂时的；<br>3、有并发性；<br>4、竞争计算机资源的<strong>基本单位</strong>；<br>5、进程是程序在数据集上的一次执行；<br><code>程序</code>：<br>1、静态概念；<br>2、指令的有序集合，永远存在；<br>3、无并发性；<br>4、不是；<br>5、一个程序可对应多个进程，一个进程可包括多个程序；</li>
+</ul>
+<h2 id="2-1-方法进程：SC-METHOD"><a href="#2-1-方法进程：SC-METHOD" class="headerlink" title="2.1  方法进程：SC_METHOD"></a>2.1  方法进程：SC_METHOD</h2><p>特点：唯一的可以综合的REL级别进程，当敏感列表中的事件发生时，它会被调用，调用后会立刻返回。该进程中<code>不能</code>使用 wait() 类语句。</p>
+<pre><code class="cpp">//用DC_METHOD进程构建异步D触发器
+SC_MODULE(dff)&#123;&#125;
+        sc_in_clk clk;
+        sc_in&lt;bool&gt; rst;
+        sc_in&lt;bool&gt; din;
+        sc_in&lt;bool&gt; dout;
 
-<p>此寄存器作为CMD1的应答发送给host，host如果支持sector access mode，CMD1的arg应该在<code>bit[30:29]</code>表明。</p>
-<h1 id="三、CID寄存器"><a href="#三、CID寄存器" class="headerlink" title="三、CID寄存器"></a>三、CID寄存器</h1><p>Device IDentification register，保证了在<code>设备识别阶段</code>每一个设备都有独一无二的设备识别号。</p>
-<center>
-<img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/25.3.png" width="80%" height="75%" alt="25.3"/>
-</center>
+        void do_it()&#123;
+                    if (rst)
+                            dout = false;
+                    else
+                            dout = din;
+        &#125;;
 
-<h1 id="四、RCA寄存器"><a href="#四、RCA寄存器" class="headerlink" title="四、RCA寄存器"></a>四、RCA寄存器</h1><p>Relative device address register，携带着<code>设备识别阶段</code>host分配给识别到的device的相对地址，此地址用于device identification mode之后<code>host&lt;——&gt;device通讯</code>。</p>
-<p>默认值为0x0001，值 0x0000 是为将所有设备以 CMD7 置于 Stand-by 状态而保留的。</p>
+        SC_CTOR(dff)&#123;
+                SC_METHOD(do_it);  //do_it时SC_METHOD进程，当clk或rst有上升沿发生时，do_it就会被触发执行
+                sensitive_pos(rst);
+                sensitive_pos(clk);
+    &#125;
+&#125;;
+</code></pre>
+<h2 id="2-2-线程进程：SC-THREAD"><a href="#2-2-线程进程：SC-THREAD" class="headerlink" title="2.2  线程进程：SC_THREAD"></a>2.2  线程进程：SC_THREAD</h2><p>特点：能够<code>被挂起</code>和<code>重新激活</code>。</p>
+<p>SC_THREAD 使用 wait() 挂起，当敏感列表中有事件发生，线程进程被重新激活运行，当遇到新的 wait() 语句再重新挂起。</p>
+<p>多用于 Testbench 中输入激励和输出获取。</p>
+<pre><code class="cpp">//用DC_THREAD进程构建一个监视全加器输入输出变化值的变化情况
+//File1：monitor.h
+#include&quot;systemc.h&quot;
+SC_MODULE(Monitor)&#123;
+        sc_in&lt;sc_bit&gt; m_a, m_b, m_cin, m_sum, m_cout;
+
+        void prc_monitor();
+
+        SC_CTOR(Monitor)&#123;
+                SC_THREAD(prc_monitor); //进程对以下数据敏感，初始化时被执行，并挂起在wait()语句
+                sensitive&lt;&lt;m_a, m_b, m_cin, m_sum, m_cout;
+        &#125;
+&#125;;
+
+//File2:monitor.cpp
+#include&quot;monitor.h&quot;
+void Monitor::prc_monitor()&#123;
+            while(1)&#123;
+                cout&lt;&lt;&quot;At time&quot;&lt;&lt;sc_time_stamp()&lt;&lt;&quot;::&quot;;
+                cout&lt;&lt;&quot;(a, b, carry_in):&quot;;
+                cout&lt;&lt;m_a.read()&lt;&lt;m_b.read()&lt;&lt;m_cin.read()&lt;&lt;&quot;,&quot;;
+                cout&lt;&lt;&quot;(sum, carry_out):&quot;;
+                cout&lt;&lt;m_sum.read()&lt;&lt;m_cout.read()&lt;&lt;endl;
+                wait();
+            &#125;
+&#125;
+</code></pre>
+<h2 id="2-3-钟控线程进程：SC-CTHREAD"><a href="#2-3-钟控线程进程：SC-CTHREAD" class="headerlink" title="2.3  钟控线程进程：SC_CTHREAD"></a>2.3  钟控线程进程：SC_CTHREAD</h2><p>clock thread process 特点：只能在时钟沿降时被触发或激活，这种行为更接近硬件。</p>
+<p>引入的目的：产生更好的行为综合（行为综合时从高层次描述综合为 RTL 级描述的过程）。</p>
+<pre><code class="cpp">//例子
+SC_MODULE(Driver)&#123;
+            void prc_diver();
+
+            SC_CTOR(DRIVER)&#123;
+                SC_CTHREAD(prc_driver, clk.ps()); //只有在时钟上升沿时prc_driver才被激活。
+                //必须在指定线程名字的同时，指定时钟和它的边沿。
+                //下降沿表示方法为 clk.neg()
+            &#125;
+&#125;
+</code></pre>
+<h2 id="2-4-wait-until-、wait-和-next-trigger"><a href="#2-4-wait-until-、wait-和-next-trigger" class="headerlink" title="2.4  wait_until()、wait()和 next_trigger()"></a>2.4  wait_until()、wait()和 next_trigger()</h2><p><code>wait_until</code>：将进程挂起直达指定的表达式的值为真，只能用于线程进程和钟控线程进程。</p>
+<pre><code class="cpp">//wait_until举例
+wait_until(clock.delayed()==true &amp;&amp; reset.de;ayed()==false);
+</code></pre>
+<p><code>wait()</code>：等待函数，只能用于线程进程和钟控线程进程。</p>
+<pre><code class="cpp">//1、等;待敏感列表中有事件发生；
+wait()
+
+//2、等待事件发生；
+sc_event e1;
+......
+wait(e1);
+
+//3、等待事件之一发生；
+sc_event e1, e2, e3;
+......
+wait(e1|e1|e2);
+
+//4、等待事件全部发生；
+sc_event e1, e2, e3;
+......
+wait(e1 &amp; e1 &amp; e2);
+
+//5、等待100ns后，后面的语句会被执行；
+wait(100, SC_NS);
+
+//6、如果100ns内事件e1发生，或时间超过了100ns，进程将被激活；
+sc_event e1;
+......
+wait(100, SC_NS, e1); //e1、e2、e3也可以换成第3、4条所述
+
+//7、sc_time定义等效替代
+sc_time t(100, SC_NS);
+wait(t, e1); //等效于wait(100, SC_NS, e1);
+</code></pre>
+<p><code>next_trigger()</code>：和 wait() 参数一样，只能用于SC_METHOD进程。</p>
+<p>特点：调用后立刻返回，在一个 SC_METHOD 进程中可以多次调用 next_trigger()，但由最后一个 next_trigger() 决定进程的下一次激活时间。</p>
+<h1 id="三、波形追踪"><a href="#三、波形追踪" class="headerlink" title="三、波形追踪"></a>三、波形追踪</h1><h2 id="3-1-顶层函数sc-main"><a href="#3-1-顶层函数sc-main" class="headerlink" title="3.1  顶层函数sc_main()"></a>3.1  顶层函数sc_main()</h2><p>所有 SystemC 的最顶层函数都是 sc_main()，没有该函数的代码无法编译成功。</p>
+<p>作用：将设计中的所有模块连接在一起，并引入时钟和波形跟踪（wave trace）</p>
+<p>格式：<code>int sc_main(int argc, char* argv[]) &#123;…/Body&#125;</code>，前一个表示参数的数目，后一个是用字符串表示的参数的值。</p>
+<h2 id="3-2-波形追踪"><a href="#3-2-波形追踪" class="headerlink" title="3.2  波形追踪"></a>3.2  波形追踪</h2><pre><code class="cpp">#include &lt;systemc.h&gt;
+
+int sc_main(int argc, char* argv[]) &#123;
+    // 创建VCD波形跟踪文件
+    sc_trace_file *wf = sc_create_vcd_trace_file(&quot;counter&quot;);
+
+    // 定义信号或模块
+    sc_signal&lt;bool&gt; clk;
+    sc_signal&lt;int&gt; counter;
+
+    // 将信号与波形跟踪文件相关联，所有于wf关联的信号值都会被记录在counter.vcd文件中
+    sc_trace(wf, clk, &quot;clk&quot;);
+    sc_trace(wf, counter, &quot;counter&quot;);
+
+    // 创建模块等其他初始化操作
+    // ...
+
+        // 开始仿真运行，持续1000个时间单位
+    sc_start(1000, SC_NS);
+
+    // 仿真结束后关闭波形跟踪文件
+    sc_close_vcd_trace_file(wf);
+
+    return 0; //返回之前必须关闭波形文件
+&#125;
+</code></pre>
 
       
        <hr><span style="font-style: italic;color: gray;"> 转载请注明来源，欢迎对文章中的引用来源进行考证，欢迎指出任何有错误或不够清晰的表达。可以在下面评论区评论，也可以邮件至 icmarktian@163.com </span>
