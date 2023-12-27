@@ -6,7 +6,7 @@
   <link href="https://mkdbook.com/atom.xml" rel="self"/>
   
   <link href="https://mkdbook.com/"/>
-  <updated>2023-08-04T14:49:01.788Z</updated>
+  <updated>2023-12-27T02:48:34.872Z</updated>
   <id>https://mkdbook.com/</id>
   
   <author>
@@ -15,6 +15,34 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>38--关于NAND的一些个人总结</title>
+    <link href="https://mkdbook.com/blog038.html"/>
+    <id>https://mkdbook.com/blog038.html</id>
+    <published>2023-12-27T01:41:33.000Z</published>
+    <updated>2023-12-27T02:48:34.872Z</updated>
+    
+    <content type="html"><![CDATA[<p>[toc]</p><h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>一些个人理解结合网上文章，不一定正确；</p><h1 id="一、ONFI协议和DataSheet"><a href="#一、ONFI协议和DataSheet" class="headerlink" title="一、ONFI协议和DataSheet"></a>一、ONFI协议和DataSheet</h1><p><a href="http://www.onfi.org/">ONFI（Open NAND Flash Interface）协议</a>是ONFI公开组织制定的一种用于闪存芯片的开放接口标准，它定义了闪存芯片与主控制器之间的通信协议和信号传输规范。</p><p>DataSheet（数据手册）是不同厂商根据ONFI协议制造出Flash产品之后，对自家Flash产品进行说明的一份技术文档，其中包含了该芯片的详细规格、功能描述、引脚定义、电气特性等信息。</p><ul><li>区别和联系：ONFI是蓝图，厂商的NAND Flash产品必须符合ONFI协议。但是ONFI预留了一些未定义的指令可供不同厂商自定义。故而不同厂商的<code>功能和时序</code>可能会有一些差异，甚至同一功能的实现需要不同命令（例如Erase Suspen&#x2F;Resume，Micron是61h&#x2F;D2h，YMTC是67h&#x2F;D7h）。</li><li>ONFI指令集及预留给厂商的指令集，如图1所示：</li></ul><center><img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/38.1.png" width="80%" height="80%" alt="38.1"/></center>    <h1 id="二、一些值得注意的点"><a href="#二、一些值得注意的点" class="headerlink" title="二、一些值得注意的点"></a>二、一些值得注意的点</h1><h2 id="2-1、SLC-x2F-TLC模式切换（DAh-x2F-DFh）"><a href="#2-1、SLC-x2F-TLC模式切换（DAh-x2F-DFh）" class="headerlink" title="2.1、SLC&#x2F;TLC模式切换（DAh&#x2F;DFh）"></a>2.1、SLC&#x2F;TLC模式切换（DAh&#x2F;DFh）</h2><p>默认上电后处于TLC模式，可通过DAh命令切换到SLC模式。但是由于NAND物理特性，同一Block的Page是共用一个衬底的，所以不能在同一个Block中进行不同模式的Program操作。</p><p>1、SLC模式写入后，再切换为TLC模式，不能对SLC模式下已经Program的Block进行写入（其它Block可以）。</p><center><img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/38.2.png" width="100%" height="100%" alt="38.2"/></center><p>2、并且不能在TLC模式下，读取SLC模式下Program的数据。</p><center><img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/38.3.png" width="100%" height="100%" alt="38.3"/></center><p>3、需要在TLC模式下发送Erase命令将之前SLC模式下Program的Block擦除，才能写入。注意：在SLC模式下Erase之后再切换为TLC模式，依然不能在TLC模式下写入.</p><h2 id="2-2、Copyback的作用"><a href="#2-2、Copyback的作用" class="headerlink" title="2.2、Copyback的作用"></a>2.2、Copyback的作用</h2><p>命令序列为：00h-35h-85h-10h；</p><p>Copyback用于在<code>同一个LUN</code>中，将data从一个page中读出来，再写入到<code>同一plane</code>中的其他page，可以用于固件做Block Management和wear leveling。</p><blockquote><p>为什么是用同一plane的不同page？</p><p>美光是这样描述的：COPYBACK operations make it possible to transfer data within a plane from one page to another using the cache register.<br>因为不同plane是拥有不同cache、page register的最小单位。</p></blockquote><p>在NAND parameter的byte[7:6]的bit[4]中，定义了是（1）否（0）允许<code>读取奇数page——&gt;复制到偶数page</code>。</p><h2 id="2-3、NAND-Reset命令FFh、FCh、FAh、FDh的区别和联系"><a href="#2-3、NAND-Reset命令FFh、FCh、FAh、FDh的区别和联系" class="headerlink" title="2.3、NAND Reset命令FFh、FCh、FAh、FDh的区别和联系"></a>2.3、NAND Reset命令FFh、FCh、FAh、FDh的区别和联系</h2><p>FCh和FFh类似，但是FCh专门设计出来作用于Synchronous模式，FAh专门设计出来只对单个的LUN作用。FDh在ONFI中并没有定义，但是厂家定义了此命令，尚不清楚它的实际意义。YMTC规定FDh会reset ODT（E2h）设置、以及disabled Vpp feature。</p><center><img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/38.4.png" width="100%" height="100%" alt="38.4"/></center><h2 id="2-3、Read-Status-Register"><a href="#2-3、Read-Status-Register" class="headerlink" title="2.3、Read Status Register"></a>2.3、Read Status Register</h2><h3 id="1、Status-Register和Rb-n信号的关系"><a href="#1、Status-Register和Rb-n信号的关系" class="headerlink" title="1、Status Register和Rb_n信号的关系"></a>1、Status Register和Rb_n信号的关系</h3><p><strong>一个LUN一个独立Status Register</strong>，一个Plane一个独立的Page Register，一个Block是一个独立的擦除单元（因为物理上共用一块衬底），一个page是一个独立的数据读写存储单元。</p><center><img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/38.5.png" width="80%" height="80%" alt="38.5"/></center><p>Rb_n信号反映了一条target或volume上，<code>每个LUN</code>的<code>SR [6]</code>的值的”<code>与逻辑</code>“，即任何一个LUN处于Busy状态Rb_n都会拉低。</p><h2 id="2-4、Change-Read-Column-05h-E0h-or-Change-Read-Column-Enhanced-06h-E0h-的区别"><a href="#2-4、Change-Read-Column-05h-E0h-or-Change-Read-Column-Enhanced-06h-E0h-的区别" class="headerlink" title="2.4、Change Read Column (05h-E0h) or Change Read Column Enhanced(06h-E0h)的区别"></a>2.4、Change Read Column (05h-E0h) or Change Read Column Enhanced(06h-E0h)的区别</h2><ul><li><code>05h-E0h</code>中间只有<code>两个周期</code>的Column地址，假如读一个page时不想从Column 0开始输出数据，可以通过此命令修改data out时的Column地址。实际上这个命令只是选择从page buffer中读取数据。</li><li><code>06h-E0h</code>中间有<code>完整的六个周期</code>的Row+Column地址，可以用于Multi-plane Read的时候切换Plane来进行data out或者独立的LUN的操作。</li><li>ONFI还定义了一种组合方式的Change Read Column Enhanced方式：</li></ul><center><img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/38.6.png" width="100%" height="100%" alt="38.6"/></center>    <p>注意：我在测试DDR3的时候发现，修改起始的Column地址时，只能（0，2，4，6……）这样偶数，不能从（0修改成1）这样。</p><h1 id="三、经验上的技巧"><a href="#三、经验上的技巧" class="headerlink" title="三、经验上的技巧"></a>三、经验上的技巧</h1><ul><li>1、可以先看NAND datasheet的Command define table，它定义了NAND有哪些功能，分别用了哪些命令，以及这些命令可以在什么时候发送。可以结合Command的功能，着重理解每个命令的作用域（Command Level）。</li><li>2、NAND的Parameter区域（Datasheet一般有这个table）定义了NAND产品的规格，以及各种支持的功能，写验证计划时可以从此入手。</li></ul>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;[toc]&lt;/p&gt;
+&lt;h1 id=&quot;前言&quot;&gt;&lt;a href=&quot;#前言&quot; class=&quot;headerlink&quot; title=&quot;前言&quot;&gt;&lt;/a&gt;前言&lt;/h1&gt;&lt;p&gt;一些个人理解结合网上文章，不一定正确；&lt;/p&gt;
+&lt;h1 id=&quot;一、ONFI协议和DataSheet&quot;&gt;&lt;a hr</summary>
+      
+    
+    
+    
+    <category term="领域" scheme="https://mkdbook.com/categories/%E9%A2%86%E5%9F%9F/"/>
+    
+    <category term="存储" scheme="https://mkdbook.com/categories/%E9%A2%86%E5%9F%9F/%E5%AD%98%E5%82%A8/"/>
+    
+    
+    <category term="Flash" scheme="https://mkdbook.com/tags/Flash/"/>
+    
+  </entry>
   
   <entry>
     <title>37--SystemC基本语法：数据类型、进程、仿真波形</title>
@@ -524,33 +552,6 @@
       
     <summary type="html">&lt;p&gt;[toc]&lt;/p&gt;
 &lt;h1 id=&quot;一、时序缩写速查&quot;&gt;&lt;a href=&quot;#一、时序缩写速查&quot; class=&quot;headerlink&quot; title=&quot;一、时序缩写速查&quot;&gt;&lt;/a&gt;一、时序缩写速查&lt;/h1&gt;&lt;p&gt;看懂eMMC时序的描述图，首先要理解其每个缩写代表的意思：&lt;/p&gt;</summary>
-      
-    
-    
-    
-    <category term="领域" scheme="https://mkdbook.com/categories/%E9%A2%86%E5%9F%9F/"/>
-    
-    <category term="eMMC" scheme="https://mkdbook.com/categories/%E9%A2%86%E5%9F%9F/eMMC/"/>
-    
-    
-    <category term="eMMC" scheme="https://mkdbook.com/tags/eMMC/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>18--eMMC的Secure Erase和Secure Trim操作</title>
-    <link href="https://mkdbook.com/blog018.html"/>
-    <id>https://mkdbook.com/blog018.html</id>
-    <published>2023-04-05T05:11:21.000Z</published>
-    <updated>2023-04-05T11:50:45.089Z</updated>
-    
-    <content type="html"><![CDATA[<p>[toc]</p><h1 id="一、Secure-Erase"><a href="#一、Secure-Erase" class="headerlink" title="一、Secure Erase"></a>一、Secure Erase</h1><p><code>Secure Erase</code>命令和基本的<code>Erase</code>命令不同，它要求设备在发出此命令后，device和host在进入下一个操作之前必须<strong>等待Erase物理地完成</strong>。<br><code>Secure Erase</code>命令的执行方式与Erase命令相同，只是CMD38中<code>bit[31]=1</code>，其他参数为0；<br>CMD38 四个重要的bit位说明如图所示：</p><center><img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/18.1CMD38%E9%87%8D%E8%A6%81bit%E4%BD%8D.png" width="75%" height="75%" alt="18.1 CMD38重要bit位"/></center><h1 id="二、Secure-Trim"><a href="#二、Secure-Trim" class="headerlink" title="二、Secure Trim"></a>二、Secure Trim</h1><p><code>Secure Trim</code>是对<code>write block</code>执行安全擦除操作，确保数据完全地从memory中物理擦除。</p><p><strong>启动方法有两步：</strong></p><ol><li><code>步骤1</code>：host定义它标记为Secure TRIM的write block的范围（通过CMD35、CMD36），一旦确定了范围，CMD38（<code>bit[31],bit[0]设置为1</code>，其他位为0）就会被应用。</li></ol><blockquote><p>步骤1可以重复多次，中间允许有其他命令，直到所有需要清除的write block都被明确定义。建议尽可能在多的block上进行Secure TRIM的步骤1，以提高Secure TRIM的效率。</p></blockquote><ol start="2"><li><code>步骤2</code>：发送夹带地址的CMD35和CMD36（注意与这些命令一起使用的参数将被忽略），然后发送CMD38（<code>bit[31],bit[15]为1</code>，其他为0）。这一步实际上是根据<code>Secure_Removal_type(EXT_CSD [16])</code>（<a href="https://mkdbook.com/blog017.html#:~:text=17.4%20Secure_Removal_type">图17.4</a>），对<strong>所有的write block以及它的所有副本</strong>执行Secure Trim，这些write block在步骤1中已被标记。</li></ol><blockquote><p>在步骤1和步骤2之间，可以向设备发出其他命令。</p></blockquote><h1 id="三、总结"><a href="#三、总结" class="headerlink" title="三、总结"></a>三、总结</h1><h2 id="1、隐式（implicit）擦除和显式（explicit）擦除"><a href="#1、隐式（implicit）擦除和显式（explicit）擦除" class="headerlink" title="1、隐式（implicit）擦除和显式（explicit）擦除"></a>1、隐式（implicit）擦除和显式（explicit）擦除</h2><p><code>隐式擦除</code>是指device中的某些数据被简单地标记成已删除，host可以向device该位置写数据。但是在技术上，memory里面的数据在overwrite之前还存在device中，甚至通过某些手段能够恢复数据。<br><code>显式擦除</code>则是一个更彻底的过程，用新数据（0&#x2F;1）覆盖掉原来的数据，保证删除的数据是无法被恢复的。<br>所以，隐式擦除速度更快、更简单，但是数据有被恢复的潜在风险。显式擦除反之。</p><h2 id="2、Secure-Erase和Erase的区别；Secure-Trim和TRIM的区别；"><a href="#2、Secure-Erase和Erase的区别；Secure-Trim和TRIM的区别；" class="headerlink" title="2、Secure Erase和Erase的区别；Secure Trim和TRIM的区别；"></a>2、Secure Erase和Erase的区别；Secure Trim和TRIM的区别；</h2><p>着重理解这里的<code>Secure</code>，是指要保证数据完全、永久地从device删除，不能被恢复，采取的是显示擦除的overwrite的方法。<br>而不带Secure的操作仅仅<code>被标记为删除</code>，device可能还没有实际进行overwrite，数据可能被恢复。</p><h2 id="3、新的eMMC版本中，Secure操作被取代"><a href="#3、新的eMMC版本中，Secure操作被取代" class="headerlink" title="3、新的eMMC版本中，Secure操作被取代"></a>3、新的eMMC版本中，Secure操作被取代</h2><p>为了向后兼容，保留了Secure Erase和Secure TRIM，但在v4.51之后这两种方式分别以<code>Erase+Sanitize</code>和<code>TRIM+Sanitize</code>的方式实现。<br>Sanitize操作就是能实际地通过overwrite的方式，将数据擦除。故结合使用，<code>标记+删除</code>结合就可以实现<code>Secure</code>的功能。</p>]]></content>
-    
-    
-      
-      
-    <summary type="html">&lt;p&gt;[toc]&lt;/p&gt;
-&lt;h1 id=&quot;一、Secure-Erase&quot;&gt;&lt;a href=&quot;#一、Secure-Erase&quot; class=&quot;headerlink&quot; title=&quot;一、Secure Erase&quot;&gt;&lt;/a&gt;一、Secure Erase&lt;/h1&gt;&lt;p&gt;&lt;code&gt;Sec</summary>
       
     
     

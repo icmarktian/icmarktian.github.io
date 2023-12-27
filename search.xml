@@ -4,6 +4,33 @@
   
     
     <entry>
+      <title>38--关于NAND的一些个人总结</title>
+      <link href="/blog038.html"/>
+      <url>/blog038.html</url>
+      
+        <content type="html"><![CDATA[<p>[toc]</p><h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>一些个人理解结合网上文章，不一定正确；</p><h1 id="一、ONFI协议和DataSheet"><a href="#一、ONFI协议和DataSheet" class="headerlink" title="一、ONFI协议和DataSheet"></a>一、ONFI协议和DataSheet</h1><p><a href="http://www.onfi.org/">ONFI（Open NAND Flash Interface）协议</a>是ONFI公开组织制定的一种用于闪存芯片的开放接口标准，它定义了闪存芯片与主控制器之间的通信协议和信号传输规范。</p><p>DataSheet（数据手册）是不同厂商根据ONFI协议制造出Flash产品之后，对自家Flash产品进行说明的一份技术文档，其中包含了该芯片的详细规格、功能描述、引脚定义、电气特性等信息。</p><ul><li>区别和联系：ONFI是蓝图，厂商的NAND Flash产品必须符合ONFI协议。但是ONFI预留了一些未定义的指令可供不同厂商自定义。故而不同厂商的<code>功能和时序</code>可能会有一些差异，甚至同一功能的实现需要不同命令（例如Erase Suspen&#x2F;Resume，Micron是61h&#x2F;D2h，YMTC是67h&#x2F;D7h）。</li><li>ONFI指令集及预留给厂商的指令集，如图1所示：</li></ul><center><img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/38.1.png" width="80%" height="80%" alt="38.1"/></center>    <h1 id="二、一些值得注意的点"><a href="#二、一些值得注意的点" class="headerlink" title="二、一些值得注意的点"></a>二、一些值得注意的点</h1><h2 id="2-1、SLC-x2F-TLC模式切换（DAh-x2F-DFh）"><a href="#2-1、SLC-x2F-TLC模式切换（DAh-x2F-DFh）" class="headerlink" title="2.1、SLC&#x2F;TLC模式切换（DAh&#x2F;DFh）"></a>2.1、SLC&#x2F;TLC模式切换（DAh&#x2F;DFh）</h2><p>默认上电后处于TLC模式，可通过DAh命令切换到SLC模式。但是由于NAND物理特性，同一Block的Page是共用一个衬底的，所以不能在同一个Block中进行不同模式的Program操作。</p><p>1、SLC模式写入后，再切换为TLC模式，不能对SLC模式下已经Program的Block进行写入（其它Block可以）。</p><center><img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/38.2.png" width="100%" height="100%" alt="38.2"/></center><p>2、并且不能在TLC模式下，读取SLC模式下Program的数据。</p><center><img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/38.3.png" width="100%" height="100%" alt="38.3"/></center><p>3、需要在TLC模式下发送Erase命令将之前SLC模式下Program的Block擦除，才能写入。注意：在SLC模式下Erase之后再切换为TLC模式，依然不能在TLC模式下写入.</p><h2 id="2-2、Copyback的作用"><a href="#2-2、Copyback的作用" class="headerlink" title="2.2、Copyback的作用"></a>2.2、Copyback的作用</h2><p>命令序列为：00h-35h-85h-10h；</p><p>Copyback用于在<code>同一个LUN</code>中，将data从一个page中读出来，再写入到<code>同一plane</code>中的其他page，可以用于固件做Block Management和wear leveling。</p><blockquote><p>为什么是用同一plane的不同page？</p><p>美光是这样描述的：COPYBACK operations make it possible to transfer data within a plane from one page to another using the cache register.<br>因为不同plane是拥有不同cache、page register的最小单位。</p></blockquote><p>在NAND parameter的byte[7:6]的bit[4]中，定义了是（1）否（0）允许<code>读取奇数page——&gt;复制到偶数page</code>。</p><h2 id="2-3、NAND-Reset命令FFh、FCh、FAh、FDh的区别和联系"><a href="#2-3、NAND-Reset命令FFh、FCh、FAh、FDh的区别和联系" class="headerlink" title="2.3、NAND Reset命令FFh、FCh、FAh、FDh的区别和联系"></a>2.3、NAND Reset命令FFh、FCh、FAh、FDh的区别和联系</h2><p>FCh和FFh类似，但是FCh专门设计出来作用于Synchronous模式，FAh专门设计出来只对单个的LUN作用。FDh在ONFI中并没有定义，但是厂家定义了此命令，尚不清楚它的实际意义。YMTC规定FDh会reset ODT（E2h）设置、以及disabled Vpp feature。</p><center><img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/38.4.png" width="100%" height="100%" alt="38.4"/></center><h2 id="2-3、Read-Status-Register"><a href="#2-3、Read-Status-Register" class="headerlink" title="2.3、Read Status Register"></a>2.3、Read Status Register</h2><h3 id="1、Status-Register和Rb-n信号的关系"><a href="#1、Status-Register和Rb-n信号的关系" class="headerlink" title="1、Status Register和Rb_n信号的关系"></a>1、Status Register和Rb_n信号的关系</h3><p><strong>一个LUN一个独立Status Register</strong>，一个Plane一个独立的Page Register，一个Block是一个独立的擦除单元（因为物理上共用一块衬底），一个page是一个独立的数据读写存储单元。</p><center><img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/38.5.png" width="80%" height="80%" alt="38.5"/></center><p>Rb_n信号反映了一条target或volume上，<code>每个LUN</code>的<code>SR [6]</code>的值的”<code>与逻辑</code>“，即任何一个LUN处于Busy状态Rb_n都会拉低。</p><h2 id="2-4、Change-Read-Column-05h-E0h-or-Change-Read-Column-Enhanced-06h-E0h-的区别"><a href="#2-4、Change-Read-Column-05h-E0h-or-Change-Read-Column-Enhanced-06h-E0h-的区别" class="headerlink" title="2.4、Change Read Column (05h-E0h) or Change Read Column Enhanced(06h-E0h)的区别"></a>2.4、Change Read Column (05h-E0h) or Change Read Column Enhanced(06h-E0h)的区别</h2><ul><li><code>05h-E0h</code>中间只有<code>两个周期</code>的Column地址，假如读一个page时不想从Column 0开始输出数据，可以通过此命令修改data out时的Column地址。实际上这个命令只是选择从page buffer中读取数据。</li><li><code>06h-E0h</code>中间有<code>完整的六个周期</code>的Row+Column地址，可以用于Multi-plane Read的时候切换Plane来进行data out或者独立的LUN的操作。</li><li>ONFI还定义了一种组合方式的Change Read Column Enhanced方式：</li></ul><center><img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/38.6.png" width="100%" height="100%" alt="38.6"/></center>    <p>注意：我在测试DDR3的时候发现，修改起始的Column地址时，只能（0，2，4，6……）这样偶数，不能从（0修改成1）这样。</p><h1 id="三、经验上的技巧"><a href="#三、经验上的技巧" class="headerlink" title="三、经验上的技巧"></a>三、经验上的技巧</h1><ul><li>1、可以先看NAND datasheet的Command define table，它定义了NAND有哪些功能，分别用了哪些命令，以及这些命令可以在什么时候发送。可以结合Command的功能，着重理解每个命令的作用域（Command Level）。</li><li>2、NAND的Parameter区域（Datasheet一般有这个table）定义了NAND产品的规格，以及各种支持的功能，写验证计划时可以从此入手。</li></ul>]]></content>
+      
+      
+      <categories>
+          
+          <category> 领域 </category>
+          
+          <category> 存储 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Flash </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>37--SystemC基本语法：数据类型、进程、仿真波形</title>
       <link href="/blog037.html"/>
       <url>/blog037.html</url>
@@ -971,8 +998,8 @@
     
     <entry>
       <title>Verilog分类保留</title>
-      <link href="/clkwpfazz00364oub0j3bb08q.html"/>
-      <url>/clkwpfazz00364oub0j3bb08q.html</url>
+      <link href="/clqn6nrfq00139wmr10i5cf9n.html"/>
+      <url>/clqn6nrfq00139wmr10i5cf9n.html</url>
       
         <content type="html"><![CDATA[]]></content>
       

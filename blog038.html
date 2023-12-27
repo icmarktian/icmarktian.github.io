@@ -2,9 +2,9 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>7--[Design]ERASE BLOCK协议及代码实现-项目2-1 | 马克得烂笔头</title>
-  <meta name="keywords" content=" NAND ">
-  <meta name="description" content="7--[Design]ERASE BLOCK协议及代码实现-项目2-1 | 马克得烂笔头">
+  <title>38--关于NAND的一些个人总结 | 马克得烂笔头</title>
+  <meta name="keywords" content=" Flash ">
+  <meta name="description" content="38--关于NAND的一些个人总结 | 马克得烂笔头">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <meta name="description" content="人的精力是有限的，本站作为第二大脑用于存储本人学过的知识">
 <meta property="og:type" content="website">
@@ -866,9 +866,9 @@
 </aside>
 <div id="post">
     <div class="pjax">
-        <article id="post-1 项目/项目2：Erase of NAND behavior model/7--[Design]ERASE BLOCK协议及代码实现-项目2-1" class="article article-type-post" itemscope itemprop="blogPost">
+        <article id="post-2 领域/存储/38--关于NAND的一些个人总结" class="article article-type-post" itemscope itemprop="blogPost">
     
-        <h1 class="article-title">7--[Design]ERASE BLOCK协议及代码实现-项目2-1</h1>
+        <h1 class="article-title">38--关于NAND的一些个人总结</h1>
     
     <div class="article-meta">
         
@@ -878,9 +878,9 @@
             <i class="iconfont icon-category"></i>
             
             
-            <a  data-rel="项目">项目</a> > 
+            <a  data-rel="领域">领域</a> > 
             
-            <a  data-rel="项目&lt;---&gt;项目2-Erase_of_NAND_behavior_model">项目2-Erase_of_NAND_behavior_model</a>
+            <a  data-rel="领域&lt;---&gt;存储">存储</a>
             
         </span>
         
@@ -888,19 +888,19 @@
         <span class="tag">
             <i class="iconfont icon-tag"></i>
             
-            <a class="color5">NAND</a>
+            <a class="color1">Flash</a>
             
         </span>
         
     </div>
     <div class="article-meta">
         
-            发布时间 : <time class="date" title='最后更新: 2023-03-24 16:08:13'>2023-03-19 18:31</time>
+            发布时间 : <time class="date" title='最后更新: 2023-12-27 10:48:34'>2023-12-27 09:41</time>
         
     </div>
     <div class="article-meta">
         
-        <span>字数:762</span>
+        <span>字数:1.1k</span>
         
         
         
@@ -919,7 +919,7 @@
     
     <div class="toc-ref">
     
-        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E9%A1%B9%E7%9B%AE%E5%8A%9F%E8%83%BD%E6%8F%8F%E8%BF%B0"><span class="toc-text">一、项目功能描述</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%8C%E3%80%81Erase-Block%E5%8A%9F%E8%83%BD%E6%8F%8F%E8%BF%B0"><span class="toc-text">二、Erase Block功能描述</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%89%E3%80%81ERASE-BLOCK%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0%E6%96%B9%E6%A1%88"><span class="toc-text">三、ERASE BLOCK代码实现方案</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#3-1%E3%80%81%E5%91%BD%E4%BB%A4%E8%BE%93%E5%85%A5always%E5%9D%97"><span class="toc-text">3.1、命令输入always块</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-2%E3%80%81Command-60h"><span class="toc-text">3.2、Command 60h</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-3%E3%80%81Command-D0h"><span class="toc-text">3.3、Command D0h</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-4%E3%80%81Erase%E5%8A%9F%E8%83%BD%E5%AE%9E%E7%8E%B0%E7%9A%84always%E5%9D%97"><span class="toc-text">3.4、Erase功能实现的always块</span></a></li></ol></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-text">前言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%80%E3%80%81ONFI%E5%8D%8F%E8%AE%AE%E5%92%8CDataSheet"><span class="toc-text">一、ONFI协议和DataSheet</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E4%B8%80%E4%BA%9B%E5%80%BC%E5%BE%97%E6%B3%A8%E6%84%8F%E7%9A%84%E7%82%B9"><span class="toc-text">二、一些值得注意的点</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#2-1%E3%80%81SLC-x2F-TLC%E6%A8%A1%E5%BC%8F%E5%88%87%E6%8D%A2%EF%BC%88DAh-x2F-DFh%EF%BC%89"><span class="toc-text">2.1、SLC&#x2F;TLC模式切换（DAh&#x2F;DFh）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-2%E3%80%81Copyback%E7%9A%84%E4%BD%9C%E7%94%A8"><span class="toc-text">2.2、Copyback的作用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-3%E3%80%81NAND-Reset%E5%91%BD%E4%BB%A4FFh%E3%80%81FCh%E3%80%81FAh%E3%80%81FDh%E7%9A%84%E5%8C%BA%E5%88%AB%E5%92%8C%E8%81%94%E7%B3%BB"><span class="toc-text">2.3、NAND Reset命令FFh、FCh、FAh、FDh的区别和联系</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-3%E3%80%81Read-Status-Register"><span class="toc-text">2.3、Read Status Register</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1%E3%80%81Status-Register%E5%92%8CRb-n%E4%BF%A1%E5%8F%B7%E7%9A%84%E5%85%B3%E7%B3%BB"><span class="toc-text">1、Status Register和Rb_n信号的关系</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-4%E3%80%81Change-Read-Column-05h-E0h-or-Change-Read-Column-Enhanced-06h-E0h-%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="toc-text">2.4、Change Read Column (05h-E0h) or Change Read Column Enhanced(06h-E0h)的区别</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E7%BB%8F%E9%AA%8C%E4%B8%8A%E7%9A%84%E6%8A%80%E5%B7%A7"><span class="toc-text">三、经验上的技巧</span></a></li></ol>
     
 <style>
     .left-col .switch-btn,
@@ -935,86 +935,65 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p><div class='inner-toc'><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E9%A1%B9%E7%9B%AE%E5%8A%9F%E8%83%BD%E6%8F%8F%E8%BF%B0"><span class="toc-text">一、项目功能描述</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%8C%E3%80%81Erase-Block%E5%8A%9F%E8%83%BD%E6%8F%8F%E8%BF%B0"><span class="toc-text">二、Erase Block功能描述</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%89%E3%80%81ERASE-BLOCK%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0%E6%96%B9%E6%A1%88"><span class="toc-text">三、ERASE BLOCK代码实现方案</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#3-1%E3%80%81%E5%91%BD%E4%BB%A4%E8%BE%93%E5%85%A5always%E5%9D%97"><span class="toc-text">3.1、命令输入always块</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-2%E3%80%81Command-60h"><span class="toc-text">3.2、Command 60h</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-3%E3%80%81Command-D0h"><span class="toc-text">3.3、Command D0h</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-4%E3%80%81Erase%E5%8A%9F%E8%83%BD%E5%AE%9E%E7%8E%B0%E7%9A%84always%E5%9D%97"><span class="toc-text">3.4、Erase功能实现的always块</span></a></li></ol></li></ol></div></p>
-<h1 id="一、项目功能描述"><a href="#一、项目功能描述" class="headerlink" title="一、项目功能描述"></a>一、项目功能描述</h1><p>本项目基于长江存储NAND Datasheet，实现了NAND behavior model的<code>擦除功能（Erase Block）</code>，<code>擦除挂起功能（Erase Suspend）</code>，<code>擦除恢复功能（Erase Resume）</code>。</p>
-<h1 id="二、Erase-Block功能描述"><a href="#二、Erase-Block功能描述" class="headerlink" title="二、Erase Block功能描述"></a>二、<strong>Erase Block功能描述</strong></h1><ul>
-<li>以Block为单位对Array进行擦除。</li>
-<li>如图7.1，Command 60h后跟四个周期的Row地址，再发送Command D0h，经tWB时间后，R&#x2F;B_n信号拉低，开始时长tBERS的擦除操作。</li>
-<li>Host端通过监测R&#x2F;B_n信号或者Status Register，判断Erase操作是否完成，<br>SR[0]为0则表示Erase成功（SR[6]为1时，SR[0]才有效）。</li>
-<li>在Erase过程中，只可接受Read Status Command、Reset Command、Suspend Command。</li>
+        <p><div class='inner-toc'><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-text">前言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%80%E3%80%81ONFI%E5%8D%8F%E8%AE%AE%E5%92%8CDataSheet"><span class="toc-text">一、ONFI协议和DataSheet</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E4%B8%80%E4%BA%9B%E5%80%BC%E5%BE%97%E6%B3%A8%E6%84%8F%E7%9A%84%E7%82%B9"><span class="toc-text">二、一些值得注意的点</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#2-1%E3%80%81SLC-x2F-TLC%E6%A8%A1%E5%BC%8F%E5%88%87%E6%8D%A2%EF%BC%88DAh-x2F-DFh%EF%BC%89"><span class="toc-text">2.1、SLC&#x2F;TLC模式切换（DAh&#x2F;DFh）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-2%E3%80%81Copyback%E7%9A%84%E4%BD%9C%E7%94%A8"><span class="toc-text">2.2、Copyback的作用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-3%E3%80%81NAND-Reset%E5%91%BD%E4%BB%A4FFh%E3%80%81FCh%E3%80%81FAh%E3%80%81FDh%E7%9A%84%E5%8C%BA%E5%88%AB%E5%92%8C%E8%81%94%E7%B3%BB"><span class="toc-text">2.3、NAND Reset命令FFh、FCh、FAh、FDh的区别和联系</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-3%E3%80%81Read-Status-Register"><span class="toc-text">2.3、Read Status Register</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1%E3%80%81Status-Register%E5%92%8CRb-n%E4%BF%A1%E5%8F%B7%E7%9A%84%E5%85%B3%E7%B3%BB"><span class="toc-text">1、Status Register和Rb_n信号的关系</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-4%E3%80%81Change-Read-Column-05h-E0h-or-Change-Read-Column-Enhanced-06h-E0h-%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="toc-text">2.4、Change Read Column (05h-E0h) or Change Read Column Enhanced(06h-E0h)的区别</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E7%BB%8F%E9%AA%8C%E4%B8%8A%E7%9A%84%E6%8A%80%E5%B7%A7"><span class="toc-text">三、经验上的技巧</span></a></li></ol></div></p>
+<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>一些个人理解结合网上文章，不一定正确；</p>
+<h1 id="一、ONFI协议和DataSheet"><a href="#一、ONFI协议和DataSheet" class="headerlink" title="一、ONFI协议和DataSheet"></a>一、ONFI协议和DataSheet</h1><p><a target="_blank" rel="noopener" href="http://www.onfi.org/">ONFI（Open NAND Flash Interface）协议</a>是ONFI公开组织制定的一种用于闪存芯片的开放接口标准，它定义了闪存芯片与主控制器之间的通信协议和信号传输规范。</p>
+<p>DataSheet（数据手册）是不同厂商根据ONFI协议制造出Flash产品之后，对自家Flash产品进行说明的一份技术文档，其中包含了该芯片的详细规格、功能描述、引脚定义、电气特性等信息。</p>
+<ul>
+<li>区别和联系：ONFI是蓝图，厂商的NAND Flash产品必须符合ONFI协议。但是ONFI预留了一些未定义的指令可供不同厂商自定义。故而不同厂商的<code>功能和时序</code>可能会有一些差异，甚至同一功能的实现需要不同命令（例如Erase Suspen&#x2F;Resume，Micron是61h&#x2F;D2h，YMTC是67h&#x2F;D7h）。</li>
+<li>ONFI指令集及预留给厂商的指令集，如图1所示：</li>
 </ul>
 <center>
-<img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/7.1Block%20Erase%20Sequence.png" width="75%" height="75%" alt="7.1 Block Erase Sequence"/>
+<img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/38.1.png" width="80%" height="80%" alt="38.1"/>
 </center>
 
-<h1 id="三、ERASE-BLOCK代码实现方案"><a href="#三、ERASE-BLOCK代码实现方案" class="headerlink" title="三、ERASE BLOCK代码实现方案"></a>三、<strong>ERASE BLOCK代码实现方案</strong></h1><h2 id="3-1、命令输入always块"><a href="#3-1、命令输入always块" class="headerlink" title="3.1、命令输入always块"></a>3.1、<strong>命令输入always块</strong></h2><p>如下所示，在We_n的上升沿会触发command input的always块。</p>
-<pre><code class="verilog">always @ (posedge We_n) begin : cLatch
-          1、判断是否command_enable
-          2、判断power up后第一个命令是否为reset命令，会产生error信息
-          3、Command（60h）
-          4、Command（D0h）
-end
-</code></pre>
-<p>command_enbale信号定义如下：</p>
-<pre><code class="verilog">assign command_enable = (Cle &amp; ~Ale &amp; ~Ce_n_vol &amp; Re_n );
-</code></pre>
-<h2 id="3-2、Command-60h"><a href="#3-2、Command-60h" class="headerlink" title="3.2、Command 60h"></a>3.2、Command 60h</h2><p>当IO口收到60h时，内部会进行如下操作：</p>
-<pre><code class="verilog">if (Io_mirror [7 : 0] = = = 8&#39;h60) begin
-        1、program cache 未完成时，60h会被忽略，直到状态变为E0h
-        2、~Wp_n 和 OTP_mode 时均不允许 ERASE
-        3、60h有效时，判断是否处于Multi-Plane ERASE，
-           if lastCmd为60h，或D1h，则继续让lastCmd=60h
-        else if (~multiplane_op_erase) begin
-                              saw_cmnd_60h = 1&#39;b1;
-                              saw_cmnd_60h_clear = 1&#39;b1;
-                          end else begin
-                              saw_cmnd_60h = 1&#39;b1;
-                              saw_cmnd_60h_clear = 1&#39;b0;
-                          end
-        4、调用 disable_rdStatus，复位 status flag，让device返Read mode
+    
 
-end
-</code></pre>
-<h2 id="3-3、Command-D0h"><a href="#3-3、Command-D0h" class="headerlink" title="3.3、Command D0h"></a>3.3、<strong>Command D0h</strong></h2><p>当IO口收到D0h时，内部会进行如下操作：</p>
-<pre><code class="verilog">else if (Io_mirror [7 : 0] = = = 8&#39;hD0) begin
-      1、program cache 未完成时，D0h会被忽略，直到状态变为E0h
-      2、判断是否 die_select，选择了才会往下执行
-      3、if ((lastCmd = = = 8&#39;h60) &amp;&amp; row_valid &amp;&amp; Wp_n) begin
-          3.1、lastCmd = 8&#39;hD0
-          3.2、判断当前LUN是否有被 Erase Suspend 的blcok，若地址相同，将会Resume 被Suspend 的block
-          3.3、调用clear_erase_suspend，清除和 Erase Suspend 相关的 reg
-          3.4、erase_blk_en = ~ erase_blk_en，产生沿降，调用后续always 块开始erase操作
-       end
-    end
-</code></pre>
-<h2 id="3-4、Erase功能实现的always块"><a href="#3-4、Erase功能实现的always块" class="headerlink" title="3.4、Erase功能实现的always块"></a>3.4、<strong>Erase功能实现的always块</strong></h2><p>第一个always块的作用是通过erase_blk_en和erase_blk_en_r的异或逻辑，使得一旦产生erase_blk_en &#x3D; ~ erase_blk_en的变换时，确保erase_blk_pls都能产生上升沿逻辑，从而驱动Erase操作的always块。</p>
-<pre><code class="verilog">always @(*)
-begin
-    erase_blk_pls &lt;= #tWB_delay ((erase_blk_en &amp; ~erase_blk_en_r) | (~erase_blk_en &amp; erase_blk_en_r));
-    erase_blk_en_r &lt;= #1 erase_blk_en;
-end
-</code></pre>
-<p>当erase_blk_pls产生上升沿的跳变时，会触发如下具有擦除逻辑的always块，从而完成Erase操作。</p>
-<pre><code class="verilog">always @(posedge erase_blk_pls) begin
-      1、进入busy状态，设置SR[5、6]为00；
-      2、调用 check_plane_addresses，检查排队的擦除块是否满足multi-plane寻址要求
-      3、擦除逻辑
-       if (eb_unlocked_erase) begin : unlocked_erase_block
-            3.1、截取擦除的 block 地址 
-             erase_block_addr = row_addr [eb_thisPlane] [BLCK_BITS + PAGE_BITS – 1 : PAGE_BITS];
-            
-        3.2、采用循环将array进行写1擦除
-                      for (e=0; e&lt;memory_used; e=e+1) begin : mem_loop
-                          //check to see if existing used address location matches block being erased
-                          if (memory_addr[e] [BLCK_BITS + PAGE_BITS - 1 : PAGE_BITS] = = = erase_block_addr) begin
-                              mem_array[e] = &#123;PAGE_SIZE&#123;erase_data[0]&#125;&#125;;
-                              seq_page[erase_block_addr] = &#123;PAGE_BITS&#123;1&#39;b0&#125;&#125;;                 
-                 mem_flag[e] = 0;  // 0: not programmed; 1: programmed.
-                                                  end
-                      end //mem_loop end
-         end  // unlocked_erase_block
-end
-</code></pre>
+<h1 id="二、一些值得注意的点"><a href="#二、一些值得注意的点" class="headerlink" title="二、一些值得注意的点"></a>二、一些值得注意的点</h1><h2 id="2-1、SLC-x2F-TLC模式切换（DAh-x2F-DFh）"><a href="#2-1、SLC-x2F-TLC模式切换（DAh-x2F-DFh）" class="headerlink" title="2.1、SLC&#x2F;TLC模式切换（DAh&#x2F;DFh）"></a>2.1、SLC&#x2F;TLC模式切换（DAh&#x2F;DFh）</h2><p>默认上电后处于TLC模式，可通过DAh命令切换到SLC模式。但是由于NAND物理特性，同一Block的Page是共用一个衬底的，所以不能在同一个Block中进行不同模式的Program操作。</p>
+<p>1、SLC模式写入后，再切换为TLC模式，不能对SLC模式下已经Program的Block进行写入（其它Block可以）。</p>
+<center>
+<img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/38.2.png" width="100%" height="100%" alt="38.2"/>
+</center>
+
+<p>2、并且不能在TLC模式下，读取SLC模式下Program的数据。</p>
+<center>
+<img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/38.3.png" width="100%" height="100%" alt="38.3"/>
+</center>
+
+<p>3、需要在TLC模式下发送Erase命令将之前SLC模式下Program的Block擦除，才能写入。注意：在SLC模式下Erase之后再切换为TLC模式，依然不能在TLC模式下写入.</p>
+<h2 id="2-2、Copyback的作用"><a href="#2-2、Copyback的作用" class="headerlink" title="2.2、Copyback的作用"></a>2.2、Copyback的作用</h2><p>命令序列为：00h-35h-85h-10h；</p>
+<p>Copyback用于在<code>同一个LUN</code>中，将data从一个page中读出来，再写入到<code>同一plane</code>中的其他page，可以用于固件做Block Management和wear leveling。</p>
+<blockquote>
+<p>为什么是用同一plane的不同page？</p>
+<p>美光是这样描述的：COPYBACK operations make it possible to transfer data within a plane from one page to another using the cache register.<br>因为不同plane是拥有不同cache、page register的最小单位。</p>
+</blockquote>
+<p>在NAND parameter的byte[7:6]的bit[4]中，定义了是（1）否（0）允许<code>读取奇数page——&gt;复制到偶数page</code>。</p>
+<h2 id="2-3、NAND-Reset命令FFh、FCh、FAh、FDh的区别和联系"><a href="#2-3、NAND-Reset命令FFh、FCh、FAh、FDh的区别和联系" class="headerlink" title="2.3、NAND Reset命令FFh、FCh、FAh、FDh的区别和联系"></a>2.3、NAND Reset命令FFh、FCh、FAh、FDh的区别和联系</h2><p>FCh和FFh类似，但是FCh专门设计出来作用于Synchronous模式，FAh专门设计出来只对单个的LUN作用。FDh在ONFI中并没有定义，但是厂家定义了此命令，尚不清楚它的实际意义。YMTC规定FDh会reset ODT（E2h）设置、以及disabled Vpp feature。</p>
+<center>
+<img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/38.4.png" width="100%" height="100%" alt="38.4"/>
+</center>
+
+<h2 id="2-3、Read-Status-Register"><a href="#2-3、Read-Status-Register" class="headerlink" title="2.3、Read Status Register"></a>2.3、Read Status Register</h2><h3 id="1、Status-Register和Rb-n信号的关系"><a href="#1、Status-Register和Rb-n信号的关系" class="headerlink" title="1、Status Register和Rb_n信号的关系"></a>1、Status Register和Rb_n信号的关系</h3><p><strong>一个LUN一个独立Status Register</strong>，一个Plane一个独立的Page Register，一个Block是一个独立的擦除单元（因为物理上共用一块衬底），一个page是一个独立的数据读写存储单元。</p>
+<center>
+<img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/38.5.png" width="80%" height="80%" alt="38.5"/>
+</center>
+
+<p>Rb_n信号反映了一条target或volume上，<code>每个LUN</code>的<code>SR [6]</code>的值的”<code>与逻辑</code>“，即任何一个LUN处于Busy状态Rb_n都会拉低。</p>
+<h2 id="2-4、Change-Read-Column-05h-E0h-or-Change-Read-Column-Enhanced-06h-E0h-的区别"><a href="#2-4、Change-Read-Column-05h-E0h-or-Change-Read-Column-Enhanced-06h-E0h-的区别" class="headerlink" title="2.4、Change Read Column (05h-E0h) or Change Read Column Enhanced(06h-E0h)的区别"></a>2.4、Change Read Column (05h-E0h) or Change Read Column Enhanced(06h-E0h)的区别</h2><ul>
+<li><code>05h-E0h</code>中间只有<code>两个周期</code>的Column地址，假如读一个page时不想从Column 0开始输出数据，可以通过此命令修改data out时的Column地址。实际上这个命令只是选择从page buffer中读取数据。</li>
+<li><code>06h-E0h</code>中间有<code>完整的六个周期</code>的Row+Column地址，可以用于Multi-plane Read的时候切换Plane来进行data out或者独立的LUN的操作。</li>
+<li>ONFI还定义了一种组合方式的Change Read Column Enhanced方式：</li>
+</ul>
+<center>
+<img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/38.6.png" width="100%" height="100%" alt="38.6"/>
+</center>
+    
+
+<p>注意：我在测试DDR3的时候发现，修改起始的Column地址时，只能（0，2，4，6……）这样偶数，不能从（0修改成1）这样。</p>
+<h1 id="三、经验上的技巧"><a href="#三、经验上的技巧" class="headerlink" title="三、经验上的技巧"></a>三、经验上的技巧</h1><ul>
+<li>1、可以先看NAND datasheet的Command define table，它定义了NAND有哪些功能，分别用了哪些命令，以及这些命令可以在什么时候发送。可以结合Command的功能，着重理解每个命令的作用域（Command Level）。</li>
+<li>2、NAND的Parameter区域（Datasheet一般有这个table）定义了NAND产品的规格，以及各种支持的功能，写验证计划时可以从此入手。</li>
+</ul>
 
       
        <hr><span style="font-style: italic;color: gray;"> 转载请注明来源，欢迎对文章中的引用来源进行考证，欢迎指出任何有错误或不够清晰的表达。可以在下面评论区评论，也可以邮件至 icmarktian@163.com </span>
