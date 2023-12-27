@@ -2,9 +2,9 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>11--折腾Blog学到的一些东西 | 马克得烂笔头</title>
-  <meta name="keywords" content="">
-  <meta name="description" content="11--折腾Blog学到的一些东西 | 马克得烂笔头">
+  <title>40--eMMC的Power Up操作 | 马克得烂笔头</title>
+  <meta name="keywords" content=" eMMC ">
+  <meta name="description" content="40--eMMC的Power Up操作 | 马克得烂笔头">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <meta name="description" content="人的精力是有限的，本站作为第二大脑用于存储本人学过的知识">
 <meta property="og:type" content="website">
@@ -902,9 +902,9 @@
 </aside>
 <div id="post">
     <div class="pjax">
-        <article id="post-5 杂记/11--折腾Blog学到的一些东西" class="article article-type-post" itemscope itemprop="blogPost">
+        <article id="post-2 领域/eMMC/40--eMMC的Power Up操作" class="article article-type-post" itemscope itemprop="blogPost">
     
-        <h1 class="article-title">11--折腾Blog学到的一些东西</h1>
+        <h1 class="article-title">40--eMMC的Power Up操作</h1>
     
     <div class="article-meta">
         
@@ -914,20 +914,29 @@
             <i class="iconfont icon-category"></i>
             
             
-            <a  data-rel="杂记">杂记</a>
+            <a  data-rel="领域">领域</a> > 
+            
+            <a  data-rel="领域&lt;---&gt;eMMC">eMMC</a>
             
         </span>
         
         
+        <span class="tag">
+            <i class="iconfont icon-tag"></i>
+            
+            <a class="color5">eMMC</a>
+            
+        </span>
+        
     </div>
     <div class="article-meta">
         
-            发布时间 : <time class="date" title='最后更新: 2023-03-24 16:09:25'>2023-03-20 20:32</time>
+            发布时间 : <time class="date" title='最后更新: 2023-12-27 11:30:44'>2023-12-27 11:18</time>
         
     </div>
     <div class="article-meta">
         
-        <span>字数:772</span>
+        <span>字数:703</span>
         
         
         
@@ -946,7 +955,7 @@
     
     <div class="toc-ref">
     
-        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E5%8A%A0%E6%B7%B1%E4%BA%86%E5%AF%B9%E7%BD%91%E7%BB%9C%E3%80%81%E7%BD%91%E7%AB%99%E6%90%AD%E5%BB%BA%E7%9A%84%E7%90%86%E8%A7%A3"><span class="toc-text">一、加深了对网络、网站搭建的理解</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E5%8A%A8%E6%80%81Blog%E5%92%8C%E9%9D%99%E6%80%81Blog"><span class="toc-text">二、动态Blog和静态Blog</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%89%E3%80%81Hexo-GitHub-%E8%87%AA%E5%AE%9A%E4%B9%89%E5%9F%9F%E5%90%8D-Cloudflare%E5%81%9ACDN%E4%B8%AD%E8%BD%AC"><span class="toc-text">三、Hexo+GitHub+自定义域名+Cloudflare做CDN中转</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%9B%9B%E3%80%81%E8%B8%A9%E5%9D%91%E8%AE%B0%E5%BD%95"><span class="toc-text">四、踩坑记录</span></a></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#1%E3%80%81Power-Up-%E6%B5%81%E7%A8%8B%EF%BC%88%E7%8A%B6%E6%80%81%E8%BD%AC%E6%8D%A2%EF%BC%89"><span class="toc-text">1、Power Up 流程（状态转换）</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2%E3%80%81Power-Up-%E9%81%B5%E5%BE%AA%E5%8E%9F%E5%88%99%EF%BC%88%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9%EF%BC%89"><span class="toc-text">2、Power Up 遵循原则（注意事项）</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3%E3%80%81CMD-1-%E4%BD%9C%E7%94%A8"><span class="toc-text">3、CMD 1 作用</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#4%E3%80%81Sleep-%E7%8A%B6%E6%80%81%EF%BC%8CPower-%E7%94%B5%E5%8E%8B%E7%9A%84%E5%8F%98%E5%8C%96"><span class="toc-text">4、Sleep 状态，Power 电压的变化</span></a></li></ol>
     
 <style>
     .left-col .switch-btn,
@@ -962,55 +971,37 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p><div class='inner-toc'><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E5%8A%A0%E6%B7%B1%E4%BA%86%E5%AF%B9%E7%BD%91%E7%BB%9C%E3%80%81%E7%BD%91%E7%AB%99%E6%90%AD%E5%BB%BA%E7%9A%84%E7%90%86%E8%A7%A3"><span class="toc-text">一、加深了对网络、网站搭建的理解</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E5%8A%A8%E6%80%81Blog%E5%92%8C%E9%9D%99%E6%80%81Blog"><span class="toc-text">二、动态Blog和静态Blog</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%89%E3%80%81Hexo-GitHub-%E8%87%AA%E5%AE%9A%E4%B9%89%E5%9F%9F%E5%90%8D-Cloudflare%E5%81%9ACDN%E4%B8%AD%E8%BD%AC"><span class="toc-text">三、Hexo+GitHub+自定义域名+Cloudflare做CDN中转</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%9B%9B%E3%80%81%E8%B8%A9%E5%9D%91%E8%AE%B0%E5%BD%95"><span class="toc-text">四、踩坑记录</span></a></li></ol></div></p>
-<h1 id="一、加深了对网络、网站搭建的理解"><a href="#一、加深了对网络、网站搭建的理解" class="headerlink" title="一、加深了对网络、网站搭建的理解"></a>一、加深了对网络、网站搭建的理解</h1><ol>
-<li><p>互联网其实就是一个大型的局域网罢了，所有的网页、网上的资源都处于某一台（多台）实体电脑（服务器）中，然后接入这个大型的Internet，实现我们普通网民的冲浪。</p>
-</li>
-<li><p>关于域名，其实就是一种映射关系，将一些好记的字符映射到你这台服务器的IP地址，实现访问，因为IP地址人类不好记忆。</p>
-</li>
-<li><p>关于<code>https</code>和<code>http</code>：简而言之前者需要SSL&#x2F;TLS加密，而后者是明文更容易遭受中间人攻击。这也是我强迫症使用cloudflare中转的原因之一，如果访问一个网站是http时，浏览器网址栏会提示不安全；而使用https加密后，网址栏会显示一把小锁。</p>
-</li>
-</ol>
-<h1 id="二、动态Blog和静态Blog"><a href="#二、动态Blog和静态Blog" class="headerlink" title="二、动态Blog和静态Blog"></a>二、动态Blog和静态Blog</h1><p>我试着折腾过两种，<code>动态：wordpress</code>。<code>静态：hexo</code>。我理解两者最直观的区别就是，动态的搭建在VPS上，可以访问后台实时修改和书写文章；静态是需要在本地搭建环境，生成好html文件，然后将这些页面上传到服务器。<br>比较而言，前者功能更加复杂，需要数据库等，可以用于网站的搭建，搭建博客只是其中一个功能。<br>而后者则相对纯粹，静态页面适合专注于文字的书写。</p>
-<h1 id="三、Hexo-GitHub-自定义域名-Cloudflare做CDN中转"><a href="#三、Hexo-GitHub-自定义域名-Cloudflare做CDN中转" class="headerlink" title="三、Hexo+GitHub+自定义域名+Cloudflare做CDN中转"></a>三、Hexo+GitHub+自定义域名+Cloudflare做CDN中转</h1><p>这里不做详细教程，只记录大体步骤；</p>
-<ol>
-<li>Github创建个人仓库（“服务器端”）；</li>
-<li>搭建本地环境（安装Git、Node.js、Hexo）；</li>
-<li>生成本地页面（localhost:4000），则表明搭建成功；</li>
-<li>将Hexo网站推送到Github中，实现互联网访问；</li>
-<li>购买域名，并让其指向你的<code>http://xxxx.github.io/</code>地址，实现自定义域名访问；<ul>
-<li>注：第五步有两种方法，一种是直接在域名购买商那里将DNS指向你的Github，一种是通过Cloudflare做中转解析；后者可以免费申请SSL证书，实现强制<code>https</code>代理，而非<code>http</code>。</li>
-</ul>
-</li>
-<li>SEO配置，让搜索引擎收录你的网站，并允许爬虫你的内容。</li>
-</ol>
-<h1 id="四、踩坑记录"><a href="#四、踩坑记录" class="headerlink" title="四、踩坑记录"></a>四、踩坑记录</h1><ol>
-<li>在添加百度SEO设置主动推送（API，要用到token那种方式），在根目录_config.yaml，修改deploy配置，添加<code>type: baidu_url_submitter</code>报错如下：<code>YAMLException: duplicated mapping key (126:3)</code>。</li>
-</ol>
-<blockquote>
-<p>解决办法是：<code>type</code>变为 ”<code>- type</code>“，且要顶格，即“-”前面不能有空格，后面有空格，且冒号后有空格，如图11.1：</p>
-</blockquote>
-<center>
-<img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/11.1%E5%9D%91%E4%B8%80.png" width="70%" height="70%" alt="11.1 坑一"/>
+        <p><div class='inner-toc'><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#1%E3%80%81Power-Up-%E6%B5%81%E7%A8%8B%EF%BC%88%E7%8A%B6%E6%80%81%E8%BD%AC%E6%8D%A2%EF%BC%89"><span class="toc-text">1、Power Up 流程（状态转换）</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2%E3%80%81Power-Up-%E9%81%B5%E5%BE%AA%E5%8E%9F%E5%88%99%EF%BC%88%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9%EF%BC%89"><span class="toc-text">2、Power Up 遵循原则（注意事项）</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3%E3%80%81CMD-1-%E4%BD%9C%E7%94%A8"><span class="toc-text">3、CMD 1 作用</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#4%E3%80%81Sleep-%E7%8A%B6%E6%80%81%EF%BC%8CPower-%E7%94%B5%E5%8E%8B%E7%9A%84%E5%8F%98%E5%8C%96"><span class="toc-text">4、Sleep 状态，Power 电压的变化</span></a></li></ol></div></p>
+<h1 id="1、Power-Up-流程（状态转换）"><a href="#1、Power-Up-流程（状态转换）" class="headerlink" title="1、Power Up 流程（状态转换）"></a>1、Power Up 流程（状态转换）</h1><center>
+<img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/40.1.png" width="100%" height="100%" alt="40.1"/>
 </center>
 
-<p>因为yml的特点是：</p>
 <ul>
-<li>大小写敏感</li>
-<li>使用缩进表示层级关系</li>
-<li>缩进不允许使用tab，只允许空格</li>
-<li>缩进的空格数不重要，只要相同层级的元素<strong>左对齐</strong>即可</li>
-<li>‘#’表示注释</li>
+<li>1、VCC 和 VCCQ 上电到指定电压范围内（同时或先后均可，上电最大持续时长受tPRU约束）；</li>
+<li>2、进入 <code>pre-idle</code> 状态，若不支持boot（或 BOOT_PARTITION_ENABLE 关闭），则直接进入<code>idle</code>状态；</li>
+<li>3、若开启boot模式（BOOT_PARTITION_ENABLE 开启），则进入 <code>Pre-boot</code> 状态，接下来就进行boot初始化序列了；<br>3.1、如果接收 <strong>boot 操作序列</strong>，完成 boot 操作之后，进入 <code>idle</code> 状态；<br>3.2、如果接收的不是 <strong>boot 操作序列</strong> 和 <strong>CMD 1</strong>，也进入 <code>idle</code> 状态；<br>3.3、如果直接接收到 <strong>CMD 1</strong>，则会返回 CMD 1请求的内容，并跳出 boot mode ，直接进入到 <strong>Device identification mode</strong>；</li>
+<li>4、<code>idle</code> 状态下发送CMD 1，然后进入<strong>Device identification mode；</strong></li>
 </ul>
-<hr>
-<br>
-
-<ol start="2">
-<li>百度SEO通过文件验证网站后，<code>baidu_verify_codeva-u08yTssVjX.html</code>文件每次都会被Hexo编译，导致认证不成功。</li>
-</ol>
-<blockquote>
-<p>解决办法是：将<code>baidu_verify_codeva-u08yTssVjX.html</code>文件放到<code>\themes\你的主题\source</code>中，而不是在blog根目录下的source文件夹中。</p>
-</blockquote>
+<h1 id="2、Power-Up-遵循原则（注意事项）"><a href="#2、Power-Up-遵循原则（注意事项）" class="headerlink" title="2、Power Up 遵循原则（注意事项）"></a>2、Power Up 遵循原则（注意事项）</h1><ul>
+<li>1、处于 <code>idle</code> 状态，必须要发送 <code>CMD 1</code> 之后才能做其他操作（其他会被忽略）；</li>
+<li>2、eMMC v4.2之前的版本，Power Up后直接进入 <code>idle</code> 状态；</li>
+<li>3、Boot 的操作序列<a href="https://mkdbook.com/blog022.html#:~:text=%E8%AF%BB%E5%8F%96%E6%95%B0%E6%8D%AE%EF%BC%89-,3.1%20%E8%AE%BF%E9%97%AEboot%E5%88%86%E5%8C%BA,-%E5%9C%A8boot%E6%A8%A1%E5%BC%8F">如blog22 3.1所示</a>：keeping the CMD line low for at least 74 clock cycles, or issuing CMD0 with the argument of 0xFFFFFFFA；</li>
+<li>4、上电完成后，host开始发送CLK和CMD；</li>
+<li>5、每组总线的master都必须执行CMD1；</li>
+</ul>
+<h1 id="3、CMD-1-作用"><a href="#3、CMD-1-作用" class="headerlink" title="3、CMD 1 作用"></a>3、CMD 1 作用</h1><ul>
+<li>1、在eMMC上电过程中，处于idle state时，发送CMD 1，请求设备状态，OCR寄存器<a href="https://mkdbook.com/blog025.html#:~:text=%E4%BA%8C%E3%80%81-,OCR%E5%AF%84%E5%AD%98%E5%99%A8%E7%9A%84%E5%86%85%E5%AE%B9,-Operation%20condition%20register">如blog25所示</a>。</li>
+<li>2、CMD 1是用来协商工作电压范围，并轮询设备直至其结束上电过程的专用同步命令。</li>
+<li>3、CMD 1的应答还包含一个busy标志位，表示设备仍工作于上电例程，没有准备好识别。主机必须等到此位清除，若CMD 1在device初始化完成之前发送，则device会给host端反馈一个含busy flag的CMD 1应答。</li>
+<li>4、如果busy标志位一直未清除，则主机可以再次发送CMD 1。但是，根据eMMC标准，设备必须在具有有效OCR范围的 CMD1 发送1秒内完成其初始化。因此，一般情况下，只需要发送一次CMD 1即可。</li>
+<li>5、若在power up之前，已经完成分区（<code>EXT_CSD byte [155]表示分区设置是否完成</code>），则初始化延迟要通过<code>INI_TIMEOUT_PA（EXT_CSD byte [241]）</code>计算，而不是固定的1s；<br>但这个超时时间仅用于设置后的第一次启动，对于所有连续的初始化，还是使用1s超时。</li>
+</ul>
+<h1 id="4、Sleep-状态，Power-电压的变化"><a href="#4、Sleep-状态，Power-电压的变化" class="headerlink" title="4、Sleep 状态，Power 电压的变化"></a>4、Sleep 状态，Power 电压的变化</h1><ul>
+<li>1、Master 必须在VCC和VCCQ稳定之后，才能发 command。</li>
+<li>2、处于<code>sleep mode</code>时，master可以<code>关断VCC</code>减少功耗，但VCCQ需要保持，用来接收唤醒命令。</li>
+<li>3、CMD 5唤醒处于sleep mode的device前，需要先拉高VCC。</li>
+<li>如果 VCC or VCCQ 低于 0.5 V 超过 1 ms，则会回到 <code>pre-idle</code> 状态。（Sleep 状态除外）</li>
+</ul>
 
       
        <hr><span style="font-style: italic;color: gray;"> 转载请注明来源，欢迎对文章中的引用来源进行考证，欢迎指出任何有错误或不够清晰的表达。可以在下面评论区评论，也可以邮件至 icmarktian@163.com </span>

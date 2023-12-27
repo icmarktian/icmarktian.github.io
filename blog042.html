@@ -2,9 +2,9 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>11--折腾Blog学到的一些东西 | 马克得烂笔头</title>
-  <meta name="keywords" content="">
-  <meta name="description" content="11--折腾Blog学到的一些东西 | 马克得烂笔头">
+  <title>42--NAND的ODT功能 | 马克得烂笔头</title>
+  <meta name="keywords" content=" NAND ">
+  <meta name="description" content="42--NAND的ODT功能 | 马克得烂笔头">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <meta name="description" content="人的精力是有限的，本站作为第二大脑用于存储本人学过的知识">
 <meta property="og:type" content="website">
@@ -902,9 +902,9 @@
 </aside>
 <div id="post">
     <div class="pjax">
-        <article id="post-5 杂记/11--折腾Blog学到的一些东西" class="article article-type-post" itemscope itemprop="blogPost">
+        <article id="post-2 领域/NAND/42--NAND的ODT功能" class="article article-type-post" itemscope itemprop="blogPost">
     
-        <h1 class="article-title">11--折腾Blog学到的一些东西</h1>
+        <h1 class="article-title">42--NAND的ODT功能</h1>
     
     <div class="article-meta">
         
@@ -914,20 +914,29 @@
             <i class="iconfont icon-category"></i>
             
             
-            <a  data-rel="杂记">杂记</a>
+            <a  data-rel="领域">领域</a> > 
+            
+            <a  data-rel="领域&lt;---&gt;NAND">NAND</a>
             
         </span>
         
         
+        <span class="tag">
+            <i class="iconfont icon-tag"></i>
+            
+            <a class="color5">NAND</a>
+            
+        </span>
+        
     </div>
     <div class="article-meta">
         
-            发布时间 : <time class="date" title='最后更新: 2023-03-24 16:09:25'>2023-03-20 20:32</time>
+            发布时间 : <time class="date" title='最后更新: 2023-12-27 11:59:17'>2023-12-27 11:34</time>
         
     </div>
     <div class="article-meta">
         
-        <span>字数:772</span>
+        <span>字数:470</span>
         
         
         
@@ -946,7 +955,7 @@
     
     <div class="toc-ref">
     
-        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E5%8A%A0%E6%B7%B1%E4%BA%86%E5%AF%B9%E7%BD%91%E7%BB%9C%E3%80%81%E7%BD%91%E7%AB%99%E6%90%AD%E5%BB%BA%E7%9A%84%E7%90%86%E8%A7%A3"><span class="toc-text">一、加深了对网络、网站搭建的理解</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E5%8A%A8%E6%80%81Blog%E5%92%8C%E9%9D%99%E6%80%81Blog"><span class="toc-text">二、动态Blog和静态Blog</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%89%E3%80%81Hexo-GitHub-%E8%87%AA%E5%AE%9A%E4%B9%89%E5%9F%9F%E5%90%8D-Cloudflare%E5%81%9ACDN%E4%B8%AD%E8%BD%AC"><span class="toc-text">三、Hexo+GitHub+自定义域名+Cloudflare做CDN中转</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%9B%9B%E3%80%81%E8%B8%A9%E5%9D%91%E8%AE%B0%E5%BD%95"><span class="toc-text">四、踩坑记录</span></a></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#1%E3%80%81ODT%E6%94%AF%E6%8C%81%E7%9A%84%E6%8E%A5%E5%8F%A3"><span class="toc-text">1、ODT支持的接口</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2%E3%80%81%E4%BB%80%E4%B9%88%E6%98%AFODT%EF%BC%9F"><span class="toc-text">2、什么是ODT？</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3%E3%80%81ODT%E5%A6%82%E4%BD%95%E9%99%8D%E4%BD%8ENAND%E7%9A%84%E8%BE%93%E5%85%A5%E9%98%BB%E6%8A%97%EF%BC%9F"><span class="toc-text">3、ODT如何降低NAND的输入阻抗？</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#4%E3%80%81%E4%B8%BA%E4%BB%80%E4%B9%88%E9%9C%80%E8%A6%81ODT%EF%BC%9F"><span class="toc-text">4、为什么需要ODT？</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#5%E3%80%81%E5%A6%82%E4%BD%95%E5%B7%A5%E4%BD%9C%EF%BC%9F"><span class="toc-text">5、如何工作？</span></a></li></ol>
     
 <style>
     .left-col .switch-btn,
@@ -962,55 +971,26 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p><div class='inner-toc'><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E5%8A%A0%E6%B7%B1%E4%BA%86%E5%AF%B9%E7%BD%91%E7%BB%9C%E3%80%81%E7%BD%91%E7%AB%99%E6%90%AD%E5%BB%BA%E7%9A%84%E7%90%86%E8%A7%A3"><span class="toc-text">一、加深了对网络、网站搭建的理解</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E5%8A%A8%E6%80%81Blog%E5%92%8C%E9%9D%99%E6%80%81Blog"><span class="toc-text">二、动态Blog和静态Blog</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%89%E3%80%81Hexo-GitHub-%E8%87%AA%E5%AE%9A%E4%B9%89%E5%9F%9F%E5%90%8D-Cloudflare%E5%81%9ACDN%E4%B8%AD%E8%BD%AC"><span class="toc-text">三、Hexo+GitHub+自定义域名+Cloudflare做CDN中转</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%9B%9B%E3%80%81%E8%B8%A9%E5%9D%91%E8%AE%B0%E5%BD%95"><span class="toc-text">四、踩坑记录</span></a></li></ol></div></p>
-<h1 id="一、加深了对网络、网站搭建的理解"><a href="#一、加深了对网络、网站搭建的理解" class="headerlink" title="一、加深了对网络、网站搭建的理解"></a>一、加深了对网络、网站搭建的理解</h1><ol>
-<li><p>互联网其实就是一个大型的局域网罢了，所有的网页、网上的资源都处于某一台（多台）实体电脑（服务器）中，然后接入这个大型的Internet，实现我们普通网民的冲浪。</p>
-</li>
-<li><p>关于域名，其实就是一种映射关系，将一些好记的字符映射到你这台服务器的IP地址，实现访问，因为IP地址人类不好记忆。</p>
-</li>
-<li><p>关于<code>https</code>和<code>http</code>：简而言之前者需要SSL&#x2F;TLS加密，而后者是明文更容易遭受中间人攻击。这也是我强迫症使用cloudflare中转的原因之一，如果访问一个网站是http时，浏览器网址栏会提示不安全；而使用https加密后，网址栏会显示一把小锁。</p>
-</li>
-</ol>
-<h1 id="二、动态Blog和静态Blog"><a href="#二、动态Blog和静态Blog" class="headerlink" title="二、动态Blog和静态Blog"></a>二、动态Blog和静态Blog</h1><p>我试着折腾过两种，<code>动态：wordpress</code>。<code>静态：hexo</code>。我理解两者最直观的区别就是，动态的搭建在VPS上，可以访问后台实时修改和书写文章；静态是需要在本地搭建环境，生成好html文件，然后将这些页面上传到服务器。<br>比较而言，前者功能更加复杂，需要数据库等，可以用于网站的搭建，搭建博客只是其中一个功能。<br>而后者则相对纯粹，静态页面适合专注于文字的书写。</p>
-<h1 id="三、Hexo-GitHub-自定义域名-Cloudflare做CDN中转"><a href="#三、Hexo-GitHub-自定义域名-Cloudflare做CDN中转" class="headerlink" title="三、Hexo+GitHub+自定义域名+Cloudflare做CDN中转"></a>三、Hexo+GitHub+自定义域名+Cloudflare做CDN中转</h1><p>这里不做详细教程，只记录大体步骤；</p>
-<ol>
-<li>Github创建个人仓库（“服务器端”）；</li>
-<li>搭建本地环境（安装Git、Node.js、Hexo）；</li>
-<li>生成本地页面（localhost:4000），则表明搭建成功；</li>
-<li>将Hexo网站推送到Github中，实现互联网访问；</li>
-<li>购买域名，并让其指向你的<code>http://xxxx.github.io/</code>地址，实现自定义域名访问；<ul>
-<li>注：第五步有两种方法，一种是直接在域名购买商那里将DNS指向你的Github，一种是通过Cloudflare做中转解析；后者可以免费申请SSL证书，实现强制<code>https</code>代理，而非<code>http</code>。</li>
+        <p><div class='inner-toc'><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#1%E3%80%81ODT%E6%94%AF%E6%8C%81%E7%9A%84%E6%8E%A5%E5%8F%A3"><span class="toc-text">1、ODT支持的接口</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2%E3%80%81%E4%BB%80%E4%B9%88%E6%98%AFODT%EF%BC%9F"><span class="toc-text">2、什么是ODT？</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3%E3%80%81ODT%E5%A6%82%E4%BD%95%E9%99%8D%E4%BD%8ENAND%E7%9A%84%E8%BE%93%E5%85%A5%E9%98%BB%E6%8A%97%EF%BC%9F"><span class="toc-text">3、ODT如何降低NAND的输入阻抗？</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#4%E3%80%81%E4%B8%BA%E4%BB%80%E4%B9%88%E9%9C%80%E8%A6%81ODT%EF%BC%9F"><span class="toc-text">4、为什么需要ODT？</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#5%E3%80%81%E5%A6%82%E4%BD%95%E5%B7%A5%E4%BD%9C%EF%BC%9F"><span class="toc-text">5、如何工作？</span></a></li></ol></div></p>
+<h1 id="1、ODT支持的接口"><a href="#1、ODT支持的接口" class="headerlink" title="1、ODT支持的接口"></a>1、ODT支持的接口</h1><ul>
+<li>NV-DDR2</li>
+<li>NV-DDR3</li>
+<li>NV-LPDDR4</li>
 </ul>
-</li>
-<li>SEO配置，让搜索引擎收录你的网站，并允许爬虫你的内容。</li>
-</ol>
-<h1 id="四、踩坑记录"><a href="#四、踩坑记录" class="headerlink" title="四、踩坑记录"></a>四、踩坑记录</h1><ol>
-<li>在添加百度SEO设置主动推送（API，要用到token那种方式），在根目录_config.yaml，修改deploy配置，添加<code>type: baidu_url_submitter</code>报错如下：<code>YAMLException: duplicated mapping key (126:3)</code>。</li>
-</ol>
-<blockquote>
-<p>解决办法是：<code>type</code>变为 ”<code>- type</code>“，且要顶格，即“-”前面不能有空格，后面有空格，且冒号后有空格，如图11.1：</p>
-</blockquote>
-<center>
-<img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/11.1%E5%9D%91%E4%B8%80.png" width="70%" height="70%" alt="11.1 坑一"/>
-</center>
-
-<p>因为yml的特点是：</p>
-<ul>
-<li>大小写敏感</li>
-<li>使用缩进表示层级关系</li>
-<li>缩进不允许使用tab，只允许空格</li>
-<li>缩进的空格数不重要，只要相同层级的元素<strong>左对齐</strong>即可</li>
-<li>‘#’表示注释</li>
+<h1 id="2、什么是ODT？"><a href="#2、什么是ODT？" class="headerlink" title="2、什么是ODT？"></a>2、什么是ODT？</h1><ul>
+<li>ODT 的全称是 On-Die Termination，即片内终端。它是一种用于<code>降低 NAND 芯片输入阻抗</code>的技术，用于优化信号传输，提高信号完整性，并降低信号反射。</li>
 </ul>
-<hr>
-<br>
-
-<ol start="2">
-<li>百度SEO通过文件验证网站后，<code>baidu_verify_codeva-u08yTssVjX.html</code>文件每次都会被Hexo编译，导致认证不成功。</li>
-</ol>
-<blockquote>
-<p>解决办法是：将<code>baidu_verify_codeva-u08yTssVjX.html</code>文件放到<code>\themes\你的主题\source</code>中，而不是在blog根目录下的source文件夹中。</p>
-</blockquote>
+<h1 id="3、ODT如何降低NAND的输入阻抗？"><a href="#3、ODT如何降低NAND的输入阻抗？" class="headerlink" title="3、ODT如何降低NAND的输入阻抗？"></a>3、ODT如何降低NAND的输入阻抗？</h1><ul>
+<li>ODT可以通过将NAND芯片的输入端连接到一个低阻抗的输出端来降低输入端电流，从而降低输入阻抗。</li>
+</ul>
+<h1 id="4、为什么需要ODT？"><a href="#4、为什么需要ODT？" class="headerlink" title="4、为什么需要ODT？"></a>4、为什么需要ODT？</h1><ul>
+<li>1、<code>提高I/O速度</code>：通过降低NAND芯片的输入阻抗。在没有个ODT的情况下，NAND芯片的输入阻抗较高，这会导致I&#x2F;O信号的上升和下降时间变长，从而降低I&#x2F;O速度。ODT可以通过降低NAND芯片的输入阻抗来缩短I&#x2F;O信号的上升和下降时间，从而提高I&#x2F;O速度。</li>
+<li>2、<code>降低功耗</code>：在没有ODT的情况下，NAND芯片的输入端会一直处于高阻状态，这会导致NAND芯片的输入端电流一直保持在一个较高的水平，从而增加NAND芯片的功耗。ODT可以通过将NAND芯片的输入端连接到一个低阻抗的输出端来降低输入端电流，从而降低NAND芯片的功耗。</li>
+</ul>
+<h1 id="5、如何工作？"><a href="#5、如何工作？" class="headerlink" title="5、如何工作？"></a>5、如何工作？</h1><ul>
+<li><strong>读操作时：</strong> ODT 输出端被<code>拉高</code>，将 NAND 芯片的<code>输入端</code>连接到 <code>ODT 输出端</code>。<br>由于 ODT 输出端的阻抗较低，NAND 芯片的<code>输入阻抗</code>也降低，从而缩短 I&#x2F;O 信号的上升和下降时间，<code>提高 I/O 速度</code>。</li>
+<li><strong>写操作时：</strong> ODT 输出端被<code>拉低</code>，将 NAND 芯片的<code>输入端</code>连接到 <code>I/O 线</code>。<br>由于 ODT 输出端的阻抗较低，NAND 芯片的<code>输入端电流</code>也降低，从而<code>降低功耗</code>。</li>
+</ul>
 
       
        <hr><span style="font-style: italic;color: gray;"> 转载请注明来源，欢迎对文章中的引用来源进行考证，欢迎指出任何有错误或不够清晰的表达。可以在下面评论区评论，也可以邮件至 icmarktian@163.com </span>

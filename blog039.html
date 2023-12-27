@@ -2,9 +2,9 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>11--折腾Blog学到的一些东西 | 马克得烂笔头</title>
-  <meta name="keywords" content="">
-  <meta name="description" content="11--折腾Blog学到的一些东西 | 马克得烂笔头">
+  <title>39--关于eMMC的一些个人总结 | 马克得烂笔头</title>
+  <meta name="keywords" content=" eMMC ">
+  <meta name="description" content="39--关于eMMC的一些个人总结 | 马克得烂笔头">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <meta name="description" content="人的精力是有限的，本站作为第二大脑用于存储本人学过的知识">
 <meta property="og:type" content="website">
@@ -902,9 +902,9 @@
 </aside>
 <div id="post">
     <div class="pjax">
-        <article id="post-5 杂记/11--折腾Blog学到的一些东西" class="article article-type-post" itemscope itemprop="blogPost">
+        <article id="post-2 领域/存储/39--关于eMMC的一些个人总结" class="article article-type-post" itemscope itemprop="blogPost">
     
-        <h1 class="article-title">11--折腾Blog学到的一些东西</h1>
+        <h1 class="article-title">39--关于eMMC的一些个人总结</h1>
     
     <div class="article-meta">
         
@@ -914,20 +914,29 @@
             <i class="iconfont icon-category"></i>
             
             
-            <a  data-rel="杂记">杂记</a>
+            <a  data-rel="领域">领域</a> > 
+            
+            <a  data-rel="领域&lt;---&gt;存储">存储</a>
             
         </span>
         
         
+        <span class="tag">
+            <i class="iconfont icon-tag"></i>
+            
+            <a class="color5">eMMC</a>
+            
+        </span>
+        
     </div>
     <div class="article-meta">
         
-            发布时间 : <time class="date" title='最后更新: 2023-03-24 16:09:25'>2023-03-20 20:32</time>
+            发布时间 : <time class="date" title='最后更新: 2023-12-27 11:16:11'>2023-12-27 11:00</time>
         
     </div>
     <div class="article-meta">
         
-        <span>字数:772</span>
+        <span>字数:575</span>
         
         
         
@@ -946,7 +955,7 @@
     
     <div class="toc-ref">
     
-        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E5%8A%A0%E6%B7%B1%E4%BA%86%E5%AF%B9%E7%BD%91%E7%BB%9C%E3%80%81%E7%BD%91%E7%AB%99%E6%90%AD%E5%BB%BA%E7%9A%84%E7%90%86%E8%A7%A3"><span class="toc-text">一、加深了对网络、网站搭建的理解</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E5%8A%A8%E6%80%81Blog%E5%92%8C%E9%9D%99%E6%80%81Blog"><span class="toc-text">二、动态Blog和静态Blog</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%89%E3%80%81Hexo-GitHub-%E8%87%AA%E5%AE%9A%E4%B9%89%E5%9F%9F%E5%90%8D-Cloudflare%E5%81%9ACDN%E4%B8%AD%E8%BD%AC"><span class="toc-text">三、Hexo+GitHub+自定义域名+Cloudflare做CDN中转</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%9B%9B%E3%80%81%E8%B8%A9%E5%9D%91%E8%AE%B0%E5%BD%95"><span class="toc-text">四、踩坑记录</span></a></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-text">前言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#1%E3%80%81eMMC%E4%B8%ADVCC%E3%80%81VDD%E3%80%81VSS%E3%80%81VCCQ-%E7%9A%84%E5%85%B3%E7%B3%BB%E7%90%86%E8%A7%A3"><span class="toc-text">1、eMMC中VCC、VDD、VSS、VCCQ 的关系理解</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2%E3%80%81eMMC%E7%9A%84%E5%B7%A5%E4%BD%9C%E6%B5%81%E7%A8%8B"><span class="toc-text">2、eMMC的工作流程</span></a></li></ol>
     
 <style>
     .left-col .switch-btn,
@@ -962,55 +971,27 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p><div class='inner-toc'><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E5%8A%A0%E6%B7%B1%E4%BA%86%E5%AF%B9%E7%BD%91%E7%BB%9C%E3%80%81%E7%BD%91%E7%AB%99%E6%90%AD%E5%BB%BA%E7%9A%84%E7%90%86%E8%A7%A3"><span class="toc-text">一、加深了对网络、网站搭建的理解</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E5%8A%A8%E6%80%81Blog%E5%92%8C%E9%9D%99%E6%80%81Blog"><span class="toc-text">二、动态Blog和静态Blog</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%89%E3%80%81Hexo-GitHub-%E8%87%AA%E5%AE%9A%E4%B9%89%E5%9F%9F%E5%90%8D-Cloudflare%E5%81%9ACDN%E4%B8%AD%E8%BD%AC"><span class="toc-text">三、Hexo+GitHub+自定义域名+Cloudflare做CDN中转</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%9B%9B%E3%80%81%E8%B8%A9%E5%9D%91%E8%AE%B0%E5%BD%95"><span class="toc-text">四、踩坑记录</span></a></li></ol></div></p>
-<h1 id="一、加深了对网络、网站搭建的理解"><a href="#一、加深了对网络、网站搭建的理解" class="headerlink" title="一、加深了对网络、网站搭建的理解"></a>一、加深了对网络、网站搭建的理解</h1><ol>
-<li><p>互联网其实就是一个大型的局域网罢了，所有的网页、网上的资源都处于某一台（多台）实体电脑（服务器）中，然后接入这个大型的Internet，实现我们普通网民的冲浪。</p>
+        <p><div class='inner-toc'><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-text">前言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#1%E3%80%81eMMC%E4%B8%ADVCC%E3%80%81VDD%E3%80%81VSS%E3%80%81VCCQ-%E7%9A%84%E5%85%B3%E7%B3%BB%E7%90%86%E8%A7%A3"><span class="toc-text">1、eMMC中VCC、VDD、VSS、VCCQ 的关系理解</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2%E3%80%81eMMC%E7%9A%84%E5%B7%A5%E4%BD%9C%E6%B5%81%E7%A8%8B"><span class="toc-text">2、eMMC的工作流程</span></a></li></ol></div></p>
+<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>一些个人理解结合网上文章，不一定正确；</p>
+<h1 id="1、eMMC中VCC、VDD、VSS、VCCQ-的关系理解"><a href="#1、eMMC中VCC、VDD、VSS、VCCQ-的关系理解" class="headerlink" title="1、eMMC中VCC、VDD、VSS、VCCQ 的关系理解"></a>1、eMMC中VCC、VDD、VSS、VCCQ 的关系理解</h1><ul>
+<li><p>在MOS管中，它们是可以这样对应的：<br><code>VCC</code>：栅极电压，Control Gate，给栅极加压打开珪衬底的隧道；<br><code>VDD</code>：漏极电压，Drain Gate，电子或者空穴在漏极耗尽，类似GND（低电压）；<br><code>VSS</code>：源极电压，Source Gate，储存负电子或正空穴；<br>VCCQ：给信号线（I&#x2F;O口）供电，Q一般表示数字电路中的数据线，如DQ。<br>在eMMC中，供电方式如<a href="https://mkdbook.com/blog028.html#:~:text=28.2-,%E8%BF%98%E6%9C%89%E4%B8%80%E4%BA%9B%E9%87%8D%E8%A6%81%E7%9A%84%E5%8A%9F%E8%83%BD%E7%BA%BF%EF%BC%9A,-RST%EF%BC%9A%E7%A1%AC%E4%BB%B6%E5%A4%8D">blog028所示</a>。</p>
 </li>
-<li><p>关于域名，其实就是一种映射关系，将一些好记的字符映射到你这台服务器的IP地址，实现访问，因为IP地址人类不好记忆。</p>
+<li><p><strong>高电压3.3V</strong>：<code>2.7--3.6</code>；<br><strong>低电压1.8V</strong>：<code>1.7--1.95</code>；<br><strong>更低电压1.2V</strong>：<code>1.1--1.3</code>；(为了获得更高的I&#x2F;O速度)</p>
 </li>
-<li><p>关于<code>https</code>和<code>http</code>：简而言之前者需要SSL&#x2F;TLS加密，而后者是明文更容易遭受中间人攻击。这也是我强迫症使用cloudflare中转的原因之一，如果访问一个网站是http时，浏览器网址栏会提示不安全；而使用https加密后，网址栏会显示一把小锁。</p>
+<li><p><code>tPRUH</code>：3.3伏高电压上电时间，35ms；<br><code>tPRUL</code>：1.8伏低电压上电时间，25ms；</p>
 </li>
-</ol>
-<h1 id="二、动态Blog和静态Blog"><a href="#二、动态Blog和静态Blog" class="headerlink" title="二、动态Blog和静态Blog"></a>二、动态Blog和静态Blog</h1><p>我试着折腾过两种，<code>动态：wordpress</code>。<code>静态：hexo</code>。我理解两者最直观的区别就是，动态的搭建在VPS上，可以访问后台实时修改和书写文章；静态是需要在本地搭建环境，生成好html文件，然后将这些页面上传到服务器。<br>比较而言，前者功能更加复杂，需要数据库等，可以用于网站的搭建，搭建博客只是其中一个功能。<br>而后者则相对纯粹，静态页面适合专注于文字的书写。</p>
-<h1 id="三、Hexo-GitHub-自定义域名-Cloudflare做CDN中转"><a href="#三、Hexo-GitHub-自定义域名-Cloudflare做CDN中转" class="headerlink" title="三、Hexo+GitHub+自定义域名+Cloudflare做CDN中转"></a>三、Hexo+GitHub+自定义域名+Cloudflare做CDN中转</h1><p>这里不做详细教程，只记录大体步骤；</p>
-<ol>
-<li>Github创建个人仓库（“服务器端”）；</li>
-<li>搭建本地环境（安装Git、Node.js、Hexo）；</li>
-<li>生成本地页面（localhost:4000），则表明搭建成功；</li>
-<li>将Hexo网站推送到Github中，实现互联网访问；</li>
-<li>购买域名，并让其指向你的<code>http://xxxx.github.io/</code>地址，实现自定义域名访问；<ul>
-<li>注：第五步有两种方法，一种是直接在域名购买商那里将DNS指向你的Github，一种是通过Cloudflare做中转解析；后者可以免费申请SSL证书，实现强制<code>https</code>代理，而非<code>http</code>。</li>
+<li><p><code>tPRUV</code>：1.2伏低电压上电时间，20ms；</p>
+</li>
 </ul>
-</li>
-<li>SEO配置，让搜索引擎收录你的网站，并允许爬虫你的内容。</li>
-</ol>
-<h1 id="四、踩坑记录"><a href="#四、踩坑记录" class="headerlink" title="四、踩坑记录"></a>四、踩坑记录</h1><ol>
-<li>在添加百度SEO设置主动推送（API，要用到token那种方式），在根目录_config.yaml，修改deploy配置，添加<code>type: baidu_url_submitter</code>报错如下：<code>YAMLException: duplicated mapping key (126:3)</code>。</li>
-</ol>
-<blockquote>
-<p>解决办法是：<code>type</code>变为 ”<code>- type</code>“，且要顶格，即“-”前面不能有空格，后面有空格，且冒号后有空格，如图11.1：</p>
-</blockquote>
-<center>
-<img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/11.1%E5%9D%91%E4%B8%80.png" width="70%" height="70%" alt="11.1 坑一"/>
-</center>
-
-<p>因为yml的特点是：</p>
-<ul>
-<li>大小写敏感</li>
-<li>使用缩进表示层级关系</li>
-<li>缩进不允许使用tab，只允许空格</li>
-<li>缩进的空格数不重要，只要相同层级的元素<strong>左对齐</strong>即可</li>
-<li>‘#’表示注释</li>
+<h1 id="2、eMMC的工作流程"><a href="#2、eMMC的工作流程" class="headerlink" title="2、eMMC的工作流程"></a>2、eMMC的工作流程</h1><ul>
+<li>eMMC 5.1A协议中p31、p36、p39、p40，有四个状态机转移图，这几个状态转移图可以连起来的。</li>
+<li>Power on之后eMMC设备依次进入<code>Boot mode</code>（可跳过），然后CMD 1之后进入<code>Device identification mode</code>，再然后进入到<code>Data transfer mode</code>，最后可以在<code>Interrupt mode</code>之间切换。还有一个<code>inactive mode</code> ，它出现在eMMC协议Figure 25中，通过CMD 15主动进入或在对应情况下自动进入。</li>
+<li><strong>Boot mode</strong>：是eMMC设备启动的初始模式，用于检查eMMC的健康状况（温度、电压、电容等）并加载配置信息（容量、扇区大小、坏块表等），初始化eMMC存储空间等。</li>
+<li><strong>Device identification mode</strong>：用于向主机提供设备信息，如设备类型、容量、版本等。</li>
+<li><strong>Data transfer mode</strong>：是eMMC设备的主要工作模式，用于执行主机的命令，eMMC的读、写、擦除等数据传输功能都在此模式下实现。</li>
+<li><strong>Interrupt mode</strong>：eMMC device可以向host发送中断，用于通知主机发生了某些事件。eMMC支持多种中断，包括写完成中断、擦除完成中断等。</li>
+<li><strong>Inactive mode</strong>：通常是eMMC设备的一种低功耗状态，用于降低功耗和延长设备寿命，尤其在设备长时间不被访问时。在非活动模式下，eMMC设备通常处于一种较低的功耗状态，以节省电能。</li>
 </ul>
-<hr>
-<br>
-
-<ol start="2">
-<li>百度SEO通过文件验证网站后，<code>baidu_verify_codeva-u08yTssVjX.html</code>文件每次都会被Hexo编译，导致认证不成功。</li>
-</ol>
-<blockquote>
-<p>解决办法是：将<code>baidu_verify_codeva-u08yTssVjX.html</code>文件放到<code>\themes\你的主题\source</code>中，而不是在blog根目录下的source文件夹中。</p>
-</blockquote>
 
       
        <hr><span style="font-style: italic;color: gray;"> 转载请注明来源，欢迎对文章中的引用来源进行考证，欢迎指出任何有错误或不够清晰的表达。可以在下面评论区评论，也可以邮件至 icmarktian@163.com </span>

@@ -6,7 +6,7 @@
   <link href="https://mkdbook.com/atom.xml" rel="self"/>
   
   <link href="https://mkdbook.com/"/>
-  <updated>2023-12-27T02:48:34.872Z</updated>
+  <updated>2023-12-27T03:59:17.515Z</updated>
   <id>https://mkdbook.com/</id>
   
   <author>
@@ -15,6 +15,117 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>42--NAND的ODT功能</title>
+    <link href="https://mkdbook.com/blog042.html"/>
+    <id>https://mkdbook.com/blog042.html</id>
+    <published>2023-12-27T03:34:51.000Z</published>
+    <updated>2023-12-27T03:59:17.515Z</updated>
+    
+    <content type="html"><![CDATA[<p>[toc]</p><h1 id="1、ODT支持的接口"><a href="#1、ODT支持的接口" class="headerlink" title="1、ODT支持的接口"></a>1、ODT支持的接口</h1><ul><li>NV-DDR2</li><li>NV-DDR3</li><li>NV-LPDDR4</li></ul><h1 id="2、什么是ODT？"><a href="#2、什么是ODT？" class="headerlink" title="2、什么是ODT？"></a>2、什么是ODT？</h1><ul><li>ODT 的全称是 On-Die Termination，即片内终端。它是一种用于<code>降低 NAND 芯片输入阻抗</code>的技术，用于优化信号传输，提高信号完整性，并降低信号反射。</li></ul><h1 id="3、ODT如何降低NAND的输入阻抗？"><a href="#3、ODT如何降低NAND的输入阻抗？" class="headerlink" title="3、ODT如何降低NAND的输入阻抗？"></a>3、ODT如何降低NAND的输入阻抗？</h1><ul><li>ODT可以通过将NAND芯片的输入端连接到一个低阻抗的输出端来降低输入端电流，从而降低输入阻抗。</li></ul><h1 id="4、为什么需要ODT？"><a href="#4、为什么需要ODT？" class="headerlink" title="4、为什么需要ODT？"></a>4、为什么需要ODT？</h1><ul><li>1、<code>提高I/O速度</code>：通过降低NAND芯片的输入阻抗。在没有个ODT的情况下，NAND芯片的输入阻抗较高，这会导致I&#x2F;O信号的上升和下降时间变长，从而降低I&#x2F;O速度。ODT可以通过降低NAND芯片的输入阻抗来缩短I&#x2F;O信号的上升和下降时间，从而提高I&#x2F;O速度。</li><li>2、<code>降低功耗</code>：在没有ODT的情况下，NAND芯片的输入端会一直处于高阻状态，这会导致NAND芯片的输入端电流一直保持在一个较高的水平，从而增加NAND芯片的功耗。ODT可以通过将NAND芯片的输入端连接到一个低阻抗的输出端来降低输入端电流，从而降低NAND芯片的功耗。</li></ul><h1 id="5、如何工作？"><a href="#5、如何工作？" class="headerlink" title="5、如何工作？"></a>5、如何工作？</h1><ul><li><strong>读操作时：</strong> ODT 输出端被<code>拉高</code>，将 NAND 芯片的<code>输入端</code>连接到 <code>ODT 输出端</code>。<br>由于 ODT 输出端的阻抗较低，NAND 芯片的<code>输入阻抗</code>也降低，从而缩短 I&#x2F;O 信号的上升和下降时间，<code>提高 I/O 速度</code>。</li><li><strong>写操作时：</strong> ODT 输出端被<code>拉低</code>，将 NAND 芯片的<code>输入端</code>连接到 <code>I/O 线</code>。<br>由于 ODT 输出端的阻抗较低，NAND 芯片的<code>输入端电流</code>也降低，从而<code>降低功耗</code>。</li></ul>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;[toc]&lt;/p&gt;
+&lt;h1 id=&quot;1、ODT支持的接口&quot;&gt;&lt;a href=&quot;#1、ODT支持的接口&quot; class=&quot;headerlink&quot; title=&quot;1、ODT支持的接口&quot;&gt;&lt;/a&gt;1、ODT支持的接口&lt;/h1&gt;&lt;ul&gt;
+&lt;li&gt;NV-DDR2&lt;/li&gt;
+&lt;li&gt;NV</summary>
+      
+    
+    
+    
+    <category term="领域" scheme="https://mkdbook.com/categories/%E9%A2%86%E5%9F%9F/"/>
+    
+    <category term="NAND" scheme="https://mkdbook.com/categories/%E9%A2%86%E5%9F%9F/NAND/"/>
+    
+    
+    <category term="NAND" scheme="https://mkdbook.com/tags/NAND/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>41--NAND的ZQCalibration功能</title>
+    <link href="https://mkdbook.com/blog041.html"/>
+    <id>https://mkdbook.com/blog041.html</id>
+    <published>2023-12-27T03:34:38.000Z</published>
+    <updated>2023-12-27T03:56:08.681Z</updated>
+    
+    <content type="html"><![CDATA[<p>[toc]</p><h1 id="1、什么情况需要ZQ-Calibration？"><a href="#1、什么情况需要ZQ-Calibration？" class="headerlink" title="1、什么情况需要ZQ Calibration？"></a>1、什么情况需要ZQ Calibration？</h1><ul><li>NV-DDR2：可选；</li><li>NV-DDR3：可选，但是当接口速率达到400MT&#x2F;s时推荐使用；</li><li>NV_LPDDR4：必选，无论接口速率多少；</li></ul><h1 id="2、ZQ-Calibration的作用？"><a href="#2、ZQ-Calibration的作用？" class="headerlink" title="2、ZQ Calibration的作用？"></a>2、ZQ Calibration的作用？</h1><ul><li>1、校准NAND Ron阻值；</li><li>2、校准ODT值；</li></ul><h1 id="3、ZQCL-和-ZQCS的区别？"><a href="#3、ZQCL-和-ZQCS的区别？" class="headerlink" title="3、ZQCL 和 ZQCS的区别？"></a>3、ZQCL 和 ZQCS的区别？</h1><ul><li><strong>ZQ long calibration：</strong><code>F9h</code>命令。<br>Power-on初始化校准时，需要较长时间；<br>host也可随时主动发出ZQCL命令。</li><li><strong>ZQ short calibration：</strong><code>D9h</code>命令。<br>定期的校准，需要的时间比较短；<br>需要定期的原因：随时考虑到电压和温度的变化。</li></ul><h1 id="4、ZQCL-过程"><a href="#4、ZQCL-过程" class="headerlink" title="4、ZQCL 过程"></a>4、ZQCL 过程</h1><ul><li>ZQCL 会触发 <code>NAND 内部</code>的Calibration engine，一旦完成校准，校准值就会传输到 NAND IO，从而更新output driver和ODT的值。</li></ul><h1 id="5、ZQCS-的间隔周期如何计算？"><a href="#5、ZQCS-的间隔周期如何计算？" class="headerlink" title="5、ZQCS 的间隔周期如何计算？"></a>5、ZQCS 的间隔周期如何计算？</h1><center><img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/41.1.png" width="80%" height="80%" alt="41.1"/></center><p><strong>如果 ：</strong></p><ul><li>TSens &#x3D; 0.5 %&#x2F;°C，定义了温度灵敏度。它等于 TSens &#x3D; max（dRTTdT，dRONdTM）。</li><li>VSens &#x3D; 0.2 %&#x2F;mV，定义了电压灵敏度。它等于 VSens &#x3D; max（dRTTdV，dRONdVM）。</li><li>Tdriftrate &#x3D; 1 °C&#x2F;sec，定义了温度漂移率。</li><li>Vdriftrate &#x3D;15 mV&#x2F;sec， 定义了电压漂移率。</li></ul><p> <strong>计算方法举例如下：</strong></p><ul><li>1.5&#x2F; [(0.5 X 1) + (0.2 X 15)] &#x3D; 0.429 &#x3D; 429ms</li></ul><center><img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/41.2.png" width="80%" height="80%" alt="41.2"/></center><center><img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/41.3.png" width="80%" height="80%" alt="41.3"/></center><h1 id="6、其它事项"><a href="#6、其它事项" class="headerlink" title="6、其它事项"></a>6、其它事项</h1><ul><li>1、在ZQCL和ZQCS进行的过程中，NAND总线上不能执行任何操作，包括读取status。</li><li>2、对于multi-channel packages，当一个channel正在进行ZQ Calibration时，所有其它通道也都不能执行其它数据传输操作。</li><li>3、ZQ Calibration完成后，NAND应该断开ZQ的电流消耗路径，以节省电压。</li><li>4、ZQ Calibration过程中，RESET命令会导致校准失效，host需要重新执行ZQ Calibration操作。</li></ul><h1 id="7、为什么需要ZQ-Calibration？"><a href="#7、为什么需要ZQ-Calibration？" class="headerlink" title="7、为什么需要ZQ Calibration？"></a>7、为什么需要ZQ Calibration？</h1><p>ZQ Calibration 可以确保 NAND 控制器和 NAND 闪存芯片之间的数据传输质量。</p><p>NAND 闪存芯片的 I&#x2F;O 端口使用差分信号传输数据。差分信号由两个信号线组成，一个是差分信号的正端，一个是差分信号的负端。在理想情况下，两个信号线的阻抗应该相等。如果两个信号线的阻抗不相等，就会导致差分信号的振幅发生变化，从而影响数据传输的质量。</p><p>ZQ Calibration 就是通过一个被称为 ZQ 电阻的参考电阻，来校准 NAND 控制器和 NAND 闪存芯片之间的差分信号阻抗。ZQ 电阻的阻值通常为 300 Ω。在 ZQ Calibration 过程中，NAND 控制器会通过 ZQ 电阻向 NAND 闪存芯片发送一个参考信号。NAND 闪存芯片会根据这个参考信号，来校准自己的差分信号阻抗。</p><p>ZQ Calibration 通常在 NAND 闪存芯片初始化时进行一次，也可以在运行过程中定期进行。定期进行 ZQ Calibration，可以确保 NAND 控制器和 NAND 闪存芯片之间的差分信号阻抗始终保持一致，从而提高数据传输的质量。</p><p>具体来说，ZQ Calibration 可以带来以下好处：</p><ul><li>提高数据传输的可靠性：ZQ Calibration 可以确保 NAND 控制器和 NAND 闪存芯片之间的差分信号阻抗始终保持一致，从而提高数据传输的可靠性。</li><li>降低数据传输的错误率：ZQ Calibration 可以降低数据传输的错误率，从而提高数据传输的效率。</li><li>延长 NAND 闪存芯片的使用寿命：ZQ Calibration 可以延长 NAND 闪存芯片的使用寿命，因为它可以降低数据传输过程中的损耗。</li></ul>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;[toc]&lt;/p&gt;
+&lt;h1 id=&quot;1、什么情况需要ZQ-Calibration？&quot;&gt;&lt;a href=&quot;#1、什么情况需要ZQ-Calibration？&quot; class=&quot;headerlink&quot; title=&quot;1、什么情况需要ZQ Calibration？&quot;&gt;&lt;/a&gt;1、什么</summary>
+      
+    
+    
+    
+    <category term="领域" scheme="https://mkdbook.com/categories/%E9%A2%86%E5%9F%9F/"/>
+    
+    <category term="NAND" scheme="https://mkdbook.com/categories/%E9%A2%86%E5%9F%9F/NAND/"/>
+    
+    
+    <category term="NAND" scheme="https://mkdbook.com/tags/NAND/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>40--eMMC的Power Up操作</title>
+    <link href="https://mkdbook.com/blog040.html"/>
+    <id>https://mkdbook.com/blog040.html</id>
+    <published>2023-12-27T03:18:08.000Z</published>
+    <updated>2023-12-27T03:30:44.391Z</updated>
+    
+    <content type="html"><![CDATA[<p>[toc]</p><h1 id="1、Power-Up-流程（状态转换）"><a href="#1、Power-Up-流程（状态转换）" class="headerlink" title="1、Power Up 流程（状态转换）"></a>1、Power Up 流程（状态转换）</h1><center><img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/40.1.png" width="100%" height="100%" alt="40.1"/></center><ul><li>1、VCC 和 VCCQ 上电到指定电压范围内（同时或先后均可，上电最大持续时长受tPRU约束）；</li><li>2、进入 <code>pre-idle</code> 状态，若不支持boot（或 BOOT_PARTITION_ENABLE 关闭），则直接进入<code>idle</code>状态；</li><li>3、若开启boot模式（BOOT_PARTITION_ENABLE 开启），则进入 <code>Pre-boot</code> 状态，接下来就进行boot初始化序列了；<br>3.1、如果接收 <strong>boot 操作序列</strong>，完成 boot 操作之后，进入 <code>idle</code> 状态；<br>3.2、如果接收的不是 <strong>boot 操作序列</strong> 和 <strong>CMD 1</strong>，也进入 <code>idle</code> 状态；<br>3.3、如果直接接收到 <strong>CMD 1</strong>，则会返回 CMD 1请求的内容，并跳出 boot mode ，直接进入到 <strong>Device identification mode</strong>；</li><li>4、<code>idle</code> 状态下发送CMD 1，然后进入<strong>Device identification mode；</strong></li></ul><h1 id="2、Power-Up-遵循原则（注意事项）"><a href="#2、Power-Up-遵循原则（注意事项）" class="headerlink" title="2、Power Up 遵循原则（注意事项）"></a>2、Power Up 遵循原则（注意事项）</h1><ul><li>1、处于 <code>idle</code> 状态，必须要发送 <code>CMD 1</code> 之后才能做其他操作（其他会被忽略）；</li><li>2、eMMC v4.2之前的版本，Power Up后直接进入 <code>idle</code> 状态；</li><li>3、Boot 的操作序列<a href="https://mkdbook.com/blog022.html#:~:text=%E8%AF%BB%E5%8F%96%E6%95%B0%E6%8D%AE%EF%BC%89-,3.1%20%E8%AE%BF%E9%97%AEboot%E5%88%86%E5%8C%BA,-%E5%9C%A8boot%E6%A8%A1%E5%BC%8F">如blog22 3.1所示</a>：keeping the CMD line low for at least 74 clock cycles, or issuing CMD0 with the argument of 0xFFFFFFFA；</li><li>4、上电完成后，host开始发送CLK和CMD；</li><li>5、每组总线的master都必须执行CMD1；</li></ul><h1 id="3、CMD-1-作用"><a href="#3、CMD-1-作用" class="headerlink" title="3、CMD 1 作用"></a>3、CMD 1 作用</h1><ul><li>1、在eMMC上电过程中，处于idle state时，发送CMD 1，请求设备状态，OCR寄存器<a href="https://mkdbook.com/blog025.html#:~:text=%E4%BA%8C%E3%80%81-,OCR%E5%AF%84%E5%AD%98%E5%99%A8%E7%9A%84%E5%86%85%E5%AE%B9,-Operation%20condition%20register">如blog25所示</a>。</li><li>2、CMD 1是用来协商工作电压范围，并轮询设备直至其结束上电过程的专用同步命令。</li><li>3、CMD 1的应答还包含一个busy标志位，表示设备仍工作于上电例程，没有准备好识别。主机必须等到此位清除，若CMD 1在device初始化完成之前发送，则device会给host端反馈一个含busy flag的CMD 1应答。</li><li>4、如果busy标志位一直未清除，则主机可以再次发送CMD 1。但是，根据eMMC标准，设备必须在具有有效OCR范围的 CMD1 发送1秒内完成其初始化。因此，一般情况下，只需要发送一次CMD 1即可。</li><li>5、若在power up之前，已经完成分区（<code>EXT_CSD byte [155]表示分区设置是否完成</code>），则初始化延迟要通过<code>INI_TIMEOUT_PA（EXT_CSD byte [241]）</code>计算，而不是固定的1s；<br>但这个超时时间仅用于设置后的第一次启动，对于所有连续的初始化，还是使用1s超时。</li></ul><h1 id="4、Sleep-状态，Power-电压的变化"><a href="#4、Sleep-状态，Power-电压的变化" class="headerlink" title="4、Sleep 状态，Power 电压的变化"></a>4、Sleep 状态，Power 电压的变化</h1><ul><li>1、Master 必须在VCC和VCCQ稳定之后，才能发 command。</li><li>2、处于<code>sleep mode</code>时，master可以<code>关断VCC</code>减少功耗，但VCCQ需要保持，用来接收唤醒命令。</li><li>3、CMD 5唤醒处于sleep mode的device前，需要先拉高VCC。</li><li>如果 VCC or VCCQ 低于 0.5 V 超过 1 ms，则会回到 <code>pre-idle</code> 状态。（Sleep 状态除外）</li></ul>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;[toc]&lt;/p&gt;
+&lt;h1 id=&quot;1、Power-Up-流程（状态转换）&quot;&gt;&lt;a href=&quot;#1、Power-Up-流程（状态转换）&quot; class=&quot;headerlink&quot; title=&quot;1、Power Up 流程（状态转换）&quot;&gt;&lt;/a&gt;1、Power Up 流程（状态</summary>
+      
+    
+    
+    
+    <category term="领域" scheme="https://mkdbook.com/categories/%E9%A2%86%E5%9F%9F/"/>
+    
+    <category term="eMMC" scheme="https://mkdbook.com/categories/%E9%A2%86%E5%9F%9F/eMMC/"/>
+    
+    
+    <category term="eMMC" scheme="https://mkdbook.com/tags/eMMC/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>39--关于eMMC的一些个人总结</title>
+    <link href="https://mkdbook.com/blog039.html"/>
+    <id>https://mkdbook.com/blog039.html</id>
+    <published>2023-12-27T03:00:16.000Z</published>
+    <updated>2023-12-27T03:16:11.760Z</updated>
+    
+    <content type="html"><![CDATA[<p>[toc]</p><h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>一些个人理解结合网上文章，不一定正确；</p><h1 id="1、eMMC中VCC、VDD、VSS、VCCQ-的关系理解"><a href="#1、eMMC中VCC、VDD、VSS、VCCQ-的关系理解" class="headerlink" title="1、eMMC中VCC、VDD、VSS、VCCQ 的关系理解"></a>1、eMMC中VCC、VDD、VSS、VCCQ 的关系理解</h1><ul><li><p>在MOS管中，它们是可以这样对应的：<br><code>VCC</code>：栅极电压，Control Gate，给栅极加压打开珪衬底的隧道；<br><code>VDD</code>：漏极电压，Drain Gate，电子或者空穴在漏极耗尽，类似GND（低电压）；<br><code>VSS</code>：源极电压，Source Gate，储存负电子或正空穴；<br>VCCQ：给信号线（I&#x2F;O口）供电，Q一般表示数字电路中的数据线，如DQ。<br>在eMMC中，供电方式如<a href="https://mkdbook.com/blog028.html#:~:text=28.2-,%E8%BF%98%E6%9C%89%E4%B8%80%E4%BA%9B%E9%87%8D%E8%A6%81%E7%9A%84%E5%8A%9F%E8%83%BD%E7%BA%BF%EF%BC%9A,-RST%EF%BC%9A%E7%A1%AC%E4%BB%B6%E5%A4%8D">blog028所示</a>。</p></li><li><p><strong>高电压3.3V</strong>：<code>2.7--3.6</code>；<br><strong>低电压1.8V</strong>：<code>1.7--1.95</code>；<br><strong>更低电压1.2V</strong>：<code>1.1--1.3</code>；(为了获得更高的I&#x2F;O速度)</p></li><li><p><code>tPRUH</code>：3.3伏高电压上电时间，35ms；<br><code>tPRUL</code>：1.8伏低电压上电时间，25ms；</p></li><li><p><code>tPRUV</code>：1.2伏低电压上电时间，20ms；</p></li></ul><h1 id="2、eMMC的工作流程"><a href="#2、eMMC的工作流程" class="headerlink" title="2、eMMC的工作流程"></a>2、eMMC的工作流程</h1><ul><li>eMMC 5.1A协议中p31、p36、p39、p40，有四个状态机转移图，这几个状态转移图可以连起来的。</li><li>Power on之后eMMC设备依次进入<code>Boot mode</code>（可跳过），然后CMD 1之后进入<code>Device identification mode</code>，再然后进入到<code>Data transfer mode</code>，最后可以在<code>Interrupt mode</code>之间切换。还有一个<code>inactive mode</code> ，它出现在eMMC协议Figure 25中，通过CMD 15主动进入或在对应情况下自动进入。</li><li><strong>Boot mode</strong>：是eMMC设备启动的初始模式，用于检查eMMC的健康状况（温度、电压、电容等）并加载配置信息（容量、扇区大小、坏块表等），初始化eMMC存储空间等。</li><li><strong>Device identification mode</strong>：用于向主机提供设备信息，如设备类型、容量、版本等。</li><li><strong>Data transfer mode</strong>：是eMMC设备的主要工作模式，用于执行主机的命令，eMMC的读、写、擦除等数据传输功能都在此模式下实现。</li><li><strong>Interrupt mode</strong>：eMMC device可以向host发送中断，用于通知主机发生了某些事件。eMMC支持多种中断，包括写完成中断、擦除完成中断等。</li><li><strong>Inactive mode</strong>：通常是eMMC设备的一种低功耗状态，用于降低功耗和延长设备寿命，尤其在设备长时间不被访问时。在非活动模式下，eMMC设备通常处于一种较低的功耗状态，以节省电能。</li></ul>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;[toc]&lt;/p&gt;
+&lt;h1 id=&quot;前言&quot;&gt;&lt;a href=&quot;#前言&quot; class=&quot;headerlink&quot; title=&quot;前言&quot;&gt;&lt;/a&gt;前言&lt;/h1&gt;&lt;p&gt;一些个人理解结合网上文章，不一定正确；&lt;/p&gt;
+&lt;h1 id=&quot;1、eMMC中VCC、VDD、VSS、VCCQ-的</summary>
+      
+    
+    
+    
+    <category term="领域" scheme="https://mkdbook.com/categories/%E9%A2%86%E5%9F%9F/"/>
+    
+    <category term="存储" scheme="https://mkdbook.com/categories/%E9%A2%86%E5%9F%9F/%E5%AD%98%E5%82%A8/"/>
+    
+    
+    <category term="eMMC" scheme="https://mkdbook.com/tags/eMMC/"/>
+    
+  </entry>
   
   <entry>
     <title>38--关于NAND的一些个人总结</title>
@@ -453,115 +564,6 @@
     
     
     <category term="SVA" scheme="https://mkdbook.com/tags/SVA/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>22--eMMC的boot分区</title>
-    <link href="https://mkdbook.com/blog022.html"/>
-    <id>https://mkdbook.com/blog022.html</id>
-    <published>2023-04-28T01:20:32.000Z</published>
-    <updated>2023-04-28T02:41:02.656Z</updated>
-    
-    <content type="html"><![CDATA[<p>[toc]</p><h1 id="一、boot分区容量设置"><a href="#一、boot分区容量设置" class="headerlink" title="一、boot分区容量设置"></a>一、boot分区容量设置</h1><p>一共有两个boot分区，每个的大小最小为<code>128KB</code>，计算方法见EXT_CSD[226]，如图22.1所示，最大支持31.875M，一般为4M（即乘以32）：</p><center><img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/22.1.png" width="75%" height="75%" alt="22.1"/></center><h1 id="二、进入boot模式的方法"><a href="#二、进入boot模式的方法" class="headerlink" title="二、进入boot模式的方法"></a>二、进入boot模式的方法</h1><p>上电后，收到<code>CMD0（0xF0F0F0F0）</code>命令或<code>硬件复位</code>信号。</p><h1 id="三、如何从boot分区启动（host从boot分区读取数据）"><a href="#三、如何从boot分区启动（host从boot分区读取数据）" class="headerlink" title="三、如何从boot分区启动（host从boot分区读取数据）"></a>三、如何从boot分区启动（host从boot分区读取数据）</h1><h2 id="3-1-访问boot分区"><a href="#3-1-访问boot分区" class="headerlink" title="3.1  访问boot分区"></a>3.1  访问boot分区</h2><p>在boot模式下，host有两种方法读取eMMC中boot区的数据：</p><p>1、保持<code>CMD line low</code>；</p><p>2、在发<code>CMD1</code>之前，发送<code>CMD0（0xFFFFFFFA）</code>；</p><h2 id="3-2-Original-Boot-Operation"><a href="#3-2-Original-Boot-Operation" class="headerlink" title="3.2  Original Boot Operation"></a>3.2  Original Boot Operation</h2><p>1、<code>power-on</code>或<code>reset</code>（硬件复位或CMD0带0xF0F0F0F0）后，在第一个CMD之前 <em><strong>CMD line被拉低超过74个clock</strong></em>，则设备会识别到original boot 模式，并在内部开始准备引导数据。</p><p>2、引导数据哪里来？（<a href="http://mkdbook.com/blog022.html#:~:text=%E5%9C%A8boot%20mode%E3%80%82-,bit%5B5%3A3%5D,-%E2%80%94%E2%80%94%E6%98%AF%E5%90%A6%E4%BD%BF%E7%94%A8boot">EXT_CSD[179]的bit[5:3]</a>）</p><p>3、引导数据有多大？（<a href="http://mkdbook.com/blog022.html#:~:text=EXT_CSD%5B226%5D%EF%BC%8C%E5%A6%82-,%E5%9B%BE22.1,-%E6%89%80%E7%A4%BA%EF%BC%8C%E6%9C%80%E5%A4%A7">EXT_CSD[226]</a>）</p><p>4、以何种速率和方式传输引导数据？（<a href="http://mkdbook.com/blog022.html#:~:text=22.5%20BOOT_BUS_CONDITIONS-,bit%5B4%3A3%5D,-%E2%80%94%E2%80%94%E8%AF%BB%E5%8F%96boot">EXT_CSD[177]</a>）</p><p>5、设备是否需要给host一个“010”的boot模式确认反馈？（<a href="http://mkdbook.com/blog022.html#:~:text=22.4%20PARTITION_CONFIG-,bit%5B6%5D,-%E2%80%94%E2%80%94CPU%E5%8A%A0%E8%BD%BD">EXT_CSD[179]的bit[6]</a>）</p><center><img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/22.2Original%20Boot%20Operation.png" width="100%" height="100%" alt="22.2 Original Boot Operation"/></center><p>时序介绍：</p><ul><li>1、<code>CMD line拉低后</code>的1s内，device必须将第一个boot data从DAT line发送给host。在整个数据接收过程中，CMD line都一直保持为低。</li><li>2、如果设置了boot模式的确认反馈，device必须在<code>CMD line拉低</code>的50ms内发送“010”。</li><li>3、host通过<code>拉高CMD line结束</code>boot模式，之后需要在至少56个clock周期后，才能再发送CMD1启动正常的eMMC初始化。</li></ul><h2 id="3-3-Alternative-Boot-Operation"><a href="#3-3-Alternative-Boot-Operation" class="headerlink" title="3.3  Alternative Boot Operation"></a>3.3  Alternative Boot Operation</h2><p>v4.4版本之后的eMMC必须支持Alternative boot operation这种模式。</p><p>1、<code>power-on</code>或<code>reset</code>（硬件复位或CMD0带0xF0F0F0F0）后，再间隔<code>74个clock</code>后（<strong>在CMD line拉低或CMD1发出之前</strong>），<em><strong>host发送CMD0（参数为0xFFFFFFFA）</strong></em>，则设备会识别到Alternative boot 模式，并在内部开始准备引导数据。</p><center><img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/22.3Alternative%20Boot%20Operation.png" width="100%" height="100%" alt="22.3 Alternative Boot Operation"/></center><p>时序介绍：</p><ul><li>1、<code>CMD 0（0xFFFFFFFA）发出后</code>的1s内，device必须将第一个boot data从DAT line发送给host。</li><li>2、如果设置了boot模式的确认反馈，device必须<code>在CMD 0（0xFFFFFFFA）发出后</code>的50ms内发送“010”。</li><li>3、host通过发送<code>CMD 0（RESET：0x00000000）结束</code>boot模式，之后再发送CMD1启动正常的eMMC初始化。（没有56 clock的限制）</li></ul><h1 id="四、boot分区配置"><a href="#四、boot分区配置" class="headerlink" title="四、boot分区配置"></a>四、boot分区配置</h1><p>通过<code>CMD6（SWITCH）</code>改变EXT_CSD[179]中<code>PARTITION_CONFIG</code>的值。</p><center><img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/22.4PARTITION_CONFIG.png" width="80%" height="80%" alt="22.4 PARTITION_CONFIG"/></center><ul><li><strong>bit[6]——CPU加载boot程序时，是否使用ACK</strong><br>0x0：No boot acknowledge send（default）<br>0x1：boot操作期间发送boot应答，eMMC会在host触发boot mode的50ms内，在DAT0上发送一个<code>“010”的Boot ACK</code>给host。host可通过此位，判断是否在boot mode。</li><li><strong>bit[5:3]——是否使用boot功能，使用哪个分区存放的boot程序？</strong><br>0x0：Device not boot enabled（default）<br>0x1：选择boot分区<code>1</code><br>0x2：选择boot分区<code>2</code><br>0x3-0x6：Reserved<br>0x7：选择<code>User area</code>（boot数据也可以存到用户分区中，但不如存到专用boot分区中可靠）</li><li><strong>bit[2:0]——当前访问的是哪个分区，例如选择0x1，将boot程序烧录boot分区1，然后烧录完成后恢复成0x0（正常模式）</strong><br>0x0：No access to boot partition（default）<br>0x1：读写boot分区<code>1</code><br>0x2：读写boot分区<code>2</code><br>0x3：读写<code>RPMB</code>分区<br>0x4：访问GPP1<br>0x5：访问GPP2<br>0x6：访问GPP3<br>0x7：访问GPP4</li></ul><h1 id="五、boot的bus-width和data-access配置"><a href="#五、boot的bus-width和data-access配置" class="headerlink" title="五、boot的bus-width和data-access配置"></a>五、boot的bus-width和data-access配置</h1><p>在boot操作过程中，通过配置EXT_CSD[177]中<code>BOOT_BUS_CONDITIONS</code>。</p><center><img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/22.5BOOT_BUS_CONDITIONS.png" width="80%" height="80%" alt="22.5 BOOT_BUS_CONDITIONS"/></center><ul><li><strong>bit[4:3]——读取boot区数据，选择什么工作模式</strong><br>0x0：SDR+backward compatible timing（default）<br>0x1：SDR+High Speed timing<br>0x2：DDR<br>0x3：Reserved<br>注：<code>HS200和HS400</code>在boot操作中<code>不允许</code></li><li><strong>bit[2]——RESET_BOOT_BUS_CONDITIONS</strong><br>0x0：boot操作结束后，复位到<code>x1，SDR+backward compatible</code>模式（default）<br>0x1：保持<code>BOOT_MODE</code>和<code>BOOT_BUS_WIDTH</code>设置的参数不变</li><li><strong>bit[1:0]——读取boot区数据，选择多宽的bus width</strong><br>0x0：<code>x1（SDR）</code>或 <code>x4（DDR）</code>（default）<br>0x1：<code>x4（SDR/DDR）</code><br>0x2：<code>x8（SDR/DDR）</code><br>0x3：Reserved</li></ul><h2 id="5-1-RESET-BOOT-BUS-CONDITIONS的作用"><a href="#5-1-RESET-BOOT-BUS-CONDITIONS的作用" class="headerlink" title="5.1  RESET_BOOT_BUS_CONDITIONS的作用"></a>5.1  <strong>RESET_BOOT_BUS_CONDITIONS的作用</strong></h2><p>1、上述EXT_CSD[177]中<code>BOOT_BUS_CONDITIONS</code>主要配置了boot 模式下的数据传输模式，但是其他模式下的timing和width模式是通过两个寄存器配置的：EXT_CSD[185]——<code>HS_TIMING</code>和EXT_CSD[183]——<code>BUS_WIDTH</code>。</p><p>2、<code>BOOT_BUS_CONDITIONS</code>是nonvolatile的，<code>HS_TIMING</code>和<code>BUS_WIDTH</code>会在<strong>硬件复位</strong>或<strong>CMD0</strong>后被reset。</p><p>3、<strong>RESET_BOOT_BUS_CONDITIONS的作用：</strong>当设置为0x1时，boot操作完成后，会自动将<code>BOOT_BUS_CONDITIONS</code>设置的模式值，设置到<code>HS_TIMING</code>和<code>BUS_WIDTH</code>中。</p><p>4、这样，通过CMD0退出boot操作后，不会复位<code>HS_TIMING</code>和<code>BUS_WIDTH</code>，但是在其他模式下发送CMD0还是会导致被reset。</p><h1 id="六、Boot分区的写保护配置"><a href="#六、Boot分区的写保护配置" class="headerlink" title="六、Boot分区的写保护配置"></a>六、Boot分区的写保护配置</h1><p>设置分区保护的目的：防止boot区的数据被erase或write。</p><ul><li>两种write protection：<br>1、<code>Permanent</code> write protection：<strong>永久生效</strong>，除非主动关闭才会失效。<br>2、<code>power-on</code> write protection：<strong>掉电</strong>后，写保护功能<strong>失效</strong>，需要每次power-on重新设置。</li></ul><p>通过配置EXT_CSD[173]——<code>BOOT_WP</code>来进行设置，该寄存器介绍如下：</p><blockquote><p><code>bit[0] = B_PWR_WP_EN</code><br>bit[1] &#x3D; B_PWR_WP_SEC_SEL<br><code>bit[2] = B_PERM_WP_EN</code><br>bit[3] &#x3D; B_PERM_WP_SEC_SEL<br>bit[4] &#x3D; <code>B_PERM_WP_DIS</code><br>bit[5] &#x3D; Reserved<br>bit[6] &#x3D; <code>B_PWR_WP_DIS</code><br><strong>bit[7] &#x3D; B_SEC_WP_SEL</strong></p></blockquote><ul><li><p>bit【7】：boot sector write protection select，<br>0x0：bit 【0、2】对两个boot分区都适用，bit【1、3】无作用；<br>0x1：bit 【0、2】仅适用于bit【1、3】分别选择的分区；</p></li><li><p>bit【1】：boot <code>power-on</code> write protection sector select，<br>0x0：若bit【7】为1，bit【0】设置给boot分区1；<br>0x1：若bit【7】为1，bit【0】设置给boot分区2；</p></li><li><p>bit【3】：boot <code>permanent</code> write protection sector select，<br>0x0：若bit【7】为1，bit【2】设置给boot分区1；<br>0x1：若bit【7】为1，bit【2】设置给boot分区2；</p></li><li><p>bit【0】：boot <code>power-on</code> write protection enable，<br>0x0：boot分区没有power-on写保护<br>0x1：有power-on写保护</p></li><li><p>bit【2】：boot <code>permanent</code> write protection enable，<br>0x0：boot分区没有permanent写保护<br>0x1：有permanen写保护</p></li><li><p>bit【4】：boot permanent write protection disabled，<br>0x0：允许bit【2】<br>0x1：禁用</p></li><li><p>bit【6】：boot powe-on write protection disabled，<br>0x0：允许bit【0】<br>0x1：禁用</p></li></ul><p>例子如下图所示：</p><center><img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/22.6boot%E5%8C%BA%E5%86%99%E4%BF%9D%E6%8A%A4%E4%BE%8B%E5%AD%90.png" width="75%" height="75%" alt="22.6 boot区写保护例子"/></center><p>bit【7】为1，bit【1、3】启用；</p><p>bit【1】为0说明将bit【0】赋给boot区1；</p><p>bit【3】为1说明将bit【2】赋给boot区2；</p><p>bit【0、2】都为1，说明boot区1设置了power-on写保护，boot区2设置了permanent写保护。</p>]]></content>
-    
-    
-      
-      
-    <summary type="html">&lt;p&gt;[toc]&lt;/p&gt;
-&lt;h1 id=&quot;一、boot分区容量设置&quot;&gt;&lt;a href=&quot;#一、boot分区容量设置&quot; class=&quot;headerlink&quot; title=&quot;一、boot分区容量设置&quot;&gt;&lt;/a&gt;一、boot分区容量设置&lt;/h1&gt;&lt;p&gt;一共有两个boot分区，每个的大小</summary>
-      
-    
-    
-    
-    <category term="领域" scheme="https://mkdbook.com/categories/%E9%A2%86%E5%9F%9F/"/>
-    
-    <category term="eMMC" scheme="https://mkdbook.com/categories/%E9%A2%86%E5%9F%9F/eMMC/"/>
-    
-    
-    <category term="eMMC" scheme="https://mkdbook.com/tags/eMMC/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>21--eMMC的分区设置和分区访问</title>
-    <link href="https://mkdbook.com/blog021.html"/>
-    <id>https://mkdbook.com/blog021.html</id>
-    <published>2023-04-10T07:20:57.000Z</published>
-    <updated>2023-08-04T14:51:46.681Z</updated>
-    
-    <content type="html"><![CDATA[<p>[toc]</p><h1 id="一、eMMC分区介绍"><a href="#一、eMMC分区介绍" class="headerlink" title="一、eMMC分区介绍"></a>一、eMMC分区介绍</h1><center><img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/21.1%E5%88%86%E5%8C%BA%E7%A4%BA%E4%BE%8B.png" width="75%" height="75%" alt="21.1 分区示例"/></center><p>eMMC主要有三块大的分区，两个<strong>Boot Area Patition</strong>，一个<strong>RPMB</strong>分区（Replay Protected Memory Block），一块<strong>User Data Area（UDA）。</strong>UDA中可以最多划分出<code>四个General Purpose Patitions</code>，又可以为UDA某一段设置Enhanced属性，成为<code>Enhanced UDA</code>。<br>故最多有8个硬件分区（2 boot分区、1 RPMB分区、1 user分区、4 GPP分区）。</p><h2 id="各个分区的作用："><a href="#各个分区的作用：" class="headerlink" title="各个分区的作用："></a>各个分区的作用：</h2><ul><li><code>Boot分区</code>，主要用于存储Bootloader，为了支持从eMMC启动系统。</li><li><code>RPMB分区</code>，需要身份验证，存储一些防止被篡改或克隆的敏感数据，如设备标识符（MEID）、支付系统的加密密钥等。</li><li><code>GPP分区</code>，用于存储系统和应用数据。功能和UDA相似，因此有些厂商没有此分区。</li><li><code>UDA分区</code>，容量是减去分出的GPP之后的大小，通常是eMMC最大的数据。</li></ul><h1 id="二、分区配置流程"><a href="#二、分区配置流程" class="headerlink" title="二、分区配置流程"></a>二、分区配置流程</h1><ul><li>1、先判断设备是否支持分区。</li><li>2、如果支持，判断host是否要对该分区设置<strong>Enhanced attribute</strong>。</li><li>2.1、如果<strong>需要</strong>设置<strong>ENH attribute</strong>：</li></ul><blockquote><p><code>1、General Purpose Partition的数量</code><br><code>2、General Purpose Partition sizes</code>和enhanced attribute<br> 3、Enhanced User Data Area sizes，start address和enhanced attribute</p></blockquote><ul><li>2.2、如果<strong>不需要</strong>设置<strong>ENH attribute</strong>：</li></ul><blockquote><p><code>1、General Purpose Partition的数量</code><br><code>2、General Purpose Partition sizes</code></p></blockquote><p>3、PARTITIONING_SETTING_COMPLETED置位</p><h2 id="2-1-如何判断是否支持分区"><a href="#2-1-如何判断是否支持分区" class="headerlink" title="2.1  如何判断是否支持分区"></a>2.1  如何判断是否支持分区</h2><p><code>EXT_CSD[160]</code>中<code>PARTITIONING_SUPPORT</code>的bit0，如下图21.2所示：</p><center><img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/21.2.png" width="75%" height="75%" alt="21.2"/></center><p><code>bit[0]</code>表示设备是否支持分区，<code>bit[1]</code>表示分区（partitions and user data area）是否支持Enhance 属性，<code>bit[2]</code>表示设备是否支持extended 分区属性。本协议中规定这三种特性都支持，bit[0-2]&#x3D;1。</p><h2 id="2-2-General-Purpose-Partition的数量-x2F-Size设置"><a href="#2-2-General-Purpose-Partition的数量-x2F-Size设置" class="headerlink" title="2.2  General Purpose Partition的数量&#x2F;Size设置"></a>2.2  General Purpose Partition的数量&#x2F;Size设置</h2><p>EXT_CSD[154:143]的<code>GP_SIZE_MULT_GP0 - GP_SIZE_MULT_GP3</code>，共12个byte。</p><p><code>X</code>表示General Purpose Partition的<code>编号（1-4）</code>，<code>0-2</code>表示设置一个size这个公式的<code>3个因子</code>。</p><center><img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/21.3.png" width="75%" height="75%" alt="21.3"/></center><p>分区Size的计算公式，以及每一个byte代表的意义，如下21.4所示，</p><center><img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/21.4.png" width="75%" height="75%" alt="21.4"/></center><p>这里有一个疑问：设置此分区的<code>数量</code>（最大4），是否是把分区的Size设置为0，就表示该分区不存在，从而分区数量减一？</p><h2 id="2-3-General-Purpose-Partition的Enh-x2F-EXT属性设置"><a href="#2-3-General-Purpose-Partition的Enh-x2F-EXT属性设置" class="headerlink" title="2.3  General Purpose Partition的Enh&#x2F;EXT属性设置"></a>2.3  General Purpose Partition的Enh&#x2F;EXT属性设置</h2><p>EXT_CSD[156]的<code>PARTITIONS_ATTRIBUTE</code>设置Enh属性（如图21.5），EXT_CSD[53:52]的<code>EXT_PARTITIONS_ATTRIBUTE</code>设置EXT属性（协议p225）。</p><center><img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/21.5.png" width="75%" height="75%" alt="21.5"/></center><h2 id="2-4-Enhanced-User-Data-Area的start-address-x2F-Size设置"><a href="#2-4-Enhanced-User-Data-Area的start-address-x2F-Size设置" class="headerlink" title="2.4  Enhanced User Data Area的start address&#x2F;Size设置"></a>2.4  Enhanced User Data Area的start address&#x2F;Size设置</h2><p>EXT_CSD[139:136]的<code>ENH_START_ADD</code>设置地址，EXT_CSD[142:140]的<code>ENH_SIZE_MULT</code>设置Size。（p220）</p><p>EXT_CSD[156]的<code>PARTITIONS_ATTRIBUTE</code>设置Enh属性（如图21.5）。</p><h1 id="三、总结"><a href="#三、总结" class="headerlink" title="三、总结"></a>三、总结</h1><ul><li><code>General Purpose Partition</code>和<code>User Data Area</code>是两种不同的分区，它们各自设置大小、Enhanced和Extended属性。虽然前者来源于后者。</li><li><code>GPP</code>出厂默认不带，用户可以通过前文所述方法配置（1-4个）。</li></ul>]]></content>
-    
-    
-      
-      
-    <summary type="html">&lt;p&gt;[toc]&lt;/p&gt;
-&lt;h1 id=&quot;一、eMMC分区介绍&quot;&gt;&lt;a href=&quot;#一、eMMC分区介绍&quot; class=&quot;headerlink&quot; title=&quot;一、eMMC分区介绍&quot;&gt;&lt;/a&gt;一、eMMC分区介绍&lt;/h1&gt;&lt;center&gt;
-&lt;img src=&quot;https://b</summary>
-      
-    
-    
-    
-    <category term="领域" scheme="https://mkdbook.com/categories/%E9%A2%86%E5%9F%9F/"/>
-    
-    <category term="eMMC" scheme="https://mkdbook.com/categories/%E9%A2%86%E5%9F%9F/eMMC/"/>
-    
-    
-    <category term="eMMC" scheme="https://mkdbook.com/tags/eMMC/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>20--IMC初级使用教程</title>
-    <link href="https://mkdbook.com/blog020.html"/>
-    <id>https://mkdbook.com/blog020.html</id>
-    <published>2023-04-10T06:18:11.000Z</published>
-    <updated>2023-05-08T10:38:00.947Z</updated>
-    
-    <content type="html"><![CDATA[<p>[toc]</p><h1 id="IMC收集覆盖率"><a href="#IMC收集覆盖率" class="headerlink" title="IMC收集覆盖率"></a>IMC收集覆盖率</h1><h1 id="一、前言"><a href="#一、前言" class="headerlink" title="一、前言"></a>一、前言</h1><p>类似于Simvision，IMC（Incisive Metrics Center）是Cadence集成在Incisive中的一个用于覆盖率收集、分析、报告的工具。</p><p>踩坑：新版的Cadence工具已经从Incisive升级到了Xcelium，但是Xcelium不再集成IMC工具，因为IMC工具被集成在了新版的vManager工具中。</p><p>另外，由于仿真工具升级的原因，通过Xcelium仿真生成的Coverage Database无法通过Incisive中集成的IMC工具打开。故后续教程基于Incisive 151版本。</p><h1 id="二、IMC的三种启动模式"><a href="#二、IMC的三种启动模式" class="headerlink" title="二、IMC的三种启动模式"></a>二、IMC的三种启动模式</h1><h2 id="1、GUI-modo"><a href="#1、GUI-modo" class="headerlink" title="1、GUI modo"></a>1、GUI modo</h2><p>启动命令：<code>imc -gui</code></p><p><strong>IMC图形化界面。</strong></p><h2 id="2、Interactive-Command-line-modo"><a href="#2、Interactive-Command-line-modo" class="headerlink" title="2、Interactive Command-line modo"></a>2、Interactive Command-line modo</h2><p>启动命令：<code>imc -batch</code></p><p><strong>交互式命令行模式。</strong></p><h2 id="3、Batch-modo"><a href="#3、Batch-modo" class="headerlink" title="3、Batch modo"></a>3、Batch modo</h2><p>启动命令：<code>imc -exec &lt;command_file&gt;</code></p><p><strong>允许执行批量处理脚本或命令并退出，如TCL脚本。</strong></p><h1 id="三、IMC的option"><a href="#三、IMC的option" class="headerlink" title="三、IMC的option"></a>三、IMC的option</h1><p>可通过<code>imc -help</code>命令查询所有option的作用。</p><pre><code class="yaml">-batch                               run in non-gui mode-32bit                               invokes 32 bit executable-64bit                               invokes 64 bit executable-appendkey                           append keystrokes to an existing keyfile-appendlog                           append the log to an existing logfile-context                             specify application context-df                                  use default font-display &lt;arg&gt;                       display (and screen) on which to display window-enc                                 set input encoding-exec &lt;script name&gt;                  execute a script and exit-execcmd &lt;command&gt;                   execute the given tcl commands and exit-filter                              apply changes on the main table in the Regression Center-gui                                 run in gui mode-help                                print this message-init &lt;file&gt;                         run tcl commands in the given file at startup-initcmd &lt;command&gt;                   execute the given tcl commands at startup-jp                                  japanese input support-keyfile &lt;file&gt;                      specifies the file to capture keyboard input-licqueue                            use license queue mechanism-load &lt;run&gt;                          load given run at the start-load_refinement &lt;refinement file&gt;   load given refinement file at the start-logfile &lt;file&gt;                      use given file for log-memlimit &lt;limit&gt;                    determines final Java Memory limit-nocopyright                         do not print copyright information at start-nostdout                            no output on stdout-quiet                               be extra quiet-sessions_view &lt;filter&gt;              sets the specified session view at startup-sourcemap &lt;file&gt;                    use contents of given file as list of source location mappings in the form of source and                                     destination directories-status                              prints runtime statistics at the session end-verbose                             be extra verbose-version                             print the version information and exit</code></pre><h1 id="四、IMC-merge-coverage"><a href="#四、IMC-merge-coverage" class="headerlink" title="四、IMC merge coverage"></a>四、IMC merge coverage</h1><p>第一步，<code>imc -batch</code>打开batch模式。</p><p>第二步，<code>merge &lt;文件&gt; -out &lt;输出文件名&gt;</code> ，例如 merge cov_work&#x2F;scope&#x2F;* -out ALL。</p><p>第三步，<code>exit</code>，退出batch模式。然后打开 imc gui界面，把merge生成的文件load进去。</p><p>注意：如果想覆盖掉之前merge生成的文件，可以添加<code>-overwrite</code>选项。</p><h1 id="五、IMC-GUI的基本使用"><a href="#五、IMC-GUI的基本使用" class="headerlink" title="五、IMC GUI的基本使用"></a>五、IMC GUI的基本使用</h1><p>第一步，<code>imc -gui &amp;</code>启动GUI界面，并将coverage database加载进来。</p><center><img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/20.1IMC.png" width="75%" height="75%" alt="20.1"/></center><p>第二步，点击界面相关按钮进行分析。</p><center><img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/20.2IMC.png" width="75%" height="75%" alt="20.2"/></center>]]></content>
-    
-    
-      
-      
-    <summary type="html">&lt;p&gt;[toc]&lt;/p&gt;
-&lt;h1 id=&quot;IMC收集覆盖率&quot;&gt;&lt;a href=&quot;#IMC收集覆盖率&quot; class=&quot;headerlink&quot; title=&quot;IMC收集覆盖率&quot;&gt;&lt;/a&gt;IMC收集覆盖率&lt;/h1&gt;&lt;h1 id=&quot;一、前言&quot;&gt;&lt;a href=&quot;#一、前言&quot; class=</summary>
-      
-    
-    
-    
-    <category term="IC" scheme="https://mkdbook.com/categories/IC/"/>
-    
-    <category term="EDA" scheme="https://mkdbook.com/categories/IC/EDA/"/>
-    
-    
-    <category term="IMC" scheme="https://mkdbook.com/tags/IMC/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>19--eMMC时序介绍</title>
-    <link href="https://mkdbook.com/blog019.html"/>
-    <id>https://mkdbook.com/blog019.html</id>
-    <published>2023-04-05T11:52:09.000Z</published>
-    <updated>2023-04-24T08:54:03.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>[toc]</p><h1 id="一、时序缩写速查"><a href="#一、时序缩写速查" class="headerlink" title="一、时序缩写速查"></a>一、时序缩写速查</h1><p>看懂eMMC时序的描述图，首先要理解其每个缩写代表的意思：</p><ul><li><code>S</code>：CMD起始位，&#x3D;<code>0</code></li><li><code>T</code>：表示后面的命令是谁发出的，<code>Host=1</code>；<code>Device=0</code>；</li><li><code>P</code>：一个周期时间的上拉，&#x3D;<code>1</code></li><li><code>E</code>：CMD结束位，&#x3D;<code>1</code></li><li><code>L</code>：一周期时间的下拉，&#x3D;<code>0</code></li><li><code>Z</code>：高阻态</li><li><code>X</code>：<code>1或0</code></li><li><code>D</code>：表示数据</li><li><code>*</code>：重复</li><li><code>CRC</code>：<code>7bit</code></li></ul><h1 id="二、命令时序和应答时序"><a href="#二、命令时序和应答时序" class="headerlink" title="二、命令时序和应答时序"></a>二、命令时序和应答时序</h1><p>有两种不同的颜色，蓝色表示Host的命令，红色表示Device的应答。根据不同的命令类型，有的命令需要应答，有的命令不需要应答。</p><h2 id="2-1-设备识别和设备工作条件时序"><a href="#2-1-设备识别和设备工作条件时序" class="headerlink" title="2.1  设备识别和设备工作条件时序"></a>2.1  设备识别和设备工作条件时序</h2><center><img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/19.1.png" width="75%" height="75%" alt="19.1"/></center><p>上图所示为host发送<code>CMD1或CMD2</code>分别请求device的<code>OCR或CID</code>的过程，host发送完命令后经过<code>NID</code>的<code>CLK</code>周期后，device开始<strong>在响应中</strong>返回<code>OCR或CID</code>寄存器中的内容。</p><blockquote><p>注：如果host发送<code>CMD2（ALL_SEND_CID）</code>后没有收到device的应答，host就认为总线上没有device的存在。</p></blockquote><h2 id="2-2-为设备分配相对地址"><a href="#2-2-为设备分配相对地址" class="headerlink" title="2.2  为设备分配相对地址"></a>2.2  为设备分配相对地址</h2><center><img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/19.2.png" width="75%" height="75%" alt="19.2"/></center><p><code>CMD3（SET_RCA）</code>，device接收到其RCA后就切换到Data transfer模式。</p><h2 id="2-3-Data-transfer模式"><a href="#2-3-Data-transfer模式" class="headerlink" title="2.3  Data transfer模式"></a>2.3  Data transfer模式</h2><center><img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/19.3.png" width="75%" height="75%" alt="19.3"/></center><p>可以看着这里和前两个时序的区别是：不是间隔<code>Z</code>，而是间隔<code>P（host/device主动拉高）</code>。</p><blockquote><p>注：只有<code>CMD1、2、3</code>中间全是Z（针对有应答的CMD而言）。</p></blockquote><h2 id="2-4-R1b应答"><a href="#2-4-R1b应答" class="headerlink" title="2.4  R1b应答"></a>2.4  R1b应答</h2><center><img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/19.4.png" width="75%" height="75%" alt="19.4"/></center><p>带Busy信号的的应答，在host命令后隔两个周期<code>DAT0线拉低</code>，<code>表示Busy</code>。其他几根DAT线的值无所谓。</p><h2 id="2-5-上一Device应答——-gt-下一host命令"><a href="#2-5-上一Device应答——-gt-下一host命令" class="headerlink" title="2.5  上一Device应答——&gt;下一host命令"></a>2.5  上一Device应答——&gt;下一host命令</h2><center><img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/19.5.png" width="75%" height="75%" alt="19.5"/></center><h2 id="2-6-上一host命令——-gt-下一host命令"><a href="#2-6-上一host命令——-gt-下一host命令" class="headerlink" title="2.6   上一host命令——&gt;下一host命令"></a>2.6   上一host命令——&gt;下一host命令</h2><center><img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/19.6.png" width="75%" height="75%" alt="19.6"/></center><h1 id="三、总结"><a href="#三、总结" class="headerlink" title="三、总结"></a>三、总结</h1><p>1、两段之间的CLK间隔<code>N**</code>，在协议中<code>Timing Patameters</code>表格中有具体规定。（协议P154）</p><p>2、时序中的<code>CMD</code>格式是和<a href="https://mkdbook.com/blog016.html#:~:text=%E7%9A%84CRC%E4%BF%9D%E6%8A%A4-,16.2%20CMD%20token,-eMMC%E7%9A%84%E5%91%BD%E4%BB%A4">Command Format</a>对的上的。</p><p>3、时序中的<code>Response</code>格式取决于每种命令对应的应答类型，每种类型的bit位描述在协议中都有具体表格说明。（P136）</p>]]></content>
-    
-    
-      
-      
-    <summary type="html">&lt;p&gt;[toc]&lt;/p&gt;
-&lt;h1 id=&quot;一、时序缩写速查&quot;&gt;&lt;a href=&quot;#一、时序缩写速查&quot; class=&quot;headerlink&quot; title=&quot;一、时序缩写速查&quot;&gt;&lt;/a&gt;一、时序缩写速查&lt;/h1&gt;&lt;p&gt;看懂eMMC时序的描述图，首先要理解其每个缩写代表的意思：&lt;/p&gt;</summary>
-      
-    
-    
-    
-    <category term="领域" scheme="https://mkdbook.com/categories/%E9%A2%86%E5%9F%9F/"/>
-    
-    <category term="eMMC" scheme="https://mkdbook.com/categories/%E9%A2%86%E5%9F%9F/eMMC/"/>
-    
-    
-    <category term="eMMC" scheme="https://mkdbook.com/tags/eMMC/"/>
     
   </entry>
   

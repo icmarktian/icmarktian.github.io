@@ -2,9 +2,9 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>11--折腾Blog学到的一些东西 | 马克得烂笔头</title>
-  <meta name="keywords" content="">
-  <meta name="description" content="11--折腾Blog学到的一些东西 | 马克得烂笔头">
+  <title>41--NAND的ZQCalibration功能 | 马克得烂笔头</title>
+  <meta name="keywords" content=" NAND ">
+  <meta name="description" content="41--NAND的ZQCalibration功能 | 马克得烂笔头">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <meta name="description" content="人的精力是有限的，本站作为第二大脑用于存储本人学过的知识">
 <meta property="og:type" content="website">
@@ -902,9 +902,9 @@
 </aside>
 <div id="post">
     <div class="pjax">
-        <article id="post-5 杂记/11--折腾Blog学到的一些东西" class="article article-type-post" itemscope itemprop="blogPost">
+        <article id="post-2 领域/NAND/41--NAND的ZQ Calibration功能" class="article article-type-post" itemscope itemprop="blogPost">
     
-        <h1 class="article-title">11--折腾Blog学到的一些东西</h1>
+        <h1 class="article-title">41--NAND的ZQCalibration功能</h1>
     
     <div class="article-meta">
         
@@ -914,20 +914,29 @@
             <i class="iconfont icon-category"></i>
             
             
-            <a  data-rel="杂记">杂记</a>
+            <a  data-rel="领域">领域</a> > 
+            
+            <a  data-rel="领域&lt;---&gt;NAND">NAND</a>
             
         </span>
         
         
+        <span class="tag">
+            <i class="iconfont icon-tag"></i>
+            
+            <a class="color5">NAND</a>
+            
+        </span>
+        
     </div>
     <div class="article-meta">
         
-            发布时间 : <time class="date" title='最后更新: 2023-03-24 16:09:25'>2023-03-20 20:32</time>
+            发布时间 : <time class="date" title='最后更新: 2023-12-27 11:56:08'>2023-12-27 11:34</time>
         
     </div>
     <div class="article-meta">
         
-        <span>字数:772</span>
+        <span>字数:881</span>
         
         
         
@@ -946,7 +955,7 @@
     
     <div class="toc-ref">
     
-        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E5%8A%A0%E6%B7%B1%E4%BA%86%E5%AF%B9%E7%BD%91%E7%BB%9C%E3%80%81%E7%BD%91%E7%AB%99%E6%90%AD%E5%BB%BA%E7%9A%84%E7%90%86%E8%A7%A3"><span class="toc-text">一、加深了对网络、网站搭建的理解</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E5%8A%A8%E6%80%81Blog%E5%92%8C%E9%9D%99%E6%80%81Blog"><span class="toc-text">二、动态Blog和静态Blog</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%89%E3%80%81Hexo-GitHub-%E8%87%AA%E5%AE%9A%E4%B9%89%E5%9F%9F%E5%90%8D-Cloudflare%E5%81%9ACDN%E4%B8%AD%E8%BD%AC"><span class="toc-text">三、Hexo+GitHub+自定义域名+Cloudflare做CDN中转</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%9B%9B%E3%80%81%E8%B8%A9%E5%9D%91%E8%AE%B0%E5%BD%95"><span class="toc-text">四、踩坑记录</span></a></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#1%E3%80%81%E4%BB%80%E4%B9%88%E6%83%85%E5%86%B5%E9%9C%80%E8%A6%81ZQ-Calibration%EF%BC%9F"><span class="toc-text">1、什么情况需要ZQ Calibration？</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2%E3%80%81ZQ-Calibration%E7%9A%84%E4%BD%9C%E7%94%A8%EF%BC%9F"><span class="toc-text">2、ZQ Calibration的作用？</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3%E3%80%81ZQCL-%E5%92%8C-ZQCS%E7%9A%84%E5%8C%BA%E5%88%AB%EF%BC%9F"><span class="toc-text">3、ZQCL 和 ZQCS的区别？</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#4%E3%80%81ZQCL-%E8%BF%87%E7%A8%8B"><span class="toc-text">4、ZQCL 过程</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#5%E3%80%81ZQCS-%E7%9A%84%E9%97%B4%E9%9A%94%E5%91%A8%E6%9C%9F%E5%A6%82%E4%BD%95%E8%AE%A1%E7%AE%97%EF%BC%9F"><span class="toc-text">5、ZQCS 的间隔周期如何计算？</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#6%E3%80%81%E5%85%B6%E5%AE%83%E4%BA%8B%E9%A1%B9"><span class="toc-text">6、其它事项</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#7%E3%80%81%E4%B8%BA%E4%BB%80%E4%B9%88%E9%9C%80%E8%A6%81ZQ-Calibration%EF%BC%9F"><span class="toc-text">7、为什么需要ZQ Calibration？</span></a></li></ol>
     
 <style>
     .left-col .switch-btn,
@@ -962,55 +971,62 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p><div class='inner-toc'><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E5%8A%A0%E6%B7%B1%E4%BA%86%E5%AF%B9%E7%BD%91%E7%BB%9C%E3%80%81%E7%BD%91%E7%AB%99%E6%90%AD%E5%BB%BA%E7%9A%84%E7%90%86%E8%A7%A3"><span class="toc-text">一、加深了对网络、网站搭建的理解</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E5%8A%A8%E6%80%81Blog%E5%92%8C%E9%9D%99%E6%80%81Blog"><span class="toc-text">二、动态Blog和静态Blog</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%89%E3%80%81Hexo-GitHub-%E8%87%AA%E5%AE%9A%E4%B9%89%E5%9F%9F%E5%90%8D-Cloudflare%E5%81%9ACDN%E4%B8%AD%E8%BD%AC"><span class="toc-text">三、Hexo+GitHub+自定义域名+Cloudflare做CDN中转</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%9B%9B%E3%80%81%E8%B8%A9%E5%9D%91%E8%AE%B0%E5%BD%95"><span class="toc-text">四、踩坑记录</span></a></li></ol></div></p>
-<h1 id="一、加深了对网络、网站搭建的理解"><a href="#一、加深了对网络、网站搭建的理解" class="headerlink" title="一、加深了对网络、网站搭建的理解"></a>一、加深了对网络、网站搭建的理解</h1><ol>
-<li><p>互联网其实就是一个大型的局域网罢了，所有的网页、网上的资源都处于某一台（多台）实体电脑（服务器）中，然后接入这个大型的Internet，实现我们普通网民的冲浪。</p>
-</li>
-<li><p>关于域名，其实就是一种映射关系，将一些好记的字符映射到你这台服务器的IP地址，实现访问，因为IP地址人类不好记忆。</p>
-</li>
-<li><p>关于<code>https</code>和<code>http</code>：简而言之前者需要SSL&#x2F;TLS加密，而后者是明文更容易遭受中间人攻击。这也是我强迫症使用cloudflare中转的原因之一，如果访问一个网站是http时，浏览器网址栏会提示不安全；而使用https加密后，网址栏会显示一把小锁。</p>
-</li>
-</ol>
-<h1 id="二、动态Blog和静态Blog"><a href="#二、动态Blog和静态Blog" class="headerlink" title="二、动态Blog和静态Blog"></a>二、动态Blog和静态Blog</h1><p>我试着折腾过两种，<code>动态：wordpress</code>。<code>静态：hexo</code>。我理解两者最直观的区别就是，动态的搭建在VPS上，可以访问后台实时修改和书写文章；静态是需要在本地搭建环境，生成好html文件，然后将这些页面上传到服务器。<br>比较而言，前者功能更加复杂，需要数据库等，可以用于网站的搭建，搭建博客只是其中一个功能。<br>而后者则相对纯粹，静态页面适合专注于文字的书写。</p>
-<h1 id="三、Hexo-GitHub-自定义域名-Cloudflare做CDN中转"><a href="#三、Hexo-GitHub-自定义域名-Cloudflare做CDN中转" class="headerlink" title="三、Hexo+GitHub+自定义域名+Cloudflare做CDN中转"></a>三、Hexo+GitHub+自定义域名+Cloudflare做CDN中转</h1><p>这里不做详细教程，只记录大体步骤；</p>
-<ol>
-<li>Github创建个人仓库（“服务器端”）；</li>
-<li>搭建本地环境（安装Git、Node.js、Hexo）；</li>
-<li>生成本地页面（localhost:4000），则表明搭建成功；</li>
-<li>将Hexo网站推送到Github中，实现互联网访问；</li>
-<li>购买域名，并让其指向你的<code>http://xxxx.github.io/</code>地址，实现自定义域名访问；<ul>
-<li>注：第五步有两种方法，一种是直接在域名购买商那里将DNS指向你的Github，一种是通过Cloudflare做中转解析；后者可以免费申请SSL证书，实现强制<code>https</code>代理，而非<code>http</code>。</li>
+        <p><div class='inner-toc'><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#1%E3%80%81%E4%BB%80%E4%B9%88%E6%83%85%E5%86%B5%E9%9C%80%E8%A6%81ZQ-Calibration%EF%BC%9F"><span class="toc-text">1、什么情况需要ZQ Calibration？</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2%E3%80%81ZQ-Calibration%E7%9A%84%E4%BD%9C%E7%94%A8%EF%BC%9F"><span class="toc-text">2、ZQ Calibration的作用？</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3%E3%80%81ZQCL-%E5%92%8C-ZQCS%E7%9A%84%E5%8C%BA%E5%88%AB%EF%BC%9F"><span class="toc-text">3、ZQCL 和 ZQCS的区别？</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#4%E3%80%81ZQCL-%E8%BF%87%E7%A8%8B"><span class="toc-text">4、ZQCL 过程</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#5%E3%80%81ZQCS-%E7%9A%84%E9%97%B4%E9%9A%94%E5%91%A8%E6%9C%9F%E5%A6%82%E4%BD%95%E8%AE%A1%E7%AE%97%EF%BC%9F"><span class="toc-text">5、ZQCS 的间隔周期如何计算？</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#6%E3%80%81%E5%85%B6%E5%AE%83%E4%BA%8B%E9%A1%B9"><span class="toc-text">6、其它事项</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#7%E3%80%81%E4%B8%BA%E4%BB%80%E4%B9%88%E9%9C%80%E8%A6%81ZQ-Calibration%EF%BC%9F"><span class="toc-text">7、为什么需要ZQ Calibration？</span></a></li></ol></div></p>
+<h1 id="1、什么情况需要ZQ-Calibration？"><a href="#1、什么情况需要ZQ-Calibration？" class="headerlink" title="1、什么情况需要ZQ Calibration？"></a>1、什么情况需要ZQ Calibration？</h1><ul>
+<li>NV-DDR2：可选；</li>
+<li>NV-DDR3：可选，但是当接口速率达到400MT&#x2F;s时推荐使用；</li>
+<li>NV_LPDDR4：必选，无论接口速率多少；</li>
 </ul>
-</li>
-<li>SEO配置，让搜索引擎收录你的网站，并允许爬虫你的内容。</li>
-</ol>
-<h1 id="四、踩坑记录"><a href="#四、踩坑记录" class="headerlink" title="四、踩坑记录"></a>四、踩坑记录</h1><ol>
-<li>在添加百度SEO设置主动推送（API，要用到token那种方式），在根目录_config.yaml，修改deploy配置，添加<code>type: baidu_url_submitter</code>报错如下：<code>YAMLException: duplicated mapping key (126:3)</code>。</li>
-</ol>
-<blockquote>
-<p>解决办法是：<code>type</code>变为 ”<code>- type</code>“，且要顶格，即“-”前面不能有空格，后面有空格，且冒号后有空格，如图11.1：</p>
-</blockquote>
-<center>
-<img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/11.1%E5%9D%91%E4%B8%80.png" width="70%" height="70%" alt="11.1 坑一"/>
+<h1 id="2、ZQ-Calibration的作用？"><a href="#2、ZQ-Calibration的作用？" class="headerlink" title="2、ZQ Calibration的作用？"></a>2、ZQ Calibration的作用？</h1><ul>
+<li>1、校准NAND Ron阻值；</li>
+<li>2、校准ODT值；</li>
+</ul>
+<h1 id="3、ZQCL-和-ZQCS的区别？"><a href="#3、ZQCL-和-ZQCS的区别？" class="headerlink" title="3、ZQCL 和 ZQCS的区别？"></a>3、ZQCL 和 ZQCS的区别？</h1><ul>
+<li><strong>ZQ long calibration：</strong><code>F9h</code>命令。<br>Power-on初始化校准时，需要较长时间；<br>host也可随时主动发出ZQCL命令。</li>
+<li><strong>ZQ short calibration：</strong><code>D9h</code>命令。<br>定期的校准，需要的时间比较短；<br>需要定期的原因：随时考虑到电压和温度的变化。</li>
+</ul>
+<h1 id="4、ZQCL-过程"><a href="#4、ZQCL-过程" class="headerlink" title="4、ZQCL 过程"></a>4、ZQCL 过程</h1><ul>
+<li>ZQCL 会触发 <code>NAND 内部</code>的Calibration engine，一旦完成校准，校准值就会传输到 NAND IO，从而更新output driver和ODT的值。</li>
+</ul>
+<h1 id="5、ZQCS-的间隔周期如何计算？"><a href="#5、ZQCS-的间隔周期如何计算？" class="headerlink" title="5、ZQCS 的间隔周期如何计算？"></a>5、ZQCS 的间隔周期如何计算？</h1><center>
+<img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/41.1.png" width="80%" height="80%" alt="41.1"/>
 </center>
 
-<p>因为yml的特点是：</p>
+<p><strong>如果 ：</strong></p>
 <ul>
-<li>大小写敏感</li>
-<li>使用缩进表示层级关系</li>
-<li>缩进不允许使用tab，只允许空格</li>
-<li>缩进的空格数不重要，只要相同层级的元素<strong>左对齐</strong>即可</li>
-<li>‘#’表示注释</li>
+<li>TSens &#x3D; 0.5 %&#x2F;°C，定义了温度灵敏度。它等于 TSens &#x3D; max（dRTTdT，dRONdTM）。</li>
+<li>VSens &#x3D; 0.2 %&#x2F;mV，定义了电压灵敏度。它等于 VSens &#x3D; max（dRTTdV，dRONdVM）。</li>
+<li>Tdriftrate &#x3D; 1 °C&#x2F;sec，定义了温度漂移率。</li>
+<li>Vdriftrate &#x3D;15 mV&#x2F;sec， 定义了电压漂移率。</li>
 </ul>
-<hr>
-<br>
+<p> <strong>计算方法举例如下：</strong></p>
+<ul>
+<li>1.5&#x2F; [(0.5 X 1) + (0.2 X 15)] &#x3D; 0.429 &#x3D; 429ms</li>
+</ul>
+<center>
+<img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/41.2.png" width="80%" height="80%" alt="41.2"/>
+</center>
 
-<ol start="2">
-<li>百度SEO通过文件验证网站后，<code>baidu_verify_codeva-u08yTssVjX.html</code>文件每次都会被Hexo编译，导致认证不成功。</li>
-</ol>
-<blockquote>
-<p>解决办法是：将<code>baidu_verify_codeva-u08yTssVjX.html</code>文件放到<code>\themes\你的主题\source</code>中，而不是在blog根目录下的source文件夹中。</p>
-</blockquote>
+<center>
+<img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/41.3.png" width="80%" height="80%" alt="41.3"/>
+</center>
+
+<h1 id="6、其它事项"><a href="#6、其它事项" class="headerlink" title="6、其它事项"></a>6、其它事项</h1><ul>
+<li>1、在ZQCL和ZQCS进行的过程中，NAND总线上不能执行任何操作，包括读取status。</li>
+<li>2、对于multi-channel packages，当一个channel正在进行ZQ Calibration时，所有其它通道也都不能执行其它数据传输操作。</li>
+<li>3、ZQ Calibration完成后，NAND应该断开ZQ的电流消耗路径，以节省电压。</li>
+<li>4、ZQ Calibration过程中，RESET命令会导致校准失效，host需要重新执行ZQ Calibration操作。</li>
+</ul>
+<h1 id="7、为什么需要ZQ-Calibration？"><a href="#7、为什么需要ZQ-Calibration？" class="headerlink" title="7、为什么需要ZQ Calibration？"></a>7、为什么需要ZQ Calibration？</h1><p>ZQ Calibration 可以确保 NAND 控制器和 NAND 闪存芯片之间的数据传输质量。</p>
+<p>NAND 闪存芯片的 I&#x2F;O 端口使用差分信号传输数据。差分信号由两个信号线组成，一个是差分信号的正端，一个是差分信号的负端。在理想情况下，两个信号线的阻抗应该相等。如果两个信号线的阻抗不相等，就会导致差分信号的振幅发生变化，从而影响数据传输的质量。</p>
+<p>ZQ Calibration 就是通过一个被称为 ZQ 电阻的参考电阻，来校准 NAND 控制器和 NAND 闪存芯片之间的差分信号阻抗。ZQ 电阻的阻值通常为 300 Ω。在 ZQ Calibration 过程中，NAND 控制器会通过 ZQ 电阻向 NAND 闪存芯片发送一个参考信号。NAND 闪存芯片会根据这个参考信号，来校准自己的差分信号阻抗。</p>
+<p>ZQ Calibration 通常在 NAND 闪存芯片初始化时进行一次，也可以在运行过程中定期进行。定期进行 ZQ Calibration，可以确保 NAND 控制器和 NAND 闪存芯片之间的差分信号阻抗始终保持一致，从而提高数据传输的质量。</p>
+<p>具体来说，ZQ Calibration 可以带来以下好处：</p>
+<ul>
+<li>提高数据传输的可靠性：ZQ Calibration 可以确保 NAND 控制器和 NAND 闪存芯片之间的差分信号阻抗始终保持一致，从而提高数据传输的可靠性。</li>
+<li>降低数据传输的错误率：ZQ Calibration 可以降低数据传输的错误率，从而提高数据传输的效率。</li>
+<li>延长 NAND 闪存芯片的使用寿命：ZQ Calibration 可以延长 NAND 闪存芯片的使用寿命，因为它可以降低数据传输过程中的损耗。</li>
+</ul>
 
       
        <hr><span style="font-style: italic;color: gray;"> 转载请注明来源，欢迎对文章中的引用来源进行考证，欢迎指出任何有错误或不够清晰的表达。可以在下面评论区评论，也可以邮件至 icmarktian@163.com </span>

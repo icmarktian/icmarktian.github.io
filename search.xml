@@ -4,6 +4,114 @@
   
     
     <entry>
+      <title>42--NAND的ODT功能</title>
+      <link href="/blog042.html"/>
+      <url>/blog042.html</url>
+      
+        <content type="html"><![CDATA[<p>[toc]</p><h1 id="1、ODT支持的接口"><a href="#1、ODT支持的接口" class="headerlink" title="1、ODT支持的接口"></a>1、ODT支持的接口</h1><ul><li>NV-DDR2</li><li>NV-DDR3</li><li>NV-LPDDR4</li></ul><h1 id="2、什么是ODT？"><a href="#2、什么是ODT？" class="headerlink" title="2、什么是ODT？"></a>2、什么是ODT？</h1><ul><li>ODT 的全称是 On-Die Termination，即片内终端。它是一种用于<code>降低 NAND 芯片输入阻抗</code>的技术，用于优化信号传输，提高信号完整性，并降低信号反射。</li></ul><h1 id="3、ODT如何降低NAND的输入阻抗？"><a href="#3、ODT如何降低NAND的输入阻抗？" class="headerlink" title="3、ODT如何降低NAND的输入阻抗？"></a>3、ODT如何降低NAND的输入阻抗？</h1><ul><li>ODT可以通过将NAND芯片的输入端连接到一个低阻抗的输出端来降低输入端电流，从而降低输入阻抗。</li></ul><h1 id="4、为什么需要ODT？"><a href="#4、为什么需要ODT？" class="headerlink" title="4、为什么需要ODT？"></a>4、为什么需要ODT？</h1><ul><li>1、<code>提高I/O速度</code>：通过降低NAND芯片的输入阻抗。在没有个ODT的情况下，NAND芯片的输入阻抗较高，这会导致I&#x2F;O信号的上升和下降时间变长，从而降低I&#x2F;O速度。ODT可以通过降低NAND芯片的输入阻抗来缩短I&#x2F;O信号的上升和下降时间，从而提高I&#x2F;O速度。</li><li>2、<code>降低功耗</code>：在没有ODT的情况下，NAND芯片的输入端会一直处于高阻状态，这会导致NAND芯片的输入端电流一直保持在一个较高的水平，从而增加NAND芯片的功耗。ODT可以通过将NAND芯片的输入端连接到一个低阻抗的输出端来降低输入端电流，从而降低NAND芯片的功耗。</li></ul><h1 id="5、如何工作？"><a href="#5、如何工作？" class="headerlink" title="5、如何工作？"></a>5、如何工作？</h1><ul><li><strong>读操作时：</strong> ODT 输出端被<code>拉高</code>，将 NAND 芯片的<code>输入端</code>连接到 <code>ODT 输出端</code>。<br>由于 ODT 输出端的阻抗较低，NAND 芯片的<code>输入阻抗</code>也降低，从而缩短 I&#x2F;O 信号的上升和下降时间，<code>提高 I/O 速度</code>。</li><li><strong>写操作时：</strong> ODT 输出端被<code>拉低</code>，将 NAND 芯片的<code>输入端</code>连接到 <code>I/O 线</code>。<br>由于 ODT 输出端的阻抗较低，NAND 芯片的<code>输入端电流</code>也降低，从而<code>降低功耗</code>。</li></ul>]]></content>
+      
+      
+      <categories>
+          
+          <category> 领域 </category>
+          
+          <category> NAND </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> NAND </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>41--NAND的ZQCalibration功能</title>
+      <link href="/blog041.html"/>
+      <url>/blog041.html</url>
+      
+        <content type="html"><![CDATA[<p>[toc]</p><h1 id="1、什么情况需要ZQ-Calibration？"><a href="#1、什么情况需要ZQ-Calibration？" class="headerlink" title="1、什么情况需要ZQ Calibration？"></a>1、什么情况需要ZQ Calibration？</h1><ul><li>NV-DDR2：可选；</li><li>NV-DDR3：可选，但是当接口速率达到400MT&#x2F;s时推荐使用；</li><li>NV_LPDDR4：必选，无论接口速率多少；</li></ul><h1 id="2、ZQ-Calibration的作用？"><a href="#2、ZQ-Calibration的作用？" class="headerlink" title="2、ZQ Calibration的作用？"></a>2、ZQ Calibration的作用？</h1><ul><li>1、校准NAND Ron阻值；</li><li>2、校准ODT值；</li></ul><h1 id="3、ZQCL-和-ZQCS的区别？"><a href="#3、ZQCL-和-ZQCS的区别？" class="headerlink" title="3、ZQCL 和 ZQCS的区别？"></a>3、ZQCL 和 ZQCS的区别？</h1><ul><li><strong>ZQ long calibration：</strong><code>F9h</code>命令。<br>Power-on初始化校准时，需要较长时间；<br>host也可随时主动发出ZQCL命令。</li><li><strong>ZQ short calibration：</strong><code>D9h</code>命令。<br>定期的校准，需要的时间比较短；<br>需要定期的原因：随时考虑到电压和温度的变化。</li></ul><h1 id="4、ZQCL-过程"><a href="#4、ZQCL-过程" class="headerlink" title="4、ZQCL 过程"></a>4、ZQCL 过程</h1><ul><li>ZQCL 会触发 <code>NAND 内部</code>的Calibration engine，一旦完成校准，校准值就会传输到 NAND IO，从而更新output driver和ODT的值。</li></ul><h1 id="5、ZQCS-的间隔周期如何计算？"><a href="#5、ZQCS-的间隔周期如何计算？" class="headerlink" title="5、ZQCS 的间隔周期如何计算？"></a>5、ZQCS 的间隔周期如何计算？</h1><center><img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/41.1.png" width="80%" height="80%" alt="41.1"/></center><p><strong>如果 ：</strong></p><ul><li>TSens &#x3D; 0.5 %&#x2F;°C，定义了温度灵敏度。它等于 TSens &#x3D; max（dRTTdT，dRONdTM）。</li><li>VSens &#x3D; 0.2 %&#x2F;mV，定义了电压灵敏度。它等于 VSens &#x3D; max（dRTTdV，dRONdVM）。</li><li>Tdriftrate &#x3D; 1 °C&#x2F;sec，定义了温度漂移率。</li><li>Vdriftrate &#x3D;15 mV&#x2F;sec， 定义了电压漂移率。</li></ul><p> <strong>计算方法举例如下：</strong></p><ul><li>1.5&#x2F; [(0.5 X 1) + (0.2 X 15)] &#x3D; 0.429 &#x3D; 429ms</li></ul><center><img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/41.2.png" width="80%" height="80%" alt="41.2"/></center><center><img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/41.3.png" width="80%" height="80%" alt="41.3"/></center><h1 id="6、其它事项"><a href="#6、其它事项" class="headerlink" title="6、其它事项"></a>6、其它事项</h1><ul><li>1、在ZQCL和ZQCS进行的过程中，NAND总线上不能执行任何操作，包括读取status。</li><li>2、对于multi-channel packages，当一个channel正在进行ZQ Calibration时，所有其它通道也都不能执行其它数据传输操作。</li><li>3、ZQ Calibration完成后，NAND应该断开ZQ的电流消耗路径，以节省电压。</li><li>4、ZQ Calibration过程中，RESET命令会导致校准失效，host需要重新执行ZQ Calibration操作。</li></ul><h1 id="7、为什么需要ZQ-Calibration？"><a href="#7、为什么需要ZQ-Calibration？" class="headerlink" title="7、为什么需要ZQ Calibration？"></a>7、为什么需要ZQ Calibration？</h1><p>ZQ Calibration 可以确保 NAND 控制器和 NAND 闪存芯片之间的数据传输质量。</p><p>NAND 闪存芯片的 I&#x2F;O 端口使用差分信号传输数据。差分信号由两个信号线组成，一个是差分信号的正端，一个是差分信号的负端。在理想情况下，两个信号线的阻抗应该相等。如果两个信号线的阻抗不相等，就会导致差分信号的振幅发生变化，从而影响数据传输的质量。</p><p>ZQ Calibration 就是通过一个被称为 ZQ 电阻的参考电阻，来校准 NAND 控制器和 NAND 闪存芯片之间的差分信号阻抗。ZQ 电阻的阻值通常为 300 Ω。在 ZQ Calibration 过程中，NAND 控制器会通过 ZQ 电阻向 NAND 闪存芯片发送一个参考信号。NAND 闪存芯片会根据这个参考信号，来校准自己的差分信号阻抗。</p><p>ZQ Calibration 通常在 NAND 闪存芯片初始化时进行一次，也可以在运行过程中定期进行。定期进行 ZQ Calibration，可以确保 NAND 控制器和 NAND 闪存芯片之间的差分信号阻抗始终保持一致，从而提高数据传输的质量。</p><p>具体来说，ZQ Calibration 可以带来以下好处：</p><ul><li>提高数据传输的可靠性：ZQ Calibration 可以确保 NAND 控制器和 NAND 闪存芯片之间的差分信号阻抗始终保持一致，从而提高数据传输的可靠性。</li><li>降低数据传输的错误率：ZQ Calibration 可以降低数据传输的错误率，从而提高数据传输的效率。</li><li>延长 NAND 闪存芯片的使用寿命：ZQ Calibration 可以延长 NAND 闪存芯片的使用寿命，因为它可以降低数据传输过程中的损耗。</li></ul>]]></content>
+      
+      
+      <categories>
+          
+          <category> 领域 </category>
+          
+          <category> NAND </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> NAND </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>40--eMMC的Power Up操作</title>
+      <link href="/blog040.html"/>
+      <url>/blog040.html</url>
+      
+        <content type="html"><![CDATA[<p>[toc]</p><h1 id="1、Power-Up-流程（状态转换）"><a href="#1、Power-Up-流程（状态转换）" class="headerlink" title="1、Power Up 流程（状态转换）"></a>1、Power Up 流程（状态转换）</h1><center><img src="https://blog-img-1317260263.cos.ap-shanghai.myqcloud.com/blog-pic/40.1.png" width="100%" height="100%" alt="40.1"/></center><ul><li>1、VCC 和 VCCQ 上电到指定电压范围内（同时或先后均可，上电最大持续时长受tPRU约束）；</li><li>2、进入 <code>pre-idle</code> 状态，若不支持boot（或 BOOT_PARTITION_ENABLE 关闭），则直接进入<code>idle</code>状态；</li><li>3、若开启boot模式（BOOT_PARTITION_ENABLE 开启），则进入 <code>Pre-boot</code> 状态，接下来就进行boot初始化序列了；<br>3.1、如果接收 <strong>boot 操作序列</strong>，完成 boot 操作之后，进入 <code>idle</code> 状态；<br>3.2、如果接收的不是 <strong>boot 操作序列</strong> 和 <strong>CMD 1</strong>，也进入 <code>idle</code> 状态；<br>3.3、如果直接接收到 <strong>CMD 1</strong>，则会返回 CMD 1请求的内容，并跳出 boot mode ，直接进入到 <strong>Device identification mode</strong>；</li><li>4、<code>idle</code> 状态下发送CMD 1，然后进入<strong>Device identification mode；</strong></li></ul><h1 id="2、Power-Up-遵循原则（注意事项）"><a href="#2、Power-Up-遵循原则（注意事项）" class="headerlink" title="2、Power Up 遵循原则（注意事项）"></a>2、Power Up 遵循原则（注意事项）</h1><ul><li>1、处于 <code>idle</code> 状态，必须要发送 <code>CMD 1</code> 之后才能做其他操作（其他会被忽略）；</li><li>2、eMMC v4.2之前的版本，Power Up后直接进入 <code>idle</code> 状态；</li><li>3、Boot 的操作序列<a href="https://mkdbook.com/blog022.html#:~:text=%E8%AF%BB%E5%8F%96%E6%95%B0%E6%8D%AE%EF%BC%89-,3.1%20%E8%AE%BF%E9%97%AEboot%E5%88%86%E5%8C%BA,-%E5%9C%A8boot%E6%A8%A1%E5%BC%8F">如blog22 3.1所示</a>：keeping the CMD line low for at least 74 clock cycles, or issuing CMD0 with the argument of 0xFFFFFFFA；</li><li>4、上电完成后，host开始发送CLK和CMD；</li><li>5、每组总线的master都必须执行CMD1；</li></ul><h1 id="3、CMD-1-作用"><a href="#3、CMD-1-作用" class="headerlink" title="3、CMD 1 作用"></a>3、CMD 1 作用</h1><ul><li>1、在eMMC上电过程中，处于idle state时，发送CMD 1，请求设备状态，OCR寄存器<a href="https://mkdbook.com/blog025.html#:~:text=%E4%BA%8C%E3%80%81-,OCR%E5%AF%84%E5%AD%98%E5%99%A8%E7%9A%84%E5%86%85%E5%AE%B9,-Operation%20condition%20register">如blog25所示</a>。</li><li>2、CMD 1是用来协商工作电压范围，并轮询设备直至其结束上电过程的专用同步命令。</li><li>3、CMD 1的应答还包含一个busy标志位，表示设备仍工作于上电例程，没有准备好识别。主机必须等到此位清除，若CMD 1在device初始化完成之前发送，则device会给host端反馈一个含busy flag的CMD 1应答。</li><li>4、如果busy标志位一直未清除，则主机可以再次发送CMD 1。但是，根据eMMC标准，设备必须在具有有效OCR范围的 CMD1 发送1秒内完成其初始化。因此，一般情况下，只需要发送一次CMD 1即可。</li><li>5、若在power up之前，已经完成分区（<code>EXT_CSD byte [155]表示分区设置是否完成</code>），则初始化延迟要通过<code>INI_TIMEOUT_PA（EXT_CSD byte [241]）</code>计算，而不是固定的1s；<br>但这个超时时间仅用于设置后的第一次启动，对于所有连续的初始化，还是使用1s超时。</li></ul><h1 id="4、Sleep-状态，Power-电压的变化"><a href="#4、Sleep-状态，Power-电压的变化" class="headerlink" title="4、Sleep 状态，Power 电压的变化"></a>4、Sleep 状态，Power 电压的变化</h1><ul><li>1、Master 必须在VCC和VCCQ稳定之后，才能发 command。</li><li>2、处于<code>sleep mode</code>时，master可以<code>关断VCC</code>减少功耗，但VCCQ需要保持，用来接收唤醒命令。</li><li>3、CMD 5唤醒处于sleep mode的device前，需要先拉高VCC。</li><li>如果 VCC or VCCQ 低于 0.5 V 超过 1 ms，则会回到 <code>pre-idle</code> 状态。（Sleep 状态除外）</li></ul>]]></content>
+      
+      
+      <categories>
+          
+          <category> 领域 </category>
+          
+          <category> eMMC </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> eMMC </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>39--关于eMMC的一些个人总结</title>
+      <link href="/blog039.html"/>
+      <url>/blog039.html</url>
+      
+        <content type="html"><![CDATA[<p>[toc]</p><h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>一些个人理解结合网上文章，不一定正确；</p><h1 id="1、eMMC中VCC、VDD、VSS、VCCQ-的关系理解"><a href="#1、eMMC中VCC、VDD、VSS、VCCQ-的关系理解" class="headerlink" title="1、eMMC中VCC、VDD、VSS、VCCQ 的关系理解"></a>1、eMMC中VCC、VDD、VSS、VCCQ 的关系理解</h1><ul><li><p>在MOS管中，它们是可以这样对应的：<br><code>VCC</code>：栅极电压，Control Gate，给栅极加压打开珪衬底的隧道；<br><code>VDD</code>：漏极电压，Drain Gate，电子或者空穴在漏极耗尽，类似GND（低电压）；<br><code>VSS</code>：源极电压，Source Gate，储存负电子或正空穴；<br>VCCQ：给信号线（I&#x2F;O口）供电，Q一般表示数字电路中的数据线，如DQ。<br>在eMMC中，供电方式如<a href="https://mkdbook.com/blog028.html#:~:text=28.2-,%E8%BF%98%E6%9C%89%E4%B8%80%E4%BA%9B%E9%87%8D%E8%A6%81%E7%9A%84%E5%8A%9F%E8%83%BD%E7%BA%BF%EF%BC%9A,-RST%EF%BC%9A%E7%A1%AC%E4%BB%B6%E5%A4%8D">blog028所示</a>。</p></li><li><p><strong>高电压3.3V</strong>：<code>2.7--3.6</code>；<br><strong>低电压1.8V</strong>：<code>1.7--1.95</code>；<br><strong>更低电压1.2V</strong>：<code>1.1--1.3</code>；(为了获得更高的I&#x2F;O速度)</p></li><li><p><code>tPRUH</code>：3.3伏高电压上电时间，35ms；<br><code>tPRUL</code>：1.8伏低电压上电时间，25ms；</p></li><li><p><code>tPRUV</code>：1.2伏低电压上电时间，20ms；</p></li></ul><h1 id="2、eMMC的工作流程"><a href="#2、eMMC的工作流程" class="headerlink" title="2、eMMC的工作流程"></a>2、eMMC的工作流程</h1><ul><li>eMMC 5.1A协议中p31、p36、p39、p40，有四个状态机转移图，这几个状态转移图可以连起来的。</li><li>Power on之后eMMC设备依次进入<code>Boot mode</code>（可跳过），然后CMD 1之后进入<code>Device identification mode</code>，再然后进入到<code>Data transfer mode</code>，最后可以在<code>Interrupt mode</code>之间切换。还有一个<code>inactive mode</code> ，它出现在eMMC协议Figure 25中，通过CMD 15主动进入或在对应情况下自动进入。</li><li><strong>Boot mode</strong>：是eMMC设备启动的初始模式，用于检查eMMC的健康状况（温度、电压、电容等）并加载配置信息（容量、扇区大小、坏块表等），初始化eMMC存储空间等。</li><li><strong>Device identification mode</strong>：用于向主机提供设备信息，如设备类型、容量、版本等。</li><li><strong>Data transfer mode</strong>：是eMMC设备的主要工作模式，用于执行主机的命令，eMMC的读、写、擦除等数据传输功能都在此模式下实现。</li><li><strong>Interrupt mode</strong>：eMMC device可以向host发送中断，用于通知主机发生了某些事件。eMMC支持多种中断，包括写完成中断、擦除完成中断等。</li><li><strong>Inactive mode</strong>：通常是eMMC设备的一种低功耗状态，用于降低功耗和延长设备寿命，尤其在设备长时间不被访问时。在非活动模式下，eMMC设备通常处于一种较低的功耗状态，以节省电能。</li></ul>]]></content>
+      
+      
+      <categories>
+          
+          <category> 领域 </category>
+          
+          <category> 存储 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> eMMC </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>38--关于NAND的一些个人总结</title>
       <link href="/blog038.html"/>
       <url>/blog038.html</url>
@@ -998,8 +1106,8 @@
     
     <entry>
       <title>Verilog分类保留</title>
-      <link href="/clqn6o8jb0024qwmr5wi2bgdp.html"/>
-      <url>/clqn6o8jb0024qwmr5wi2bgdp.html</url>
+      <link href="/clqndaqhk001ffsmr1n52br53.html"/>
+      <url>/clqndaqhk001ffsmr1n52br53.html</url>
       
         <content type="html"><![CDATA[]]></content>
       
